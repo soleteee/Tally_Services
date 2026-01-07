@@ -1,0 +1,118 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yeseva+One&display=swap');
+
+@theme {
+  --color-primary: #0056b3;
+  --color-secondary: #00a8e8;
+  --color-accent: #f0ad4e;
+  --color-text: #333333;
+  --color-bg: #f9f9f9;
+
+  /* Fonts */
+  --font-sans: 'Outfit', 'Poppins', 'Lato', system-ui, sans-serif;
+  --font-serif: 'Noto Serif', serif;
+  --font-display: 'Yeseva One', serif;
+  --font-hand: 'Amita', cursive;
+
+  --animate-fade-in: fadeIn 0.2s ease-in-out;
+  --animate-gradient-bg: gradientBG 15s ease infinite;
+  --animate-fade-up: fadeUp 0.8s ease-out forwards;
+  --animate-slide-left: slideLeft 0.8s ease-out forwards;
+  --animate-slide-right: slideRight 0.8s ease-out forwards;
+  --animate-zoom-in: zoomIn 0.8s ease-out forwards;
+  --animate-blue-white: gradientBlueWhite 8s ease infinite;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes gradientBlueWhite {
+    0% {
+      background-position: 0% 0%;
+    }
+
+    50% {
+      background-position: 100% 100%;
+    }
+
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes zoomIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-bg text-text antialiased;
+  }
+}
