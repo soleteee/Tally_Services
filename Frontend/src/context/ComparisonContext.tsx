@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
 import { getComparisonItem } from '../data/comparisonData';
 import type { ComparisonItem } from '../data/comparisonData';
 
