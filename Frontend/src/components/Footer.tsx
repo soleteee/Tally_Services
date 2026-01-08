@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
                 </ScrollReveal>
             </div>
             <div className="text-center border-t border-[#444] pt-5 mt-10">
-                <p>&copy; {new Date().getFullYear()}  Owl Media House. All Rights Reserved.Terms & Conditions</p>
+                <p>&copy; {new Date().getFullYear()}  <a href="https://owlmediahouse.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Owl Media House</a>. All Rights Reserved.Terms & Conditions</p>
             </div>
         </footer>
     );

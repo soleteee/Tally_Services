@@ -37,6 +37,10 @@ export const ComparisonProvider: React.FC<{ children: ReactNode }> = ({ children
     };
 
     const setTarget = (targetId: string) => {
+        if (targetId === '') {
+            setTargetItem(null);
+            return;
+        }
         const item = getComparisonItem(targetId);
         if (item) {
             setTargetItem(item);
