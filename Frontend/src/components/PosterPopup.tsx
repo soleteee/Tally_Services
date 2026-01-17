@@ -11,7 +11,7 @@ const PosterPopup = () => {
         // "if its off then the poster will not be shown only the site will be started directly if on then the poster will be shown"
         // I'll assume every time the site is loaded (e.g. refresh), based on the prompt "on starting the site".
 
-        fetch("http://localhost:5000/api/poster")
+        fetch(`${import.meta.env.VITE_API_URL}/api/poster`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.isVisible && data.imageUrl) {

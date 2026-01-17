@@ -10,7 +10,7 @@ const Resources: React.FC = () => {
 
     const fetchBlogs = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/blogs');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs`);
             const data = await response.json();
             setBlogs(data);
         } catch (error) {
@@ -24,7 +24,7 @@ const Resources: React.FC = () => {
 
     const handleCreateBlog = async (blogData: any) => {
         try {
-            const response = await fetch('http://localhost:5000/api/blogs', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(blogData),
