@@ -75,8 +75,8 @@ const Contact: React.FC = () => {
 
                         <div className="mb-6">
                             <h4 className="font-bold text-lg text-secondary mb-2">Email</h4>
-                            <p className="text-text/80">mittalonlineservices@gmail.com</p>
-                            <p className="text-text/80">info@mittalonlineservices.com</p>
+                            <p className="text-text/80">{import.meta.env.VITE_CONTACT_EMAIL}</p>
+                            <p className="text-text/80">{import.meta.env.VITE_INFO_EMAIL}</p>
                         </div>
 
                         <div className="mb-6">
@@ -147,7 +147,23 @@ const Contact: React.FC = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Google Map Section */}
+            <div className="mt-20 w-full h-[400px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Mittal%20Online%20Services%20Meerut%20Mall&t=&z=14&ie=UTF8&iwloc=B&output=embed"
+                    frameBorder="0"
+                    scrolling="no"
+                    marginHeight={0}
+                    marginWidth={0}
+                    title="Mittal Online Services Location"
+                    className="w-full h-full"
+                ></iframe>
+            </div>
         </div>
+
     );
 };
 

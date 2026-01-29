@@ -43,6 +43,13 @@ const Consultancy = lazy(() => import('./pages/services/Consultancy'));
 // Solution Pages
 const AI = lazy(() => import('./pages/solutions/AI'));
 const Customization = lazy(() => import('./pages/solutions/Customization'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Clients = lazy(() => import('./pages/Clients'));
+const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'));
+const RenewTSS = lazy(() => import('./pages/RenewTSS'));
+const Upgrade = lazy(() => import('./pages/Upgrade'));
+const OnlinePayment = lazy(() => import('./pages/OnlinePayment'));
 
 import PosterPopup from './components/PosterPopup';
 
@@ -105,6 +112,15 @@ function App() {
 
               <Route path="/solutions/ai" element={<AI />} />
               <Route path="/solutions/customization" element={<Customization />} />
+              <Route path="/landing-page" element={<LandingPage />} />
+
+              {/* New Pages */}
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/clients" element={<Clients />} />
+              <Route path="/admin/jobs" element={<AdminJobs />} />
+              <Route path="/renew-tss" element={<RenewTSS />} />
+              <Route path="/upgrade" element={<Upgrade />} />
+              <Route path="/online-payment" element={<OnlinePayment />} />
 
               <Route path="*" element={<div className="max-w-[1200px] mx-auto px-5 py-20 text-center"><h2>404 - Page Not Found</h2></div>} />
             </Routes>

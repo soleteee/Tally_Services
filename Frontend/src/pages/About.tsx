@@ -1,4 +1,5 @@
 import ScrollReveal from '../components/ScrollReveal';
+import PhotoGallery from '../components/PhotoGallery';
 
 const About = () => {
     return (
@@ -69,6 +70,25 @@ const About = () => {
                             </div>
                         ))}
                     </div>
+                </div>
+
+                {/* Awards & Gallery Section */}
+                <div className="mb-20">
+                    <PhotoGallery />
+                </div>
+                {/* Google Map Section */}
+                <div className="mt-20 w-full h-[400px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                    <iframe
+                        width="100%"
+                        height="100%"
+                        src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Mittal%20Online%20Services%20Meerut%20Mall&t=&z=14&ie=UTF8&iwloc=B&output=embed"
+                        frameBorder="0"
+                        scrolling="no"
+                        marginHeight={0}
+                        marginWidth={0}
+                        title="Mittal Online Services Location"
+                        className="w-full h-full"
+                    ></iframe>
                 </div>
             </ScrollReveal>
         </div>

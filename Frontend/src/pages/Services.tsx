@@ -14,7 +14,7 @@ const servicesList = [
 
 const Services: React.FC = () => {
     return (
-        <div className="pt-32 pb-20 px-5 max-w-[1200px] mx-auto">
+        <div className="pt-14 lg:pt-32 pb-20 px-5 max-w-[1200px] mx-auto">
             <ScrollReveal animation="fade-up">
                 <h1 className="text-4xl font-bold text-primary mb-6 text-center">Our Services</h1>
                 <p className="text-lg text-center text-text/80 max-w-3xl mx-auto mb-16">

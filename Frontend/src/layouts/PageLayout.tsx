@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { productsNav, servicesNav } from '../data/navigation';
-import { useComparison } from '../context/ComparisonContext';
-import { getAllComparisonItems } from '../data/comparisonData';
-import { ArrowRightLeft } from 'lucide-react';
 
 interface PageLayoutProps {
     title: string;
@@ -14,11 +11,7 @@ interface PageLayoutProps {
 
 const PageLayout: React.FC<PageLayoutProps> = ({ title, children, sidebarType = 'products' }) => {
     const navigate = useNavigate();
-    const { openComparison } = useComparison();
-    const allComparisonItems = getAllComparisonItems();
-
-    // Find the ID based on the title (simple matching)
-    const comparisonItem = allComparisonItems.find(item => item.title === title);
+    const location = useLocation();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -29,11 +22,12 @@ const PageLayout: React.FC<PageLayoutProps> = ({ title, children, sidebarType = 
     };
 
     const sidebarItems = sidebarType === 'products' ? productsNav : servicesNav;
+    const showBuyNow = location.pathname !== '/online-payment';
 
     return (
-        <div className="pt-24 min-h-screen bg-bg">
+        <div className="pt-06 lg:pt-09 min-h-screen bg-bg">
             {/* Hero Header */}
-            <div className="bg-gradient-to-r from-primary to-[#004494] py-16 px-5 text-white mb-10">
+            <div className="bg-gradient-to-r from-primary to-[#004494] py-6 px-5 text-white mb-10">
                 <div className="max-w-[1200px] mx-auto">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-up">{title}</h1>
                     <p className="text-blue-100 max-w-2xl text-lg animate-fade-in delay-200">
@@ -59,16 +53,15 @@ const PageLayout: React.FC<PageLayoutProps> = ({ title, children, sidebarType = 
                         <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6 bg-gray-50 p-6 rounded-lg">
                             <div className="flex-1">
                                 <h3 className="text-lg font-bold text-gray-800">Interested in {title}?</h3>
-                                <p className="text-gray-500 text-sm">Compare features or get in touch with us.</p>
+                                <p className="text-gray-500 text-sm">Get in touch with us.</p>
                             </div>
                             <div className="flex gap-4">
-                                {comparisonItem && (
+                                {showBuyNow && (
                                     <button
-                                        onClick={() => openComparison(comparisonItem.id)}
-                                        className="px-6 py-3 bg-white border-2 border-primary text-primary font-bold rounded-full hover:bg-blue-50 transition-all transform hover:-translate-y-1 shadow-sm flex items-center gap-2"
+                                        onClick={() => navigate('/online-payment')}
+                                        className="px-8 py-3 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition-all transform hover:scale-105 shadow-md flex items-center gap-2"
                                     >
-                                        <ArrowRightLeft size={18} />
-                                        Compare
+                                        Buy Now
                                     </button>
                                 )}
                                 <button
