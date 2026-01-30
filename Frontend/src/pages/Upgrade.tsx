@@ -1,6 +1,6 @@
 import React from 'react';
 import PageLayout from '../layouts/PageLayout';
-import { FaDesktop, FaDownload, FaCheck, FaUniversity, FaSync, FaMoneyBillWave, FaShieldAlt } from 'react-icons/fa';
+import { FaDesktop, FaDownload, FaCheck } from 'react-icons/fa';
 
 const Upgrade: React.FC = () => {
     return (
