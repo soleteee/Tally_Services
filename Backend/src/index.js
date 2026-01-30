@@ -1,8 +1,9 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const blogRoutes = require('./routes/blogRoutes');
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
