@@ -37,7 +37,7 @@ const Clients = () => {
                     <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition-shadow h-40 group">
                         <img
                             src={client.logo}
-                            alt={client.name}
+                            alt={`Client ${index + 1}`}
                             className="max-h-24 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
                         />
                     </div>

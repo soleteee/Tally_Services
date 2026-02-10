@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { assets, galleryImages } from '../assets/assets';
+import { galleryImages } from '../assets/assets';
 
 // --- Types ---
 type BentoItemProps = {
@@ -109,16 +109,20 @@ const ImageTile: React.FC<ImageTileProps> = ({ images, interval = 3000 }) => {
 const VideoTile: React.FC = () => {
     return (
         <div className="relative w-full h-full group overflow-hidden bg-black">
-            <video
+            {/* <video
                 autoPlay
                 loop
                 muted
                 playsInline
                 className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
             >
+                 Video asset removed to fix git size issue - uncomment when optimized video is available
                 <source src={assets.galleryVideo} type="video/mp4" />
                 Your browser does not support the video tag.
-            </video>
+            </video> */}
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-white/50 font-bold text-xl">
+                Video Coming Soon
+            </div>
             {/* Overlay for polish */}
             <div className="absolute inset-0 bg-black/10 pointer-events-none" />
         </div>
