@@ -1,15 +1,25 @@
 import { useState } from 'react';
 import PageLayout from '../layouts/PageLayout';
 import ClientInquiryModal from '../components/ClientInquiryModal';
+import assets from '../assets/assets';
 
 const Clients = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Placeholder client data - In a real app, these would come from assets or an API
     const clients = [
-        "Jubilant FoodWorks", "Haldiram's", "Bikanervala", "Relaxo Footwears",
-        "Patanjali Ayurved", "Dabur India", "Hero MotoCorp", "Maruti Suzuki",
-        "Indian Oil Corporation", "DLF Limited", "Omaxe Ltd", "Gaurs Group"
+        { logo: assets.logo1 },
+        { logo: assets.logo2 },
+        { logo: assets.logo3 },
+        { logo: assets.logo4 },
+        { logo: assets.logo5 },
+        { logo: assets.logo6 },
+        { logo: assets.logo7 },
+        { logo: assets.logo8 },
+        { logo: assets.logo9 },
+        { logo: assets.logo10 },
+        { logo: assets.logo11 },
+        { logo: assets.logo12 },
     ];
 
     return (
@@ -24,14 +34,12 @@ const Clients = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-20">
                 {clients.map((client, index) => (
-                    <div key={index} className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition-shadow h-32 group">
-                        {/* 
-                           For now displaying Name. 
-                           TODO: Replace with <img src={clientLogo} /> when assets are available 
-                        */}
-                        <span className="text-lg font-bold text-gray-700 group-hover:text-primary transition-colors text-center">
-                            {client}
-                        </span>
+                    <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition-shadow h-40 group">
+                        <img
+                            src={client.logo}
+                            alt={client.name}
+                            className="max-h-24 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                        />
                     </div>
                 ))}
             </div>

@@ -58,7 +58,7 @@ const About = () => {
                             { name: 'Nikhil Saini', role: 'Service & Technical Consultant Manager', color: 'bg-gray-300' },
                             { name: 'Rachit Garg', role: 'Sales Consultant Manager', color: 'bg-gray-300' },
                             { name: 'Rani Verma', role: 'Relationship Manager', color: 'bg-gray-300' },
-                            { name: 'Kushi Kashyap', role: 'Relationship Manager', color: 'bg-gray-300' },
+                            { name: 'Khushi Kashyap', role: 'Relationship Manager', color: 'bg-gray-300' },
                             { name: 'Varsha Agarwal', role: 'Relationship Manager', color: 'bg-gray-300' }
                         ].map((member, idx) => (
                             <div key={idx} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">

@@ -16,10 +16,11 @@ const Home: React.FC = () => {
             <ScrollReveal animation="fade-up" delay={200}>
                 <OurServices />
             </ScrollReveal>
-            <BusinessGrowth />
             <ScrollReveal animation="fade-up">
                 <PhotoGallery />
             </ScrollReveal>
+            <BusinessGrowth />
+
         </div>
     );
 };

@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
                             <FaClock className="text-primary text-lg" />
                             <div className="flex flex-col leading-tight">
                                 <span className="font-bold text-gray-900">Mon – Sat</span>
-                                <span className="text-xs text-gray-600 font-medium">10:00 AM – 7:00 PM</span>
+                                <span className="text-xs text-gray-600 font-medium">10:00 AM – 6:00 PM</span>
                             </div>
                         </div>
 
@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
                             <FaPhoneAlt className="text-primary text-lg" />
                             <div className="flex flex-col leading-tight">
                                 <span className="font-bold text-gray-900">Call Us</span>
-                                <span className="text-xs text-gray-600 font-medium">9997952142,98 | 9997954601,7482</span>
+                                <span className="text-xs text-gray-600 font-medium">9997952142,2198,4601,7482,7892</span>
                             </div>
                         </div>
 
@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
 
                         {/* WhatsApp Button */}
                         <a
-                            href="https://wa.me/919997952198"
+                            href="https://wa.me/919997952180"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-4 py-1.5 rounded-full font-bold ml-auto hover:bg-green-600 transition-all shadow-sm text-sm"
