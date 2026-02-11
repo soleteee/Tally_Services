@@ -39,7 +39,7 @@ const JobManagement = () => {
 
     const fetchJobs = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/jobs/admin/all');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobs/admin/all`);
             const data = await response.json();
             setJobs(data);
         } catch (error) {
@@ -74,8 +74,8 @@ const JobManagement = () => {
 
         try {
             const url = editingId
-                ? `http://localhost:5000/api/jobs/${editingId}`
-                : 'http://localhost:5000/api/jobs';
+                ? `${import.meta.env.VITE_API_URL}/api/jobs/${editingId}`
+                : `${import.meta.env.VITE_API_URL}/api/jobs`;
 
             const method = editingId ? 'PUT' : 'POST';
 
@@ -119,7 +119,7 @@ const JobManagement = () => {
         if (!window.confirm('Are you sure you want to delete this job?')) return;
 
         try {
-            await fetch(`http://localhost:5000/api/jobs/${id}`, { method: 'DELETE' });
+            await fetch(`${import.meta.env.VITE_API_URL}/api/jobs/${id}`, { method: 'DELETE' });
             setJobs(prev => prev.filter(job => job._id !== id));
         } catch (error) {
             console.error('Error deleting job:', error);

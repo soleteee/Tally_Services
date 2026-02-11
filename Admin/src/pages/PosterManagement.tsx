@@ -12,7 +12,7 @@ const PosterManagement = () => {
 
     const fetchHelper = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/poster');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/poster`);
             const data = await response.json();
             setImageUrl(data.imageUrl || '');
             setIsVisible(data.isVisible || false);
@@ -35,7 +35,7 @@ const PosterManagement = () => {
                 formData.append('imageUrl', imageUrl);
             }
 
-            const response = await fetch('http://localhost:5000/api/poster', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/poster`, {
                 method: 'PUT',
                 body: formData, // No Content-Type header when sending FormData; browser sets boundary
             });

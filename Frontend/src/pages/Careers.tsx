@@ -28,7 +28,7 @@ const Careers = () => {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/jobs');
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/jobs`);
                 if (response.ok) {
                     const data = await response.json();
                     setJobs(data);

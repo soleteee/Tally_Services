@@ -5,7 +5,7 @@ const BlogManagement = () => {
 
     const fetchBlogs = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/blogs/admin/all');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs/admin/all`);
             const data = await response.json();
             setBlogs(data);
         } catch (error) {
@@ -19,7 +19,7 @@ const BlogManagement = () => {
 
     const handleApprove = async (id: string) => {
         try {
-            await fetch(`http://localhost:5000/api/blogs/${id}/approve`, { method: 'PATCH' });
+            await fetch(`${import.meta.env.VITE_API_URL}/api/blogs/${id}/approve`, { method: 'PATCH' });
             fetchBlogs(); // Refresh list
         } catch (error) {
             console.error('Error approving blog:', error);
@@ -28,7 +28,7 @@ const BlogManagement = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            await fetch(`http://localhost:5000/api/blogs/${id}`, { method: 'DELETE' });
+            await fetch(`${import.meta.env.VITE_API_URL}/api/blogs/${id}`, { method: 'DELETE' });
             setBlogs(prev => prev.filter(blog => blog._id !== id));
         } catch (error) {
             console.error('Error deleting blog:', error);
