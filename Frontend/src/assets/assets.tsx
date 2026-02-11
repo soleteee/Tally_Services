@@ -51,7 +51,7 @@ import gal41 from './gallery/compressed_41.webp';
 import gal42 from './gallery/compressed_42.webp';
 import gal43 from './gallery/compressed_43.webp';
 import gal44 from './gallery/compressed_44.webp';
-
+import galleryVideo from './gallery/website video-1.mp4';
 
 
 export const galleryImages = [
@@ -80,7 +80,8 @@ export const assets = {
     logo9,
     logo10,
     logo11,
-    logo12
+    logo12,
+    galleryVideo
 };
 
 export default assets;

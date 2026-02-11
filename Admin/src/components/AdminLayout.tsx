@@ -1,6 +1,6 @@
 
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, LogOut } from 'lucide-react';
+import { LayoutDashboard, FilePlus, LogOut, Briefcase } from 'lucide-react';
 
 const AdminLayout = () => {
     const location = useLocation();
@@ -24,6 +24,10 @@ const AdminLayout = () => {
                     <Link to="/add-blog" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/add-blog') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                         <FilePlus size={20} />
                         <span className="font-medium">Add New Blog</span>
+                    </Link>
+                    <Link to="/jobs" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/jobs') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                        <Briefcase size={20} />
+                        <span className="font-medium">Job Management</span>
                     </Link>
                     <Link to="/poster-settings" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/poster-settings') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                         <FilePlus size={20} />

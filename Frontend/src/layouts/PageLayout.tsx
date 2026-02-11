@@ -7,9 +7,10 @@ interface PageLayoutProps {
     title: string;
     children: React.ReactNode;
     sidebarType?: 'products' | 'services' | 'none';
+    showInquirySection?: boolean;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({ title, children, sidebarType = 'products' }) => {
+const PageLayout: React.FC<PageLayoutProps> = ({ title, children, sidebarType = 'products', showInquirySection = true }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -50,28 +51,30 @@ const PageLayout: React.FC<PageLayoutProps> = ({ title, children, sidebarType = 
                         {children}
 
                         {/* Buttons Container */}
-                        <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6 bg-gray-50 p-6 rounded-lg">
-                            <div className="flex-1">
-                                <h3 className="text-lg font-bold text-gray-800">Interested in {title}?</h3>
-                                <p className="text-gray-500 text-sm">Get in touch with us.</p>
-                            </div>
-                            <div className="flex gap-4">
-                                {showBuyNow && (
+                        {showInquirySection && (
+                            <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6 bg-gray-50 p-6 rounded-lg">
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold text-gray-800">Interested in {title}?</h3>
+                                    <p className="text-gray-500 text-sm">Get in touch with us.</p>
+                                </div>
+                                <div className="flex gap-4">
+                                    {showBuyNow && (
+                                        <button
+                                            onClick={() => navigate('/online-payment')}
+                                            className="px-8 py-3 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition-all transform hover:scale-105 shadow-md flex items-center gap-2"
+                                        >
+                                            Buy Now
+                                        </button>
+                                    )}
                                     <button
-                                        onClick={() => navigate('/online-payment')}
-                                        className="px-8 py-3 bg-green-600 text-white font-bold rounded-full hover:bg-green-700 transition-all transform hover:scale-105 shadow-md flex items-center gap-2"
+                                        onClick={handleInquiry}
+                                        className="px-8 py-3 bg-secondary text-white font-bold rounded-full hover:bg-[#008ec4] transition-all transform hover:scale-105 shadow-md"
                                     >
-                                        Buy Now
+                                        Get An Inquiry
                                     </button>
-                                )}
-                                <button
-                                    onClick={handleInquiry}
-                                    className="px-8 py-3 bg-secondary text-white font-bold rounded-full hover:bg-[#008ec4] transition-all transform hover:scale-105 shadow-md"
-                                >
-                                    Get An Inquiry
-                                </button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>

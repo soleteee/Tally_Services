@@ -18,6 +18,8 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/blogs', blogRoutes);
 app.use('/api/poster', require('./routes/posterRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
+app.use('/api/jobs', require('./routes/jobRoutes'));
+
 
 // Database Connection
 mongoose.connect(MONGODB_URI)
