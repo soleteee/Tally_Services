@@ -10,7 +10,18 @@ const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/tally_services';
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://mittalonlineservices.com',
+        'http://www.mittalonlineservices.com',
+        'http://admin.mittalonlineservices.com'
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
