@@ -124,8 +124,8 @@ const Careers = () => {
                         We are always interested in meeting great people. Send your resume directly to us.
                     </p>
                     <div className="space-y-2">
-                        <p className="font-semibold">Email: mittalonline.services@gmail.com</p>
-                        <p className="font-semibold">Call/WhatsApp: +91 9997952142</p>
+                        <p className="font-semibold">Email: mittalonlineservices@gmail.com</p>
+                        <p className="font-semibold">Call/WhatsApp: +91 9997952180</p>
                     </div>
                 </div>
             </div>
