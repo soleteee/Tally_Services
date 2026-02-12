@@ -16,7 +16,10 @@ const corsOptions = {
         'http://localhost:5173',
         'http://mittalonlineservices.com',
         'http://www.mittalonlineservices.com',
-        'http://admin.mittalonlineservices.com'
+        'http://admin.mittalonlineservices.com',
+        'https://mittalonlineservices.com',
+        'https://www.mittalonlineservices.com',
+        'https://admin.mittalonlineservices.com'
     ],
     credentials: true,
     optionsSuccessStatus: 200
