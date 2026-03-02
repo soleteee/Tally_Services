@@ -72,10 +72,15 @@ const Navbar: React.FC = () => {
                         </div>
 
                         {/* Office Address */}
-                        <div className="flex items-center gap-2 max-w-[200px]">
+                        <a 
+                            href="https://www.google.com/maps/search/?api=1&query=B-4,+Ground+Floor,+Meerut+Mall,+Delhi+Road,+Meerut" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 max-w-[200px] cursor-pointer hover:text-primary transition-colors"
+                        >
                             <FaMapMarkerAlt className="text-primary text-lg flex-shrink-0" />
                             <span className="text-xs text-gray-600 leading-snug font-medium">B-4, Ground Floor, Meerut Mall, Delhi Road, Meerut</span>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>

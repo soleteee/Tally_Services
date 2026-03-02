@@ -2,6 +2,7 @@ import newLogo from './newlogo.png';
 import aboutus from './Aboutus.png';
 import logoMOS from './LogoMOS.png';
 import certification from './3star_logo.png';
+import certificateFull from './Certificate/3Starpartnercertificate.jpg';
 import hero1 from './hero1.png';
 import hero2 from './hero2.png';
 import hero3 from './hero3.png';
@@ -53,6 +54,23 @@ import gal43 from './gallery/compressed_43.webp';
 import gal44 from './gallery/compressed_44.webp';
 import galleryVideo from './gallery/website video-1.mp4';
 
+// Team photos
+import teamShivam from './our team/Shivam.webp';
+import teamYash from './our team/Yash.webp';
+import teamNikhil from './our team/Nikhil.webp';
+import teamRani from './our team/Rani.webp';
+import teamKhushi from './our team/Khushi.webp';
+import teamVarsha from './our team/Varsha.webp';
+
+// Product logos
+import tallyPrimeLogo from './Products logo/Tally-Prime.png';
+import tallyPrimeSilverLogo from './Products logo/TallyPrime Silver.jpg.jpeg';
+import tallyPrimeGoldLogo from './Products logo/TallyPrime-Gold.jpeg';
+import tallyPrimeServerLogo from './Products logo/TallyPrime-Server_A-1.jpg';
+import tallyTSSLogo from './Products logo/Tally Software Services (TSS) - Silver..jpg.jpeg';
+import virtualuser from './Products logo/Tally virtual user.jpg';
+
+
 
 export const galleryImages = [
     gal5, gal7, gal8, gal9, gal10, gal11, gal12, gal13, gal14, gal15,
@@ -65,6 +83,7 @@ export const assets = {
     aboutus,
     logoMOS,
     certification,
+    certificateFull,
     hero1,
     hero2,
     hero3,
@@ -81,7 +100,20 @@ export const assets = {
     logo10,
     logo11,
     logo12,
-    galleryVideo
+    galleryVideo,
+    teamShivam,
+    teamYash,
+    teamNikhil,
+    teamRani,
+    teamKhushi,
+    teamVarsha,
+    tallyPrimeLogo,
+    tallyPrimeSilverLogo,
+    tallyPrimeGoldLogo,
+    tallyPrimeServerLogo,
+    tallyTSSLogo,
+    virtualuser
+    
 };
 
 export default assets;

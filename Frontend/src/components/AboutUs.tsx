@@ -52,7 +52,7 @@ const AboutUs: React.FC = () => {
                                 backgroundSize: '20px 20px'
                             }}>
                             <img
-                                src={assets.aboutus}
+                                src={assets.certificateFull}
                                 alt="About Us"
                                 className="w-full h-full object-cover z-10"
                             />

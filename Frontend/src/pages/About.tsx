@@ -1,5 +1,6 @@
 import ScrollReveal from '../components/ScrollReveal';
 import PhotoGallery from '../components/PhotoGallery';
+import { assets } from '../assets/assets';
 
 const About = () => {
     return (
@@ -23,6 +24,18 @@ const About = () => {
                         Our team includes professionals such as Chartered Accountants (CAs), Income Tax experts, and GST experts.
                         We are committed to delivering the best service and ensuring customer satisfaction in all Tally-related needs.
                     </p>
+                </div>
+
+                {/* Certificate Section */}
+                <div className="mb-16 flex justify-center">
+                    <div className="max-w-3xl w-full">
+                        <h2 className="text-3xl font-bold text-primary mb-8 text-center">Our Certification</h2>
+                        <img 
+                            src={assets.certificateFull} 
+                            alt="3-Star Partner Certificate" 
+                            className="w-full h-auto rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
+                        />
+                    </div>
                 </div>
 
                 {/* Why Choose Us Section */}
@@ -49,20 +62,36 @@ const About = () => {
                     <p className="text-lg text-center text-text/80 max-w-3xl mx-auto mb-16">
                         We are a group of certified Tally experts, professionals, and consultants passionate about helping your business thrive.
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
                         {[
-                            { name: 'Mrs. Varsha Mittal w/o CA Pawan Mittal', role: 'Owner', color: 'bg-primary' },
-                            { name: 'CA Pawan Mittal', role: 'CA & Adviser', color: 'bg-secondary' },
-                            { name: 'Shivam Sharma', role: 'Sales Consultant Manager', color: 'bg-gray-300' },
-                            { name: 'Yash Vaish', role: 'Services & Customization Consultant Manager', color: 'bg-gray-300' },
-                            { name: 'Nikhil Saini', role: 'Service & Technical Consultant Manager', color: 'bg-gray-300' },
-                            { name: 'Rachit Garg', role: 'Sales Consultant Manager', color: 'bg-gray-300' },
-                            { name: 'Rani Verma', role: 'Relationship Manager', color: 'bg-gray-300' },
-                            { name: 'Khushi Kashyap', role: 'Relationship Manager', color: 'bg-gray-300' },
-                            { name: 'Varsha Agarwal', role: 'Relationship Manager', color: 'bg-gray-300' }
+                            { name: 'Mrs. Varsha Mittal w/o CA Pawan Mittal', role: 'Owner', color: 'bg-primary', photo: null },
+                            { name: 'CA Pawan Mittal', role: 'CA & Adviser', color: 'bg-secondary', photo: null },
+                            { name: 'Shivam Sharma', role: 'Sales Consultant Manager', color: 'bg-gray-300', photo: assets.teamShivam },
+                            { name: 'Yash Vaish', role: 'Services & Customization Consultant Manager', color: 'bg-gray-300', photo: assets.teamYash },
+                            { name: 'Nikhil Saini', role: 'Service & Technical Consultant Manager', color: 'bg-gray-300', photo: assets.teamNikhil },
+                            { name: 'Rachit Garg', role: 'Sales Consultant Manager', color: 'bg-gray-300', photo: null },
+                            { name: 'Rani Verma', role: 'Relationship Manager', color: 'bg-gray-300', photo: assets.teamRani },
+                            { name: 'Khushi Kashyap', role: 'Relationship Manager', color: 'bg-gray-300', photo: assets.teamKhushi },
+                            { name: 'Varsha Agarwal', role: 'Relationship Manager', color: 'bg-gray-300', photo: assets.teamVarsha }
                         ].map((member, idx) => (
-                            <div key={idx} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
-                                <div className={`h-4 ${member.color} w-full`}></div>
+                            <div key={idx} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl  transition-all duration-300 group">
+                                {/* Member Photo */}
+                                <div className="relative h-64 bg-gradient-to-br from-primary/10 to-secondary/10 overflow-hidden">
+                                    {member.photo ? (
+                                        <img 
+                                            src={member.photo} 
+                                            alt={member.name} 
+                                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300 "
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <div className={`w-32 h-32 rounded-full ${member.color} flex items-center justify-center text-white text-4xl font-bold`}>
+                                                {member.name.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={`h-1 ${member.color} w-full`}></div>
                                 <div className="p-6">
                                     <h3 className="text-lg font-bold text-primary mb-2 group-hover:text-secondary transition-colors">{member.name}</h3>
                                     <p className="text-secondary font-medium text-sm">{member.role}</p>
