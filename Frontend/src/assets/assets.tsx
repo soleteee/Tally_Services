@@ -55,12 +55,12 @@ import gal44 from './gallery/compressed_44.webp';
 import galleryVideo from './gallery/website video-1.mp4';
 
 // Team photos
-import teamShivam from './our team/Shivam.webp';
-import teamYash from './our team/Yash.webp';
-import teamNikhil from './our team/Nikhil.webp';
-import teamRani from './our team/Rani.webp';
-import teamKhushi from './our team/Khushi.webp';
-import teamVarsha from './our team/Varsha.webp';
+import teamShivam from './Our Team/Shivam.webp';
+import teamYash from './Our Team/Yash.webp';
+import teamNikhil from './Our Team/Nikhil.webp';
+import teamRani from './Our Team/Rani.webp';
+import teamKhushi from './Our Team/Khushi.webp';
+import teamVarsha from './Our Team/Varsha.webp';
 
 // Product logos
 import tallyPrimeLogo from './Products logo/Tally-Prime.png';
