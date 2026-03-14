@@ -31,22 +31,22 @@ const Navbar: React.FC = () => {
         <header className="w-full font-sans shadow-md z-[1000] sticky top-0 bg-white">
 
             {/* Top Bar (Information Bar) */}
-            <div className="bg-white text-gray-700 py-3 border-b border-gray-100 hidden lg:block">
-                <div className="max-w-[1400px] mx-auto px-6 flex justify-between items-center">
+            <div className="hidden lg:block bg-white text-gray-700 py-2 md:py-3 border-b border-gray-100">
+                <div className="max-w-[1400px] mx-auto px-4 md:px-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 lg:gap-8 xl:gap-12">
 
                     {/* Left: Logo */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 md:gap-4 w-full lg:w-auto justify-between lg:justify-start">
                         <Link to="/" className="flex items-center gap-3">
-                            <img src={assets.logoMOS} alt="Mittal Online Services" className="h-16 w-auto object-contain" />
-                            <img src={assets.certification} alt="Certification" className="h-16 w-auto object-contain" />
+                            <img src={assets.logoMOS} alt="Mittal Online Services" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
+                            <img src={assets.certification} alt="Certification" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
                         </Link>
                     </div>
 
                     {/* Right: Business Information Grid */}
-                    <div className="flex items-center gap-8 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-3 xl:gap-3 text-sm w-full lg:w-auto mt-2 lg:mt-2">
                         {/* Working Hours */}
-                        <div className="flex items-center gap-2">
-                            <FaClock className="text-primary text-lg" />
+                        <div className="flex items-start gap-2 min-w-0 ml-6">
+                            <FaClock className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
                             <div className="flex flex-col leading-tight">
                                 <span className="font-bold text-gray-900">Mon – Sat</span>
                                 <span className="text-xs text-gray-600 font-medium">10:00 AM – 6:00 PM</span>
@@ -54,32 +54,35 @@ const Navbar: React.FC = () => {
                         </div>
 
                         {/* Phone Numbers */}
-                        <div className="flex items-center gap-2">
-                            <FaPhoneAlt className="text-primary text-lg" />
-                            <div className="flex flex-col leading-tight">
+                        <div className="flex items-start gap-1 min-w-0">
+                            <FaPhoneAlt className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
+                            <div className="flex flex-col leading-tight min-w-0">
                                 <span className="font-bold text-gray-900">Call Us</span>
-                                <span className="text-xs text-gray-600 font-medium">9997952142,2198,4601,7482,7892</span>
+                                <span className="text-xs text-bold text-gray-600 font-medium break-words">+91 99979 52180, +91 99979 52142 </span>
                             </div>
                         </div>
 
                         {/* Email */}
-                        <div className="flex items-center gap-2">
-                            <FaEnvelope className="text-primary text-lg" />
-                            <div className="flex flex-col leading-tight">
+                        <div className="flex items-start gap-2 min-w-0">
+                            <FaEnvelope className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
+                            <div className="flex flex-col leading-tight min-w-0">
                                 <span className="font-bold text-gray-900">Email Us</span>
-                                <a href="mailto:mittalonlineservices@gmail.com" className="text-xs text-gray-600 hover:text-primary transition-colors font-medium">mittalonlineservices@gmail.com</a>
+                                <a href="mailto:mittalonlineservices@gmail.com" className="text-xs text-gray-600 hover:text-primary transition-colors font-medium break-all">mittalonlineservices@gmail.com</a>
                             </div>
                         </div>
 
                         {/* Office Address */}
-                        <a 
-                            href="https://www.google.com/maps/search/?api=1&query=B-4,+Ground+Floor,+Meerut+Mall,+Delhi+Road,+Meerut" 
-                            target="_blank" 
+                        <a
+                            href="https://www.google.com/maps/search/?api=1&query=B-4,+Ground+Floor,+Meerut+Mall,+Delhi+Road,+Meerut"
+                            target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 max-w-[200px] cursor-pointer hover:text-primary transition-colors"
+                            className="flex items-start gap-2 min-w-0 max-w-full xl:max-w-[240px] cursor-pointer hover:text-primary transition-colors"
                         >
-                            <FaMapMarkerAlt className="text-primary text-lg flex-shrink-0" />
-                            <span className="text-xs text-gray-600 leading-snug font-medium">B-4, Ground Floor, Meerut Mall, Delhi Road, Meerut</span>
+                            <FaMapMarkerAlt className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
+                            <div className="flex flex-col leading-tight min-w-0">
+                                <span className="font-bold text-gray-900">Location</span>
+                                <span className="text-xs text-gray-600 leading-snug font-medium">B-4, Ground Floor, Meerut Mall, Delhi Road, Meerut</span>
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -88,7 +91,7 @@ const Navbar: React.FC = () => {
             {/* Bottom Bar (Main Navigation) */}
             <div className="bg-primary text-white w-full">
                 <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
-                    <div className="flex justify-between lg:justify-center items-center h-14 lg:h-12 relative">
+                    <div className="flex justify-between lg:justify-center items-center h-14 lg:h-12 relative flex-nowrap">
 
                         {/* Mobile Logo (Visible only on mobile) */}
                         <div className="lg:hidden flex items-center gap-2">
@@ -105,9 +108,9 @@ const Navbar: React.FC = () => {
                         </button>
 
                         {/* Navigation Links (Desktop) */}
-                        <ul className="hidden lg:flex items-center gap-8 text-[15px] font-bold tracking-wide h-full">
-                            <li><Link to="/" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/' ? 'text-accent' : ''}`}>Home</Link></li>
-                            <li><Link to="/about" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/about' ? 'text-accent' : ''}`}>About Us</Link></li>
+                        <ul className="hidden lg:flex items-center gap-3 xl:gap-5 2xl:gap-7 text-[12px] xl:text-[13px] 2xl:text-[15px] font-bold tracking-normal xl:tracking-wide h-full whitespace-nowrap">
+                            <li><Link to="/" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/' ? 'text-accent' : ''}`}>Home</Link></li>
+                            <li><Link to="/about" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/about' ? 'text-accent' : ''}`}>About Us</Link></li>
 
                             {/* Dropdown */}
                             <li
@@ -115,7 +118,7 @@ const Navbar: React.FC = () => {
                                 onMouseEnter={() => handleMouseEnter('products')}
                                 onMouseLeave={handleMouseLeave}
                             >
-                                <Link to="/products" className={`flex items-center gap-1 hover:text-accent transition-colors ${location.pathname.includes('/products') ? 'text-accent' : ''}`}>
+                                <Link to="/products" className={`flex items-center gap-1 whitespace-nowrap hover:text-accent transition-colors ${location.pathname.includes('/products') ? 'text-accent' : ''}`}>
                                     Products & Services <FaChevronDown size={10} className={`mt-0.5 transition-transform duration-300 ${activeDropdown === 'products' ? 'rotate-180' : ''}`} />
                                 </Link>
 
@@ -147,12 +150,12 @@ const Navbar: React.FC = () => {
                                 )}
                             </li>
 
-                            <li><Link to="/resources" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/resources' ? 'text-accent' : ''}`}>Blogs</Link></li>
-                            <li><Link to="/testimonials" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/testimonials' ? 'text-accent' : ''}`}>Testimonials</Link></li>
-                            <li><Link to="/clients" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/clients' ? 'text-accent' : ''}`}>Clients</Link></li>
-                            <li><Link to="/careers" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/careers' ? 'text-accent' : ''}`}>Careers</Link></li>
-                            <li><Link to="/online-payment" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/online-payment' ? 'text-accent' : ''}`}>Pay Online</Link></li>
-                            <li><Link to="/contact" className={`h-full flex items-center hover:text-accent transition-colors ${location.pathname === '/contact' ? 'text-accent' : ''}`}>Contact Us</Link></li>
+                            <li><Link to="/resources" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/resources' ? 'text-accent' : ''}`}>Blogs</Link></li>
+                            <li><Link to="/testimonials" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/testimonials' ? 'text-accent' : ''}`}>Testimonials</Link></li>
+                            <li><Link to="/clients" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/clients' ? 'text-accent' : ''}`}>Clients</Link></li>
+                            <li><Link to="/careers" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/careers' ? 'text-accent' : ''}`}>Careers</Link></li>
+                            <li><Link to="/online-payment" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/online-payment' ? 'text-accent' : ''}`}>Pay Online</Link></li>
+                            <li><Link to="/contact" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/contact' ? 'text-accent' : ''}`}>Contact Us</Link></li>
                         </ul>
 
                         {/* WhatsApp Button */}
@@ -160,7 +163,7 @@ const Navbar: React.FC = () => {
                             href="https://wa.me/919997952180"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-4 py-1.5 rounded-full font-bold ml-auto hover:bg-green-600 transition-all shadow-sm text-sm"
+                            className="hidden xl:flex items-center gap-2 bg-[#25D366] text-white px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-auto hover:bg-green-600 transition-all shadow-sm text-xs 2xl:text-sm whitespace-nowrap"
                         >
                             <FaWhatsapp size={18} />
                             <span>WhatsApp</span>
@@ -169,7 +172,7 @@ const Navbar: React.FC = () => {
                             href="https://whatsapp.com/channel/0029Va6UVWjGehEHQhXVrI2P"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-4 py-1.5 rounded-full font-bold ml-2 hover:bg-green-600 transition-all shadow-sm text-sm"
+                            className="hidden 2xl:flex items-center gap-2 bg-[#25D366] text-white px-4 py-1.5 rounded-full font-bold ml-2 hover:bg-green-600 transition-all shadow-sm text-sm whitespace-nowrap"
                         >
                             <FaWhatsapp size={18} />
                             <span>Join Channel</span>
@@ -178,7 +181,7 @@ const Navbar: React.FC = () => {
                             href="https://www.youtube.com/@mittalonlineservices3412"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden lg:flex items-center gap-2 bg-[#FF0000] text-white px-4 py-1.5 rounded-full font-bold ml-2 hover:bg-red-700 transition-all shadow-sm text-sm"
+                            className="hidden 2xl:flex items-center gap-2 bg-[#FF0000] text-white px-4 py-1.5 rounded-full font-bold ml-2 hover:bg-red-700 transition-all shadow-sm text-sm whitespace-nowrap"
                         >
                             <FaYoutube size={18} />
                             <span>YouTube</span>

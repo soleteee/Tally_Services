@@ -150,40 +150,37 @@ const PhotoGallery: React.FC = () => {
     }
 
     return (
-        <section className="h-screen w-full bg-white flex flex-col items-center justify-center px-4 lg:px-8 py-8 md:py-16 font-['M_PLUS_2',sans-serif] overflow-hidden">
+        <section className="w-full bg-white flex flex-col items-center px-4 sm:px-5 lg:px-8 py-8 md:py-16 font-['M_PLUS_2',sans-serif]">
             <h1 className="text-4xl md:text-5xl text-primary mb-8 font-bold relative inline-block after:content-[''] after:block after:w-20 after:h-1 after:bg-accent after:mt-2 after:mx-auto tracking-tight">Gallery</h1>
 
-            <div className="w-full max-w-[1400px] flex-grow min-h-0">
-                {/* 
-                  Grid Layout: 4 columns x 4 rows
-                  h-full ensures it fills the remaining space defined by flex-grow
-                */}
-                <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-8 md:grid-rows-4 gap-3 md:gap-4 w-full h-full">
+            <div className="w-full max-w-[1400px]">
+                {/* Mobile/Tablet: Bento auto-rows | Desktop: 4x4 style grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[130px] sm:auto-rows-[155px] md:auto-rows-fr md:h-[680px] gap-3 md:gap-4 w-full">
 
                     {/* Salmon: 1x2 */}
-                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-1 mx-5">
+                    <BentoItem className="col-span-1 row-span-2 md:row-span-2 order-1">
                         <ImageTile images={distributedImages.salmon} interval={3500} />
                     </BentoItem>
 
                     {/* Broccoli: 1x2 */}
-                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-2 mx-5">
+                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-2">
                         <ImageTile images={distributedImages.broccoli} interval={4000} />
                     </BentoItem>
 
                     {/* Tamago: 1x2 */}
-                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-3 mx-5">
+                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-3">
                         <ImageTile images={distributedImages.tamago} interval={3200} />
                     </BentoItem>
 
                     {/* Pork: 1x2 */}
-                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-4 mx-5">
+                    <BentoItem className="col-span-1 row-span-2 md:row-span-2 order-4">
                         <ImageTile images={distributedImages.pork} interval={4500} />
                     </BentoItem>
 
                     {/* Row 2/3 items for desktop */}
 
                     {/* Edamame: 1x2 */}
-                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-5 mx-5">
+                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-5">
                         <ImageTile images={distributedImages.edamame} interval={3800} />
                     </BentoItem>
 
@@ -197,7 +194,7 @@ const PhotoGallery: React.FC = () => {
                     </BentoItem>
 
                     {/* Tofu: 1x2 */}
-                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-7 mx-5">
+                    <BentoItem className="col-span-1 row-span-1 md:row-span-2 order-7">
                         <ImageTile images={distributedImages.tofu} interval={4200} />
                     </BentoItem>
                 </div>
