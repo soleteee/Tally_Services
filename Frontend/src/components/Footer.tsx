@@ -66,10 +66,13 @@ const Footer: React.FC = () => {
                         <h4 className="text-white mb-5 font-bold text-lg">Contact Info</h4>
                         <p className="mb-2"><strong>MITTAL ONLINE SERVICES</strong></p>
                         <p className="mb-2">B-4, Ground Floor, Meerut Mall,<br />Near Rani Mill or Metro Plaza,<br />Delhi Road, Meerut-250002 UP</p>
+                        <p className="text-text/80 font-medium text-white font-bold">For Any Inquiry Call on 9997952180</p>
                         <p className="mb-2">Phone: +91-0121-4000575, 9997952142,2198,4601, <br />7482,7892</p>
-                        <p className="mb-2">Email: {import.meta.env.VITE_CONTACT_EMAIL}<br />{import.meta.env.VITE_INFO_EMAIL}</p>
+                        <p className="mb-2">
+                            Email: <a href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL}`} className="hover:text-white transition-colors">{import.meta.env.VITE_CONTACT_EMAIL}</a><br />
+                            <a href={`mailto:${import.meta.env.VITE_INFO_EMAIL}`} className="hover:text-white transition-colors">{import.meta.env.VITE_INFO_EMAIL}</a>
+                        </p>
                         <p className="mb-2">Hours: 10:00 AM – 06:00 PM</p>
-                        <p className="text-sm text-gray-400 mt-2">After office hours: 9997952180</p>
                     </div>
                 </ScrollReveal>
             </div>

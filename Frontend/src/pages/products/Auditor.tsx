@@ -1,14 +1,25 @@
 
 import PageLayout from '../../layouts/PageLayout';
+import { assets } from '../../assets/assets';
 
 const Auditor = () => {
     return (
         <PageLayout title="TallyPrime Auditor Version" sidebarType="products">
+            {/* Product Image + Intro */}
+            <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start mb-8 pb-6 border-b border-gray-100">
+                <img
+                    src={assets.tallyPrimeLogo}
+                    alt="TallyPrime Auditor"
+                    className="w-36 h-36 md:w-44 md:h-44 object-contain rounded-2xl border border-blue-100 shadow-md bg-blue-50/40 p-3 flex-shrink-0"
+                />
+                <div>
+                    <h2 className="text-2xl font-bold text-primary mb-3">For Chartered Accountants</h2>
+                    <p className="text-gray-600">
+                        TallyPrime Auditor Edition is exclusively for Practicing Chartered Accountants for their practice offices, supporting unlimited PCs connected via LAN (wired Ethernet or WiFi).
+                    </p>
+                </div>
+            </div>
             <div className="prose max-w-none text-gray-600">
-                <h2 className="text-2xl font-bold text-primary mb-4">For Chartered Accountants</h2>
-                <p className="mb-4">
-                    TallyPrime Auditor Edition is exclusively for Practicing Chartered Accountants for their practice offices, supporting unlimited PCs connected via LAN (wired Ethernet or WiFi).
-                </p>
 
                 <h3 className="text-xl font-semibold text-primary mt-6 mb-3">Key Features</h3>
                 <p className="mb-4">

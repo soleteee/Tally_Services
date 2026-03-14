@@ -58,7 +58,10 @@ const Navbar: React.FC = () => {
                             <FaPhoneAlt className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
                             <div className="flex flex-col leading-tight min-w-0">
                                 <span className="font-bold text-gray-900">Call Us</span>
-                                <span className="text-xs text-bold text-gray-600 font-medium break-words">+91 99979 52180, +91 99979 52142 </span>
+                                <div className="flex flex-col gap-0.5">
+                                    <a href="tel:+919997952180" className="text-xs text-gray-600 font-medium hover:text-primary transition-colors">+91 99979 52180</a>
+                                    <a href="tel:+919997952142" className="text-xs text-gray-600 font-medium hover:text-primary transition-colors">+91 99979 52142</a>
+                                </div>
                             </div>
                         </div>
 
