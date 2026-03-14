@@ -163,7 +163,7 @@ const Navbar: React.FC = () => {
                             href="https://wa.me/919997952180"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden xl:flex items-center gap-2 bg-[#25D366] text-white px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-auto hover:bg-green-600 transition-all shadow-sm text-xs 2xl:text-sm whitespace-nowrap"
+                            className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-auto hover:bg-green-600 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
                         >
                             <FaWhatsapp size={18} />
                             <span>WhatsApp</span>
@@ -172,7 +172,7 @@ const Navbar: React.FC = () => {
                             href="https://whatsapp.com/channel/0029Va6UVWjGehEHQhXVrI2P"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden 2xl:flex items-center gap-2 bg-[#25D366] text-white px-4 py-1.5 rounded-full font-bold ml-2 hover:bg-green-600 transition-all shadow-sm text-sm whitespace-nowrap"
+                            className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-1 xl:ml-2 hover:bg-green-600 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
                         >
                             <FaWhatsapp size={18} />
                             <span>Join Channel</span>
@@ -181,7 +181,7 @@ const Navbar: React.FC = () => {
                             href="https://www.youtube.com/@mittalonlineservices3412"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hidden 2xl:flex items-center gap-2 bg-[#FF0000] text-white px-4 py-1.5 rounded-full font-bold ml-2 hover:bg-red-700 transition-all shadow-sm text-sm whitespace-nowrap"
+                            className="hidden lg:flex items-center gap-2 bg-[#FF0000] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-1 xl:ml-2 hover:bg-red-700 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
                         >
                             <FaYoutube size={18} />
                             <span>YouTube</span>
