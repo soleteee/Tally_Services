@@ -1,5 +1,18 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const fs = require('fs');
+const dotenv = require('dotenv');
+
+const envFilePath = path.join(__dirname, '../.env');
+if (fs.existsSync(envFilePath)) {
+    const rawEnvBuffer = fs.readFileSync(envFilePath);
+    const isUtf16Le = rawEnvBuffer.length >= 2 && rawEnvBuffer[0] === 0xff && rawEnvBuffer[1] === 0xfe;
+    const rawEnvText = isUtf16Le
+        ? rawEnvBuffer.toString('utf16le')
+        : rawEnvBuffer.toString('utf8');
+    const parsedEnv = dotenv.parse(rawEnvText);
+    Object.assign(process.env, parsedEnv);
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -28,16 +41,37 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
+app.get('/', (_req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Backend is running',
+    });
+});
+
+app.get('/api/health', (_req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'API healthy',
+    });
+});
+
 // Routes
 app.use('/api/blogs', blogRoutes);
 app.use('/api/poster', require('./routes/posterRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/jobs', require('./routes/jobRoutes'));
+app.use('/api', require('./routes/seoRoutes'));
+app.use('/api', require('./routes/seoAuthRoutes'));
+app.use('/api', require('./routes/authRoutes'));
 
 
 // Database Connection
 mongoose.connect(MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
+    .then(() => {
+        console.log('Connected to MongoDB');
+        console.log('Database name:', mongoose.connection.name);
+        console.log('Collections:', Object.keys(mongoose.connection.collections));
+    })
     .catch((err) => console.error('MongoDB connection error:', err));
 
 app.listen(PORT, () => {
