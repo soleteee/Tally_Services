@@ -181,7 +181,7 @@ const Navbar: React.FC = () => {
                             <span>Join Channel</span>
                         </a>
                         <a
-                            href="https://www.youtube.com/@mittalonlineservices3412"
+                            href="https://www.youtube.com/@mittalonlineservice"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hidden lg:flex items-center gap-2 bg-[#FF0000] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-1 xl:ml-2 hover:bg-red-700 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
