@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface BlogModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (blog: { title: string; author: string; content: string; image: string }) => void;
+    onSubmit: (blog: { title: string; author: string; content: string; image: string; youtubeUrl: string }) => void;
 }
 
 const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, onSubmit }) => {
@@ -11,17 +11,19 @@ const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, onSubmit }) => {
     const [author, setAuthor] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
+    const [youtubeUrl, setYoutubeUrl] = useState('');
 
     if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({ title, author, content, image });
+        onSubmit({ title, author, content, image, youtubeUrl });
         // Reset form
         setTitle('');
         setAuthor('');
         setContent('');
         setImage('');
+        setYoutubeUrl('');
         onClose();
     };
 
@@ -74,6 +76,16 @@ const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, onSubmit }) => {
                             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none h-32 resize-none"
                             placeholder="Share your thoughts..."
                         ></textarea>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-text mb-1">YouTube URL (Optional)</label>
+                        <input
+                            type="url"
+                            value={youtubeUrl}
+                            onChange={(e) => setYoutubeUrl(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                            placeholder="https://www.youtube.com/watch?v=..."
+                        />
                     </div>
                     <div className="flex justify-end gap-3 pt-2">
                         <button

@@ -17,6 +17,11 @@ const blogSchema = new mongoose.Schema({
         type: String, // URL to image
         required: false,
     },
+    youtubeUrl: {
+        type: String,
+        required: false,
+        trim: true,
+    },
     status: {
         type: String,
         enum: ['pending', 'approved'],

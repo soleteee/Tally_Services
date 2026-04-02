@@ -8,20 +8,37 @@ const AddBlog = () => {
         author: 'Admin', // Default to Admin
         content: '',
         image: '',
+        youtubeUrl: '',
         status: 'approved' // Admins post approved blogs directly
     });
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0] || null;
+        setImageFile(selectedFile);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const payload = new FormData();
+            payload.append('title', formData.title);
+            payload.append('author', formData.author);
+            payload.append('content', formData.content);
+            payload.append('status', formData.status);
+            payload.append('image', formData.image);
+            payload.append('youtubeUrl', formData.youtubeUrl);
+            if (imageFile) {
+                payload.append('imageFile', imageFile);
+            }
+
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: payload,
             });
 
             if (response.ok) {
@@ -76,6 +93,31 @@ const AddBlog = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                         placeholder="https://example.com/image.jpg"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="blog-image-file" className="block text-sm font-medium text-gray-700 mb-1">Upload Photo (Optional)</label>
+                    <input
+                        id="blog-image-file"
+                        type="file"
+                        name="imageFile"
+                        accept="image/*"
+                        onChange={handleImageFileChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">If both Image URL and photo are provided, uploaded photo is used.</p>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">YouTube URL (Optional)</label>
+                    <input
+                        type="url"
+                        name="youtubeUrl"
+                        value={formData.youtubeUrl}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                        placeholder="https://www.youtube.com/watch?v=..."
                     />
                 </div>
 

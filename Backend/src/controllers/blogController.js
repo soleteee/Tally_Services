@@ -3,17 +3,25 @@ const Blog = require('../models/Blog');
 // Create a new blog (User or Admin)
 exports.createBlog = async (req, res) => {
     try {
-        const { title, author, content, image, status } = req.body;
+        const { title, author, content, image, youtubeUrl, status } = req.body;
         // Users default to pending. Admin can pass 'approved' if we add that logic later, 
         // but for now, if 'status' is passed in body, accept it (secure via Admin panel logic) 
         // or force 'pending' for public API. 
         // Let's allow status to be set if passed, but typically frontend sends it.
 
+        let finalImage = image;
+        if (req.file) {
+            const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+            const host = req.get('host');
+            finalImage = `${protocol}://${host}/uploads/${req.file.filename}`;
+        }
+
         const newBlog = new Blog({
             title,
             author,
             content,
-            image,
+            image: finalImage,
+            youtubeUrl,
             status: status || 'pending'
         });
 
