@@ -410,7 +410,7 @@ const Resources: React.FC = () => {
                                                     className={`${blog.youtubeUrl ? 'flex-1' : 'w-full'} inline-flex items-center justify-center rounded-lg bg-secondary px-3 py-2 text-white font-medium hover:bg-secondary/90 transition-colors text-sm`}
                                                     title="Copy link for backlinks and sharing"
                                                 >
-                                                    Share Link
+                                                    Copy Link
                                                 </button>
                                             </div>
                                         </div>
