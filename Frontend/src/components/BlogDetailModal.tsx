@@ -15,15 +15,53 @@ interface BlogDetailModalProps {
     onClose: () => void;
 }
 
+const getYouTubeVideoId = (urlValue?: string): string | null => {
+    if (!urlValue) {
+        return null;
+    }
+
+    try {
+        const parsedUrl = new URL(urlValue);
+        const host = parsedUrl.hostname.replace('www.', '');
+
+        if (host === 'youtube.com' || host === 'm.youtube.com') {
+            const videoId = parsedUrl.searchParams.get('v');
+            if (videoId && videoId.length === 11) {
+                return videoId;
+            }
+
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+            if (pathParts.length >= 2 && ['shorts', 'embed', 'live'].includes(pathParts[0])) {
+                const pathVideoId = pathParts[1];
+                return pathVideoId && pathVideoId.length === 11 ? pathVideoId : null;
+            }
+
+            return null;
+        }
+
+        if (host === 'youtu.be') {
+            const videoId = parsedUrl.pathname.split('/').filter(Boolean)[0];
+            return videoId && videoId.length === 11 ? videoId : null;
+        }
+    } catch (_error) {
+        return null;
+    }
+
+    return null;
+};
+
 const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ blog, onClose }) => {
     if (!blog) return null;
+
+    const videoId = getYouTubeVideoId(blog.youtubeUrl);
+    const displayImage = blog.image || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '');
 
     return (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-zoom-in" onClick={(e) => e.stopPropagation()}>
                 <div className="relative h-64 w-full">
-                    {blog.image ? (
-                        <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
+                    {displayImage ? (
+                        <img src={displayImage} alt={blog.title} className="w-full h-full object-cover" />
                     ) : (
                         <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
                             No Image Available

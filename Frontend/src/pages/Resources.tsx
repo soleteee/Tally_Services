@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import BlogModal from '../components/BlogModal';
-import BlogDetailModal from '../components/BlogDetailModal';
 
 type Blog = {
     _id: string;
@@ -13,10 +12,57 @@ type Blog = {
     createdAt: string;
 };
 
+const getYouTubeVideoId = (urlValue?: string): string | null => {
+    if (!urlValue) {
+        return null;
+    }
+
+    try {
+        const parsedUrl = new URL(urlValue);
+        const host = parsedUrl.hostname.replace('www.', '');
+
+        if (host === 'youtube.com' || host === 'm.youtube.com') {
+            const videoId = parsedUrl.searchParams.get('v');
+            if (videoId && videoId.length === 11) {
+                return videoId;
+            }
+
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+            if (pathParts.length >= 2 && ['shorts', 'embed', 'live'].includes(pathParts[0])) {
+                const pathVideoId = pathParts[1];
+                return pathVideoId && pathVideoId.length === 11 ? pathVideoId : null;
+            }
+
+            return null;
+        }
+
+        if (host === 'youtu.be') {
+            const videoId = parsedUrl.pathname.split('/').filter(Boolean)[0];
+            return videoId && videoId.length === 11 ? videoId : null;
+        }
+    } catch (_error) {
+        return null;
+    }
+
+    return null;
+};
+
+const getDisplayImage = (blog: Blog): string | null => {
+    if (blog.image) {
+        return blog.image;
+    }
+
+    const videoId = getYouTubeVideoId(blog.youtubeUrl);
+    if (!videoId) {
+        return null;
+    }
+
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+};
+
 const Resources: React.FC = () => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
 
     const fetchBlogs = async () => {
         try {
@@ -87,53 +133,49 @@ const Resources: React.FC = () => {
                             No blogs available yet. Be the first to write one!
                         </div>
                     ) : (
-                        blogs.map((blog, index) => (
-                            <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow flex flex-col h-full ${getBentoClassName(index)}`}>
-                                <div
-                                    className={`w-full bg-gray-200 relative ${getBentoClassName(index).includes('md:row-span-2') ? 'h-64 md:h-full' : 'h-48 md:h-36'} ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
-                                    onClick={() => {
-                                        if (blog.youtubeUrl) {
-                                            window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer');
-                                        }
-                                    }}
-                                    title={blog.youtubeUrl ? `Open video for ${blog.title}` : undefined}
-                                >
-                                    {blog.image ? (
-                                        <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
-                                    )}
-                                    {blog.youtubeUrl && (
-                                        <div className="absolute top-3 right-3 rounded-full bg-black/70 text-white text-xs px-3 py-1">
-                                            Watch on YouTube
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
-                                    <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2">{blog.title}</h3>
-                                    <p className={`text-text/70 mb-4 flex-grow ${getBentoClassName(index).includes('md:row-span-2') ? 'line-clamp-6' : 'line-clamp-3'}`}>{blog.content}</p>
-                                    <div className="mt-auto flex items-center justify-between gap-4">
-                                        <button
-                                            onClick={() => setSelectedBlog(blog)}
-                                            className="text-secondary font-semibold hover:underline"
-                                        >
-                                            Read More →
-                                        </button>
+                        blogs.map((blog, index) => {
+                            const displayImage = getDisplayImage(blog);
+
+                            return (
+                                <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow flex flex-col h-full ${getBentoClassName(index)}`}>
+                                    <button
+                                        type="button"
+                                        className={`w-full bg-gray-200 relative text-left ${getBentoClassName(index).includes('md:row-span-2') ? 'h-64 md:h-full' : 'h-48 md:h-36'} ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
+                                        onClick={() => {
+                                            if (blog.youtubeUrl) {
+                                                window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer');
+                                            }
+                                        }}
+                                        title={blog.youtubeUrl ? `Open video for ${blog.title}` : undefined}
+                                    >
+                                        {displayImage ? (
+                                            <img src={displayImage} alt={blog.title} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                                        )}
                                         {blog.youtubeUrl && (
-                                            <a
-                                                href={blog.youtubeUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-sm text-primary hover:underline"
+                                            <div className="absolute top-3 right-3 rounded-full bg-black/70 text-white text-xs px-3 py-1">
+                                                Watch on YouTube
+                                            </div>
+                                        )}
+                                    </button>
+                                    <div className="p-6 flex flex-col flex-grow">
+                                        <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
+                                        <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2">{blog.title}</h3>
+                                        <p className="text-text/70 mb-4 flex-grow line-clamp-6">{blog.content}</p>
+                                        {blog.youtubeUrl && (
+                                            <button
+                                                type="button"
+                                                onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
+                                                className="mt-auto inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-white font-medium hover:bg-primary/90 transition-colors"
                                             >
-                                                Open Video
-                                            </a>
+                                                Watch Video
+                                            </button>
                                         )}
                                     </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
             </ScrollReveal>
@@ -151,11 +193,6 @@ const Resources: React.FC = () => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleCreateBlog}
-            />
-
-            <BlogDetailModal
-                blog={selectedBlog}
-                onClose={() => setSelectedBlog(null)}
             />
         </div>
     );
