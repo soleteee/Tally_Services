@@ -16,55 +16,87 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
     if (!isOpen || !blog) return null;
 
     const displayImage = getDisplayImage(blog);
+    const blogLink = `${window.location.origin}/resources?blog=${blog._id}`;
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        alert('Link copied to clipboard!');
+    };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={onClose}>
             <div
-                className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-white rounded-xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl my-auto"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
-                    <h2 className="text-2xl font-bold text-primary">{blog.title}</h2>
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-10">
+                    <div className="flex-1">
+                        <h2 className="text-3xl font-bold text-primary mb-2">{blog.title}</h2>
+                        <p className="text-sm text-gray-600">
+                            By <span className="font-semibold">{blog.author}</span> on {new Date(blog.createdAt).toLocaleDateString()}
+                        </p>
+                    </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700 text-2xl"
+                        className="text-gray-400 hover:text-gray-700 text-4xl ml-4 flex-shrink-0"
                     >
                         ×
                     </button>
                 </div>
 
-                <div className="p-6">
-                    {displayImage && (
-                        <img
-                            src={displayImage}
-                            alt={blog.title}
-                            className="w-full h-96 object-cover rounded-lg mb-6"
-                        />
-                    )}
-
-                    <div className="mb-4">
-                        <p className="text-sm text-gray-500 mb-2">
-                            By <span className="font-semibold text-gray-700">{blog.author}</span> on{' '}
-                            {new Date(blog.createdAt).toLocaleDateString()}
-                        </p>
+                <div className="p-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {displayImage && (
+                            <div className="lg:col-span-1">
+                                <img
+                                    src={displayImage}
+                                    alt={blog.title}
+                                    className="w-full h-64 lg:h-96 object-cover rounded-lg"
+                                />
+                            </div>
+                        )}
+                        <div className={displayImage ? 'lg:col-span-2' : 'lg:col-span-3'}>
+                            <div className="prose prose-lg max-w-none">
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap text-justify">{blog.content}</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="prose prose-sm max-w-none">
-                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{blog.content}</p>
-                    </div>
-
-                    {blog.youtubeUrl && (
-                        <div className="mt-8 pt-6 border-t border-gray-200">
+                    <div className="mt-8 pt-8 border-t border-gray-200">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            {blog.youtubeUrl && (
+                                <button
+                                    type="button"
+                                    onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
+                                    className="inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-3 text-white font-semibold hover:bg-red-700 transition-colors"
+                                >
+                                    Watch Full Video on YouTube
+                                </button>
+                            )}
                             <button
                                 type="button"
-                                onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
-                                className="w-full inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-3 text-white font-medium hover:bg-red-700 transition-colors"
+                                onClick={() => copyToClipboard(blogLink)}
+                                className={`inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-white font-semibold hover:bg-secondary/90 transition-colors ${!blog.youtubeUrl ? 'sm:col-span-2' : ''}`}
                             >
-                                Watch Full Video on YouTube
+                                Copy Blog Link
                             </button>
                         </div>
-                    )}
+
+                        <div className="p-4 bg-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-600 font-semibold mb-2">Shareable Link for Backlinks:</p>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white p-3 rounded border border-gray-300 gap-2">
+                                <code className="text-sm text-gray-700 break-all flex-1 font-mono">{blogLink}</code>
+                                <button
+                                    type="button"
+                                    onClick={() => copyToClipboard(blogLink)}
+                                    className="px-3 py-1 bg-primary text-white text-xs font-medium rounded hover:bg-primary/90 transition-colors flex-shrink-0"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,6 +209,43 @@ const Resources: React.FC = () => {
     useEffect(() => {
         filterAndSortBlogs();
     }, [blogs, searchQuery, selectedAuthor, sortBy]);
+
+    useEffect(() => {
+        if (blogs.length === 0) {
+            return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const blogId = params.get('blog');
+        if (!blogId) {
+            return;
+        }
+
+        const matchedBlog = blogs.find((blog) => blog._id === blogId);
+        if (matchedBlog) {
+            setSelectedBlog(matchedBlog);
+            setIsDetailModalOpen(true);
+        }
+    }, [blogs]);
+
+    const openBlogDetails = (blog: Blog) => {
+        setSelectedBlog(blog);
+        setIsDetailModalOpen(true);
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('blog', blog._id);
+        window.history.pushState({}, '', `${url.pathname}${url.search}`);
+    };
+
+    const closeBlogDetails = () => {
+        setIsDetailModalOpen(false);
+        setSelectedBlog(null);
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete('blog');
+        const nextSearch = url.searchParams.toString();
+        window.history.pushState({}, '', `${url.pathname}${nextSearch ? `?${nextSearch}` : ''}`);
+    };
 
     const handleCreateBlog = async (blogData: { title: string; author: string; content: string; image: string; youtubeUrl: string }) => {
         try {
@@ -314,10 +383,7 @@ const Resources: React.FC = () => {
                                         <div className="flex flex-col gap-2 mt-auto">
                                             <button
                                                 type="button"
-                                                onClick={() => {
-                                                    setSelectedBlog(blog);
-                                                    setIsDetailModalOpen(true);
-                                                }}
+                                                onClick={() => openBlogDetails(blog)}
                                                 className="w-full inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-white font-medium hover:bg-primary/90 transition-colors"
                                             >
                                                 Read More
@@ -337,7 +403,7 @@ const Resources: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => {
-                                                        const blogUrl = `${window.location.origin}${window.location.pathname}#blog-${blog._id}`;
+                                                        const blogUrl = `${window.location.origin}/resources?blog=${blog._id}`;
                                                         navigator.clipboard.writeText(blogUrl);
                                                         alert('Blog link copied to clipboard!');
                                                     }}
@@ -374,10 +440,7 @@ const Resources: React.FC = () => {
             <BlogDetailModal
                 isOpen={isDetailModalOpen}
                 blog={selectedBlog}
-                onClose={() => {
-                    setIsDetailModalOpen(false);
-                    setSelectedBlog(null);
-                }}
+                onClose={closeBlogDetails}
             />
         </div>
     );
