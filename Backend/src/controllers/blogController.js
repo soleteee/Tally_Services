@@ -11,12 +11,30 @@ const getYouTubeVideoId = (urlValue) => {
 
         if (host === 'youtube.com' || host === 'm.youtube.com') {
             const videoId = parsedUrl.searchParams.get('v');
-            return videoId && videoId.length === 11 ? videoId : null;
+            if (videoId && videoId.length === 11) {
+                return videoId;
+            }
+
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+            if (pathParts.length >= 2 && ['shorts', 'embed', 'live'].includes(pathParts[0])) {
+                const pathVideoId = pathParts[1];
+                return pathVideoId && pathVideoId.length === 11 ? pathVideoId : null;
+            }
+
+            return null;
         }
 
         if (host === 'youtu.be') {
             const videoId = parsedUrl.pathname.split('/').filter(Boolean)[0];
             return videoId && videoId.length === 11 ? videoId : null;
+        }
+
+        if (host.endsWith('youtube-nocookie.com')) {
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+            if (pathParts.length >= 2 && pathParts[0] === 'embed') {
+                const pathVideoId = pathParts[1];
+                return pathVideoId && pathVideoId.length === 11 ? pathVideoId : null;
+            }
         }
     } catch (_error) {
         return null;
@@ -57,13 +75,15 @@ exports.createBlog = async (req, res) => {
         const normalizedYouTubeUrl = typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '';
 
         let finalImage = getUploadedImageUrl(req);
-        if (!finalImage && normalizedImage) {
-            finalImage = normalizedImage;
-        }
 
-        // If no photo is uploaded and image URL is empty, use YouTube thumbnail when possible.
+        // If no photo is uploaded, prefer the YouTube thumbnail when a valid URL is present.
         if (!finalImage && normalizedYouTubeUrl) {
             finalImage = getYouTubeThumbnail(normalizedYouTubeUrl);
+        }
+
+        // Fall back to a manual image URL only when no upload or YouTube thumbnail is available.
+        if (!finalImage && normalizedImage) {
+            finalImage = normalizedImage;
         }
 
         const newBlog = new Blog({
@@ -125,13 +145,13 @@ exports.updateBlog = async (req, res) => {
         const uploadedImageUrl = getUploadedImageUrl(req);
         if (uploadedImageUrl) {
             blog.image = uploadedImageUrl;
-        } else if (typeof image === 'string' && normalizedImage) {
-            blog.image = normalizedImage;
-        } else if (!blog.image && normalizedYouTubeUrl) {
+        } else if (normalizedYouTubeUrl) {
             const thumbnail = getYouTubeThumbnail(normalizedYouTubeUrl);
             if (thumbnail) {
                 blog.image = thumbnail;
             }
+        } else if (typeof image === 'string' && normalizedImage) {
+            blog.image = normalizedImage;
         }
 
         const updatedBlog = await blog.save();
