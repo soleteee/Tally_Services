@@ -21,6 +21,7 @@ router.post('/', upload.single('imageFile'), blogController.createBlog);
 
 // Admin Routes (Technically should be protected, but for this task scope keeping open or relying on separate endpoints)
 router.get('/admin/all', blogController.getAllBlogs);
+router.put('/:id', upload.single('imageFile'), blogController.updateBlog);
 router.patch('/:id/approve', blogController.approveBlog);
 router.delete('/:id', blogController.deleteBlog);
 

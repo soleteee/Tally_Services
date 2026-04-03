@@ -1,5 +1,49 @@
 const Blog = require('../models/Blog');
 
+const getYouTubeVideoId = (urlValue) => {
+    if (!urlValue || typeof urlValue !== 'string') {
+        return null;
+    }
+
+    try {
+        const parsedUrl = new URL(urlValue);
+        const host = parsedUrl.hostname.replace('www.', '');
+
+        if (host === 'youtube.com' || host === 'm.youtube.com') {
+            const videoId = parsedUrl.searchParams.get('v');
+            return videoId && videoId.length === 11 ? videoId : null;
+        }
+
+        if (host === 'youtu.be') {
+            const videoId = parsedUrl.pathname.split('/').filter(Boolean)[0];
+            return videoId && videoId.length === 11 ? videoId : null;
+        }
+    } catch (_error) {
+        return null;
+    }
+
+    return null;
+};
+
+const getUploadedImageUrl = (req) => {
+    if (!req.file) {
+        return null;
+    }
+
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    return `${protocol}://${host}/uploads/${req.file.filename}`;
+};
+
+const getYouTubeThumbnail = (youtubeUrl) => {
+    const videoId = getYouTubeVideoId(youtubeUrl);
+    if (!videoId) {
+        return null;
+    }
+
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+};
+
 // Create a new blog (User or Admin)
 exports.createBlog = async (req, res) => {
     try {
@@ -9,11 +53,17 @@ exports.createBlog = async (req, res) => {
         // or force 'pending' for public API. 
         // Let's allow status to be set if passed, but typically frontend sends it.
 
-        let finalImage = image;
-        if (req.file) {
-            const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-            const host = req.get('host');
-            finalImage = `${protocol}://${host}/uploads/${req.file.filename}`;
+        const normalizedImage = typeof image === 'string' ? image.trim() : '';
+        const normalizedYouTubeUrl = typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '';
+
+        let finalImage = getUploadedImageUrl(req);
+        if (!finalImage && normalizedImage) {
+            finalImage = normalizedImage;
+        }
+
+        // If no photo is uploaded and image URL is empty, use YouTube thumbnail when possible.
+        if (!finalImage && normalizedYouTubeUrl) {
+            finalImage = getYouTubeThumbnail(normalizedYouTubeUrl);
         }
 
         const newBlog = new Blog({
@@ -21,7 +71,7 @@ exports.createBlog = async (req, res) => {
             author,
             content,
             image: finalImage,
-            youtubeUrl,
+            youtubeUrl: normalizedYouTubeUrl,
             status: status || 'pending'
         });
 
@@ -29,6 +79,65 @@ exports.createBlog = async (req, res) => {
         res.status(201).json(savedBlog);
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+// Update an existing blog (Admin)
+exports.updateBlog = async (req, res) => {
+    try {
+        const blog = await Blog.findById(req.params.id);
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found' });
+        }
+
+        const {
+            title,
+            content,
+            image,
+            youtubeUrl,
+            author,
+            status,
+        } = req.body;
+
+        if (typeof title === 'string') {
+            blog.title = title;
+        }
+
+        if (typeof content === 'string') {
+            blog.content = content;
+        }
+
+        if (typeof author === 'string') {
+            blog.author = author;
+        }
+
+        if (typeof status === 'string') {
+            blog.status = status;
+        }
+
+        const normalizedImage = typeof image === 'string' ? image.trim() : '';
+        const normalizedYouTubeUrl = typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '';
+
+        if (typeof youtubeUrl === 'string') {
+            blog.youtubeUrl = normalizedYouTubeUrl;
+        }
+
+        const uploadedImageUrl = getUploadedImageUrl(req);
+        if (uploadedImageUrl) {
+            blog.image = uploadedImageUrl;
+        } else if (typeof image === 'string' && normalizedImage) {
+            blog.image = normalizedImage;
+        } else if (!blog.image && normalizedYouTubeUrl) {
+            const thumbnail = getYouTubeThumbnail(normalizedYouTubeUrl);
+            if (thumbnail) {
+                blog.image = thumbnail;
+            }
+        }
+
+        const updatedBlog = await blog.save();
+        return res.json(updatedBlog);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
 };
 
