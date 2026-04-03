@@ -12,6 +12,71 @@ type Blog = {
     createdAt: string;
 };
 
+const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose }) => {
+    if (!isOpen || !blog) return null;
+
+    const displayImage = getDisplayImage(blog);
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div
+                className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                    <h2 className="text-2xl font-bold text-primary">{blog.title}</h2>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="text-gray-500 hover:text-gray-700 text-2xl"
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <div className="p-6">
+                    {displayImage && (
+                        <img
+                            src={displayImage}
+                            alt={blog.title}
+                            className="w-full h-96 object-cover rounded-lg mb-6"
+                        />
+                    )}
+
+                    <div className="mb-4">
+                        <p className="text-sm text-gray-500 mb-2">
+                            By <span className="font-semibold text-gray-700">{blog.author}</span> on{' '}
+                            {new Date(blog.createdAt).toLocaleDateString()}
+                        </p>
+                    </div>
+
+                    <div className="prose prose-sm max-w-none">
+                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{blog.content}</p>
+                    </div>
+
+                    {blog.youtubeUrl && (
+                        <div className="mt-8 pt-6 border-t border-gray-200">
+                            <button
+                                type="button"
+                                onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
+                                className="w-full inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-3 text-white font-medium hover:bg-red-700 transition-colors"
+                            >
+                                Watch Full Video on YouTube
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+type BlogDetailModalProps = {
+    isOpen: boolean;
+    blog: Blog | null;
+    onClose: () => void;
+};
+
 const getYouTubeVideoId = (urlValue?: string): string | null => {
     if (!urlValue) {
         return null;
@@ -62,7 +127,38 @@ const getDisplayImage = (blog: Blog): string | null => {
 
 const Resources: React.FC = () => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedAuthor, setSelectedAuthor] = useState<string>('');
+    const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'title'>('newest');
+
+    const getUniqueAuthors = (): string[] => {
+        const authors = new Set(blogs.map(blog => blog.author));
+        return Array.from(authors).sort();
+    };
+
+    const filterAndSortBlogs = () => {
+        let filtered = blogs.filter(blog => {
+            const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                 blog.content.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesAuthor = selectedAuthor === '' || blog.author === selectedAuthor;
+            return matchesSearch && matchesAuthor;
+        });
+
+        // Sort
+        if (sortBy === 'newest') {
+            filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        } else if (sortBy === 'oldest') {
+            filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        } else if (sortBy === 'title') {
+            filtered.sort((a, b) => a.title.localeCompare(b.title));
+        }
+
+        setFilteredBlogs(filtered);
+    };
 
     const fetchBlogs = async () => {
         try {
@@ -77,6 +173,10 @@ const Resources: React.FC = () => {
     useEffect(() => {
         fetchBlogs();
     }, []);
+
+    useEffect(() => {
+        filterAndSortBlogs();
+    }, [blogs, searchQuery, selectedAuthor, sortBy]);
 
     const handleCreateBlog = async (blogData: { title: string; author: string; content: string; image: string; youtubeUrl: string }) => {
         try {
@@ -115,25 +215,71 @@ const Resources: React.FC = () => {
         <div className="pt-32 pb-20 px-5 max-w-[1200px] mx-auto min-h-screen relative">
             <ScrollReveal animation="fade-up">
                 <div className="flex justify-between items-center mb-6">
-                    <div></div> {/* Spacer for centering the H1 if needed, or just flex alignment */}
                     <h1 className="text-4xl font-bold text-primary text-center flex-grow">Resources <span className="font-secondary">&</span> Blog</h1>
-                    {/* Add Blog Button pinned to right as requested (in flow or absolute? "pinned to the right corner of the page") 
-                         "page" usually means viewport or container. Let's put a Floating Action Button or a fixed button. 
-                         User said "pinned to the right corner of the page". Fixed position is safest for "pinned".
-                     */}
                 </div>
 
-                <p className="text-lg text-center text-text/80 max-w-3xl mx-auto mb-16">
+                <p className="text-lg text-center text-text/80 max-w-3xl mx-auto mb-8">
                     Stay updated with the latest in GST, Tally tips, and business guides.
                 </p>
 
+                {/* Search and Filter Section */}
+                <div className="bg-gray-50 p-6 rounded-xl mb-8 border border-gray-200">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        {/* Search Input */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Search Blogs</label>
+                            <input
+                                type="text"
+                                placeholder="Search by title or content..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            />
+                        </div>
+
+                        {/* Author Filter */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Filter by Author</label>
+                            <select
+                                value={selectedAuthor}
+                                onChange={(e) => setSelectedAuthor(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                                <option value="">All Authors</option>
+                                {getUniqueAuthors().map(author => (
+                                    <option key={author} value={author}>{author}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Sort By */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'title')}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="title">Title (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Results Count */}
+                    <p className="text-sm text-gray-600">
+                        Showing {filteredBlogs.length} of {blogs.length} blog{blogs.length !== 1 ? 's' : ''}
+                    </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-3 md:auto-rows-[220px] gap-6">
-                    {blogs.length === 0 ? (
+                    {filteredBlogs.length === 0 ? (
                         <div className="col-span-full text-center text-gray-500 py-10">
-                            No blogs available yet. Be the first to write one!
+                            {blogs.length === 0 ? 'No blogs available yet. Be the first to write one!' : 'No blogs match your search.'}
                         </div>
                     ) : (
-                        blogs.map((blog, index) => {
+                        filteredBlogs.map((blog, index) => {
                             const displayImage = getDisplayImage(blog);
 
                             return (
@@ -163,15 +309,45 @@ const Resources: React.FC = () => {
                                         <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
                                         <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2">{blog.title}</h3>
                                         <p className="text-text/70 mb-4 flex-grow line-clamp-4 md:line-clamp-5">{blog.content}</p>
-                                        {blog.youtubeUrl && (
+                                        
+                                        {/* Action Buttons */}
+                                        <div className="flex flex-col gap-2 mt-auto">
                                             <button
                                                 type="button"
-                                                onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
-                                                className="mt-auto inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-white font-medium hover:bg-primary/90 transition-colors"
+                                                onClick={() => {
+                                                    setSelectedBlog(blog);
+                                                    setIsDetailModalOpen(true);
+                                                }}
+                                                className="w-full inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-white font-medium hover:bg-primary/90 transition-colors"
                                             >
-                                                Watch Video
+                                                Read More
                                             </button>
-                                        )}
+
+                                            <div className="flex gap-2">
+                                                {blog.youtubeUrl && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
+                                                        className="flex-1 inline-flex items-center justify-center rounded-lg bg-red-600 px-3 py-2 text-white font-medium hover:bg-red-700 transition-colors text-sm"
+                                                    >
+                                                        Watch Video
+                                                    </button>
+                                                )}
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const blogUrl = `${window.location.origin}${window.location.pathname}#blog-${blog._id}`;
+                                                        navigator.clipboard.writeText(blogUrl);
+                                                        alert('Blog link copied to clipboard!');
+                                                    }}
+                                                    className={`${blog.youtubeUrl ? 'flex-1' : 'w-full'} inline-flex items-center justify-center rounded-lg bg-secondary px-3 py-2 text-white font-medium hover:bg-secondary/90 transition-colors text-sm`}
+                                                    title="Copy link for backlinks and sharing"
+                                                >
+                                                    Share Link
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             );
@@ -193,6 +369,15 @@ const Resources: React.FC = () => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleCreateBlog}
+            />
+
+            <BlogDetailModal
+                isOpen={isDetailModalOpen}
+                blog={selectedBlog}
+                onClose={() => {
+                    setIsDetailModalOpen(false);
+                    setSelectedBlog(null);
+                }}
             />
         </div>
     );
