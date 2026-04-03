@@ -140,7 +140,7 @@ const Resources: React.FC = () => {
                                 <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow flex flex-col h-full ${getBentoClassName(index)}`}>
                                     <button
                                         type="button"
-                                        className={`w-full bg-gray-200 relative text-left ${getBentoClassName(index).includes('md:row-span-2') ? 'h-64 md:h-full' : 'h-48 md:h-36'} ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
+                                        className={`w-full bg-gray-200 relative text-left h-56 md:h-52 ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
                                         onClick={() => {
                                             if (blog.youtubeUrl) {
                                                 window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer');
@@ -162,7 +162,7 @@ const Resources: React.FC = () => {
                                     <div className="p-6 flex flex-col flex-grow">
                                         <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
                                         <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2">{blog.title}</h3>
-                                        <p className="text-text/70 mb-4 flex-grow line-clamp-6">{blog.content}</p>
+                                        <p className="text-text/70 mb-4 flex-grow line-clamp-4 md:line-clamp-5">{blog.content}</p>
                                         {blog.youtubeUrl && (
                                             <button
                                                 type="button"
