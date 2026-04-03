@@ -1,0 +1,31 @@
+# Robots.txt for Tally Services Website
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Specific rules for common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Disallow crawling of common paths that don't need indexing
+Disallow: /admin
+Disallow: /private
+Disallow: /*.json$
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+# Crawl delay for less aggressive crawling (in seconds)
+Crawl-delay: 1
+
+# Request rate (pages per second)
+Request-rate: 10/1s
+
+# Sitemap location
+Sitemap: https://mittalonlineservices.com/sitemap.xml
