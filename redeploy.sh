@@ -81,6 +81,17 @@ printf 'server {
     }
 
     location /api/ {
+        # Handle preflight (OPTIONS) requests safely
+        if (\$request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '\$http_origin' always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
+            add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With,If-Modified-Since' always;
+            add_header 'Access-Control-Allow-Credentials' 'true' always;
+            add_header 'Content-Length' 0;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            return 204;
+        }
+
         proxy_pass http://localhost:5000;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
@@ -104,6 +115,17 @@ printf 'server {
 
     # Proxy API calls from Admin to the Backend
     location /api/ {
+        # Handle preflight (OPTIONS) requests safely
+        if (\$request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '\$http_origin' always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
+            add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With,If-Modified-Since' always;
+            add_header 'Access-Control-Allow-Credentials' 'true' always;
+            add_header 'Content-Length' 0;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            return 204;
+        }
+
         proxy_pass http://localhost:5000;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;

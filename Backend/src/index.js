@@ -38,8 +38,15 @@ const corsOptions = {
         'https://admin.mittalonlineservices.com'
     ],
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 204 // Standard for preflight requests
 };
+
+// Request logging for CORS debugging
+app.use((req, res, next) => {
+    console.log(`[API] ${req.method} ${req.url} - Origin: ${req.headers.origin || 'None'}`);
+    next();
+});
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
