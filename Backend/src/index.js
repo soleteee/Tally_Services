@@ -70,9 +70,23 @@ app.use('/api', require('./routes/authRoutes'));
 
 // Database Connection
 mongoose.connect(MONGODB_URI)
-    .then(() => {
+    .then(async () => {
         console.log('Connected to MongoDB');
         console.log('Database name:', mongoose.connection.name);
+        
+        // Drop stale index if it exists
+        try {
+            const collection = mongoose.connection.collection('seos');
+            const indexes = await collection.indexes();
+            if (indexes.some(idx => idx.name === 'page_1')) {
+                console.log('[SEO] Dropping stale index: page_1');
+                await collection.dropIndex('page_1');
+                console.log('[SEO] Index page_1 dropped successfully');
+            }
+        } catch (indexError) {
+            console.warn('[SEO] Could not drop stale index (might not exist):', indexError.message);
+        }
+
         console.log('Collections:', Object.keys(mongoose.connection.collections));
     })
     .catch((err) => console.error('MongoDB connection error:', err));
