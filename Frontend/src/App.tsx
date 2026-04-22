@@ -65,11 +65,13 @@ const Loading = () => (
 
 import { ComparisonProvider } from './context/ComparisonContext';
 import ComparisonModal from './components/ComparisonModal';
+import SeoSync from './components/SeoSync';
 
 function App() {
   return (
     <ComparisonProvider>
       <Router>
+        <SeoSync />
         <MainLayout>
           <PosterPopup />
           <ComparisonModal />
