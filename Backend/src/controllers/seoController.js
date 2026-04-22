@@ -119,11 +119,12 @@ exports.getSeoByPage = async (req, res) => {
                 exists: true,
             },
         });
-    } catch (_error) {
+    } catch (error) {
+        console.error('[SEO] Failed to fetch metadata:', error);
         return res.status(500).json({
             success: false,
             message: 'Failed to fetch SEO metadata',
-            errors: ['Unexpected server error while reading SEO metadata.'],
+            errors: [error.message || 'Unexpected server error while reading SEO metadata.'],
         });
     }
 };
@@ -196,11 +197,12 @@ exports.saveSeoByPage = async (req, res) => {
                 },
             },
         });
-    } catch (_error) {
+    } catch (error) {
+        console.error('[SEO] Failed to save metadata:', error);
         return res.status(500).json({
             success: false,
             message: 'Failed to save SEO metadata',
-            errors: ['Unexpected server error while saving SEO metadata.'],
+            errors: [error.message || 'Unexpected server error while saving SEO metadata.'],
         });
     }
 };

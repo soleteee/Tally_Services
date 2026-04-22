@@ -175,9 +175,11 @@ const SeoDashboard = () => {
             const result = await response.json();
 
             if (!response.ok || !result.success) {
-                if (result.errors && Array.isArray(result.errors)) {
-                    setApiErrors(result.errors);
-                }
+                const errors = result.errors && Array.isArray(result.errors) && result.errors.length > 0
+                    ? result.errors
+                    : [result.message || 'Failed to save SEO data'];
+                
+                setApiErrors(errors);
                 throw new Error(result.message || 'Failed to save SEO data');
             }
 
