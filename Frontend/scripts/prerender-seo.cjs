@@ -85,7 +85,10 @@ const buildSeoHeadMarkup = (metadata) => {
 
     if (Array.isArray(metadata.headTags)) {
         for (const tag of metadata.headTags) {
-            const normalized = String(tag || '').trim();
+            const normalized = String(tag || '')
+                .trim()
+                .replace(/[,;]+$/, '')
+                .trim();
             if (!normalized) {
                 continue;
             }

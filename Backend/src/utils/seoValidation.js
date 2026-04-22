@@ -178,7 +178,12 @@ const validateHeadTags = (headTagsInput) => {
     return {
         isValid: errors.length === 0,
         errors,
-        normalizedTags: entries.slice(0, MAX_HEAD_TAGS).map((entry) => quoteUnquotedAttributes(entry.text).trim()),
+        normalizedTags: entries.slice(0, MAX_HEAD_TAGS).map((entry) => {
+            let text = quoteUnquotedAttributes(entry.text).trim();
+            // Remove trailing commas, semicolons, and extra punctuation that breaks SEO rendering
+            text = text.replace(/[,;]+$/, '').trim();
+            return text;
+        }),
     };
 };
 
