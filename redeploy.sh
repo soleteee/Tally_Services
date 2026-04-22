@@ -31,7 +31,7 @@ echo "Creating Production Backend .env..."
 mkdir -p /var/www/Tally_Services/Backend
 # Note: Password 'Tally@1234' has an '@' which is URL-encoded to '%40' to avoid parsing errors. '%%' escapes '%' in printf.
 printf 'PORT=5000
-MONGODB_URI=mongodb+srv://Tally_db_user:Tally%%401234@tally.5uqhydu.mongodb.net/?appName=Tally
+MONGODB_URI=mongodb+srv://Tally-services-db:TallyServices%%401234@tally-services.ikdgdfk.mongodb.net/?appName=Tally-Services
 EMAIL_USER=mittalonlineservices@gmail.com
 EMAIL_PASS=ieyyupyniigdpdkf
 ' > /var/www/Tally_Services/Backend/.env
@@ -64,7 +64,7 @@ printf 'server {
     index index.html;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/index.html $uri/ /index.html;
     }
 
     location /api/ {
