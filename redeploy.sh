@@ -39,18 +39,28 @@ pm2 stop Tally-backend || true
 pm2 delete Tally-backend || true
 pm2 start src/index.js --name "Tally-backend"
 
-# --- 3. FRONTEND & ADMIN BUILD ---
+# --- 3. FRONTEND SETUP ---
+echo "Configuring Frontend..."
+printf 'VITE_API_URL=https://mittalonlineservices.com
+VITE_GTM_ID=GTM-PL9D2XGL
+' > "$FRONTEND_DIR/.env"
+
 echo "Building Frontend..."
 cd "$FRONTEND_DIR"
 npm install
 npm run build
+
+# --- 4. ADMIN SETUP ---
+echo "Configuring Admin..."
+printf 'VITE_API_URL=https://mittalonlineservices.com
+' > "$ADMIN_DIR/.env"
 
 echo "Building Admin..."
 cd "$ADMIN_DIR"
 npm install
 npm run build
 
-# --- 4. NGINX CONFIGURATION ---
+# --- 5. NGINX CONFIGURATION ---
 echo "Configuring Nginx..."
 
 # Main Site Config
@@ -73,12 +83,6 @@ printf 'server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
-
-    # API alias for consistency
-    location /api {
-        rewrite ^/api/(.*)$ /api/$1 break;
-        proxy_pass http://localhost:5000;
-    }
 }
 ' > /etc/nginx/sites-available/mittalonlineservices.com.conf
 
@@ -93,13 +97,22 @@ printf 'server {
     location / {
         try_files $uri $uri/index.html $uri/ /index.html;
     }
+
+    # Proxy API calls from Admin to the Backend
+    location /api/ {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 }
 ' > /etc/nginx/sites-available/admin.mittalonlineservices.com.conf
 
-# --- 5. RESTART NGINX ---
+# --- 6. RESTART NGINX ---
 echo "Restarting Nginx..."
 ln -s /etc/nginx/sites-available/mittalonlineservices.com.conf /etc/nginx/sites-enabled/ || true
 ln -s /etc/nginx/sites-available/admin.mittalonlineservices.com.conf /etc/nginx/sites-enabled/ || true
 nginx -t && systemctl restart nginx
 
-echo "Deployment Successful! Unique SEO pages are now enabled."
+echo "Deployment Successful! Admin is now connected and SEO pages are optimized."
