@@ -1,61 +1,59 @@
 #!/bin/bash
 set -e
 
-# --- 1. STOP & CLEANUP ---
-echo "Stopping services..."
-pm2 stop Tally-backend || true
-pm2 delete Tally-backend || true
+# --- Configuration ---
+PROJECT_DIR="/var/www/Tally_Services"
+REPO_URL="https://github.com/soleteee/Tally_Services.git"
+BACKEND_DIR="$PROJECT_DIR/Backend"
+FRONTEND_DIR="$PROJECT_DIR/Frontend"
+ADMIN_DIR="$PROJECT_DIR/Admin"
 
-# (Skipping backup since we are writing a fresh .env with new DB)
-# echo "Backing up Backend .env..."
-# cp /var/www/Tally_Services/Backend/.env /root/backend.env.backup || echo "No .env found, skipping backup"
+echo "Starting Resilient Deployment..."
 
-echo "Removing old files..."
-rm -rf /var/www/Tally_Services
+# --- 1. SYNC FILES (Non-destructive) ---
+if [ -d "$PROJECT_DIR" ]; then
+    echo "Directory exists. Updating via git pull..."
+    cd "$PROJECT_DIR"
+    git fetch --all
+    git reset --hard origin/main
+else
+    echo "Directory missing. Cloning fresh repository..."
+    mkdir -p /var/www
+    git clone "$REPO_URL" "$PROJECT_DIR"
+    cd "$PROJECT_DIR"
+fi
 
-echo "Removing old Nginx configs..."
-rm -f /etc/nginx/sites-enabled/mittalonlineservices.com.conf
-rm -f /etc/nginx/sites-enabled/admin.mittalonlineservices.com.conf
-rm -f /etc/nginx/sites-enabled/api.mittalonlineservices.com.conf
-
-rm -f /etc/nginx/sites-available/mittalonlineservices.com.conf
-rm -f /etc/nginx/sites-available/admin.mittalonlineservices.com.conf
-rm -f /etc/nginx/sites-available/api.mittalonlineservices.com.conf
-
-# --- 2. FRESH INSTALL ---
-echo "Cloning repository..."
-git clone https://github.com/soleteee/Tally_Services.git /var/www/Tally_Services
-
-# --- 2.5 CREATE BACKEND .ENV (With Provided MongoDB URI) ---
-echo "Creating Production Backend .env..."
-mkdir -p /var/www/Tally_Services/Backend
-# Note: Password 'Tally@1234' has an '@' which is URL-encoded to '%40' to avoid parsing errors. '%%' escapes '%' in printf.
+# --- 2. BACKEND SETUP ---
+echo "Configuring Backend..."
+mkdir -p "$BACKEND_DIR"
 printf 'PORT=5000
 MONGODB_URI=mongodb+srv://Tally-services-db:TallyServices%%401234@tally-services.ikdgdfk.mongodb.net/?appName=Tally-Services
 EMAIL_USER=mittalonlineservices@gmail.com
 EMAIL_PASS=ieyyupyniigdpdkf
-' > /var/www/Tally_Services/Backend/.env
+' > "$BACKEND_DIR/.env"
 
-# --- 3. Backend Setup ---
-echo "Installing Backend..."
-cd /var/www/Tally_Services/Backend
+cd "$BACKEND_DIR"
+echo "Installing Backend dependencies..."
 npm install
+pm2 stop Tally-backend || true
+pm2 delete Tally-backend || true
 pm2 start src/index.js --name "Tally-backend"
 
-# --- 4. Frontend Setup ---
+# --- 3. FRONTEND & ADMIN BUILD ---
 echo "Building Frontend..."
-cd /var/www/Tally_Services/Frontend
+cd "$FRONTEND_DIR"
 npm install
 npm run build
 
-# --- 5. Admin Setup ---
 echo "Building Admin..."
-cd /var/www/Tally_Services/Admin
+cd "$ADMIN_DIR"
 npm install
 npm run build
 
-# --- 6. Nginx Config (Main Site with API Proxy) ---
+# --- 4. NGINX CONFIGURATION ---
 echo "Configuring Nginx..."
+
+# Main Site Config
 printf 'server {
     listen 80;
     server_name mittalonlineservices.com www.mittalonlineservices.com;
@@ -64,6 +62,7 @@ printf 'server {
     index index.html;
 
     location / {
+        # Support for unique SEO source code per page
         try_files $uri $uri/index.html $uri/ /index.html;
     }
 
@@ -74,10 +73,16 @@ printf 'server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
+
+    # API alias for consistency
+    location /api {
+        rewrite ^/api/(.*)$ /api/$1 break;
+        proxy_pass http://localhost:5000;
+    }
 }
 ' > /etc/nginx/sites-available/mittalonlineservices.com.conf
 
-# --- 7. Nginx Config (Admin Site) ---
+# Admin Site Config
 printf 'server {
     listen 80;
     server_name admin.mittalonlineservices.com;
@@ -86,21 +91,15 @@ printf 'server {
     index index.html;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/index.html $uri/ /index.html;
     }
 }
 ' > /etc/nginx/sites-available/admin.mittalonlineservices.com.conf
 
-# --- 8. Restart ---
+# --- 5. RESTART NGINX ---
 echo "Restarting Nginx..."
 ln -s /etc/nginx/sites-available/mittalonlineservices.com.conf /etc/nginx/sites-enabled/ || true
 ln -s /etc/nginx/sites-available/admin.mittalonlineservices.com.conf /etc/nginx/sites-enabled/ || true
 nginx -t && systemctl restart nginx
 
-echo "Deployment Complete! Visit http://mittalonlineservices.com"
-echo "---------------------------------------------------"
-echo "Enabled Sites:"
-ls -l /etc/nginx/sites-enabled/
-echo "---------------------------------------------------"
-echo "Available Sites:"
-ls -l /etc/nginx/sites-available/
+echo "Deployment Successful! Unique SEO pages are now enabled."
