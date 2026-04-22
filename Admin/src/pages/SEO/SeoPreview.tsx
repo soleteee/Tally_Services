@@ -11,6 +11,15 @@ const SeoPreview = ({ pageSlug, routePath, values }: SeoPreviewProps) => {
     const displayDescription = values.description || 'Your SEO description preview appears here.';
     const canonicalUrl = `https://mittalonlineservices.com${routePath}`;
 
+    let prettySchema = '';
+    if (values.schemaJson) {
+        try {
+            prettySchema = JSON.stringify(JSON.parse(values.schemaJson), null, 2);
+        } catch (_e) {
+            prettySchema = values.schemaJson;
+        }
+    }
+
     return (
         <div className="space-y-4">
             <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
@@ -27,6 +36,13 @@ const SeoPreview = ({ pageSlug, routePath, values }: SeoPreviewProps) => {
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Head Tags Preview</h2>
                 <pre className="rounded-lg bg-gray-900 text-gray-100 p-4 text-xs overflow-auto whitespace-pre-wrap">
 {values.headTags || '<!-- Custom head tags will appear here -->'}
+                </pre>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Schema JSON Preview</h2>
+                <pre className="rounded-lg bg-gray-900 text-gray-100 p-4 text-xs overflow-auto whitespace-pre-wrap">
+{prettySchema || '// Schema JSON will appear here'}
                 </pre>
             </div>
         </div>

@@ -1,100 +1,174 @@
 const Seo = require('../models/Seo');
+const { SEO_PAGE_CATALOG, getCatalogPageByKey, canonicalUrlForPath } = require('../constants/seoCatalog');
+const {
+    normalizePageKey,
+    sanitizeAndValidateSeoPayload,
+} = require('../utils/seoValidation');
+const { writeSeoSnapshot } = require('../utils/seoSnapshot');
+const { triggerSeoPrerender } = require('../utils/seoPrerenderTrigger');
 
-const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const toDto = (doc) => ({
+    pageKey: doc.pageKey,
+    pageName: doc.pageName,
+    routePath: doc.routePath,
+    title: doc.title,
+    description: doc.description,
+    keywords: doc.keywords,
+    headTags: doc.headTags,
+    schemaJson: doc.schemaJson,
+    updatedBy: doc.updatedBy,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+});
 
-const normalizePageSlug = (page) => String(page || '').trim().toLowerCase();
+const buildSuggestedMetadata = (catalogPage) => ({
+    pageKey: catalogPage.pageKey,
+    pageName: catalogPage.pageName,
+    routePath: catalogPage.routePath,
+    title: `${catalogPage.pageName} | Tally Services`,
+    description: `Learn more about ${catalogPage.pageName} at Tally Services.`,
+    keywords: ['tally services', catalogPage.pageName.toLowerCase()],
+    headTags: [
+        `<link rel="canonical" href="${canonicalUrlForPath(catalogPage.routePath)}" />`,
+        '<meta name="robots" content="index,follow,max-image-preview:large" />',
+        `<meta property="og:title" content="${catalogPage.pageName} | Tally Services" />`,
+        `<meta property="og:description" content="Learn more about ${catalogPage.pageName} at Tally Services." />`,
+        `<meta property="og:url" content="${canonicalUrlForPath(catalogPage.routePath)}" />`,
+        '<meta property="og:type" content="website" />',
+        `<meta name="twitter:title" content="${catalogPage.pageName} | Tally Services" />`,
+        `<meta name="twitter:description" content="Learn more about ${catalogPage.pageName} at Tally Services." />`,
+        '<meta name="twitter:card" content="summary_large_image" />',
+    ],
+    schemaJson: '',
+});
 
-const validateSeoPayload = ({ title, description, keywords, headTags }) => {
-    if (typeof title !== 'string' || title.trim().length === 0) {
-        return 'Title is required';
+const writeSnapshotAndTriggerPrerender = async () => {
+    const allSeoDocs = await Seo.find({}).sort({ pageKey: 1 }).lean();
+    const snapshotWriteResult = await writeSeoSnapshot(allSeoDocs);
+
+    const prerenderResult = await triggerSeoPrerender();
+    if (!prerenderResult.ok) {
+        console.warn('[SEO] Prerender refresh failed after save:', {
+            code: prerenderResult.code,
+            stderr: prerenderResult.stderr,
+            stdout: prerenderResult.stdout,
+        });
     }
 
-    if (title.trim().length > 60) {
-        return 'Title cannot exceed 60 characters';
-    }
-
-    if (typeof description !== 'string' || description.trim().length === 0) {
-        return 'Description is required';
-    }
-
-    if (description.trim().length > 160) {
-        return 'Description cannot exceed 160 characters';
-    }
-
-    if (keywords !== undefined && typeof keywords !== 'string') {
-        return 'Keywords must be a string';
-    }
-
-    if (headTags !== undefined && typeof headTags !== 'string') {
-        return 'headTags must be a string';
-    }
-
-    return null;
+    return {
+        snapshotWriteResult,
+        prerenderResult,
+    };
 };
+
+exports.getSeoOverview = async (_req, res) => {
+    try {
+        const allSeoDocs = await Seo.find({}).sort({ updatedAt: -1 }).lean();
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                totalConfiguredPages: allSeoDocs.length,
+                catalogSize: SEO_PAGE_CATALOG.length,
+                pages: allSeoDocs.map(toDto),
+            },
+        });
+    } catch (_error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch SEO overview',
+            errors: ['Could not read SEO overview data from database.'],
+        });
+    }
+};
+
+exports.getSeoPagesCatalog = async (_req, res) =>
+    res.status(200).json({
+        success: true,
+        data: SEO_PAGE_CATALOG,
+    });
 
 exports.getSeoByPage = async (req, res) => {
     try {
-        const page = normalizePageSlug(req.params.page);
+        const pageKey = normalizePageKey(req.params.pageKey);
+        const catalogPage = getCatalogPageByKey(pageKey);
 
-        if (!slugPattern.test(page)) {
-            return res.status(400).json({
+        if (!catalogPage) {
+            return res.status(404).json({
                 success: false,
-                message: 'Invalid page slug format',
+                message: `Unsupported page key: ${pageKey}`,
+                errors: ['Use GET /api/seo/pages to list allowed page keys.'],
             });
         }
 
-        const seoData = await Seo.findOne({ page });
-
+        const seoData = await Seo.findOne({ pageKey }).lean();
         if (!seoData) {
-            return res.status(404).json({
-                success: false,
-                message: `SEO data not found for page: ${page}`,
+            return res.status(200).json({
+                success: true,
+                data: {
+                    ...buildSuggestedMetadata(catalogPage),
+                    exists: false,
+                },
             });
         }
 
         return res.status(200).json({
             success: true,
-            data: seoData,
+            data: {
+                ...toDto(seoData),
+                exists: true,
+            },
         });
     } catch (_error) {
         return res.status(500).json({
             success: false,
-            message: 'Failed to fetch SEO data',
+            message: 'Failed to fetch SEO metadata',
+            errors: ['Unexpected server error while reading SEO metadata.'],
         });
     }
 };
 
-exports.upsertSeoByPage = async (req, res) => {
+exports.suggestSeoByPage = async (req, res) => {
+    const pageKey = normalizePageKey(req.params.pageKey);
+    const catalogPage = getCatalogPageByKey(pageKey);
+
+    if (!catalogPage) {
+        return res.status(404).json({
+            success: false,
+            message: `Unsupported page key: ${pageKey}`,
+            errors: ['Use GET /api/seo/pages to list allowed page keys.'],
+        });
+    }
+
+    return res.status(200).json({
+        success: true,
+        data: buildSuggestedMetadata(catalogPage),
+    });
+};
+
+exports.saveSeoByPage = async (req, res) => {
     try {
-        const page = normalizePageSlug(req.params.page);
+        const pageKey = normalizePageKey(req.params.pageKey);
+        const validation = sanitizeAndValidateSeoPayload({
+            pageKeyInput: pageKey,
+            payload: req.body || {},
+        });
 
-        if (!slugPattern.test(page)) {
+        if (!validation.isValid) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid page slug format',
-            });
-        }
-
-        const { title, description, keywords, headTags } = req.body;
-        const validationError = validateSeoPayload({ title, description, keywords, headTags });
-
-        if (validationError) {
-            return res.status(400).json({
-                success: false,
-                message: validationError,
+                message: 'SEO validation failed. Please fix the listed issues.',
+                errors: validation.errors,
             });
         }
 
         const update = {
-            page,
-            title: title.trim(),
-            description: description.trim(),
-            keywords: typeof keywords === 'string' ? keywords.trim() : '',
-            headTags: typeof headTags === 'string' ? headTags.trim() : '',
+            ...validation.sanitized,
+            updatedBy: req.user?.id || 'unknown',
         };
 
         const seoData = await Seo.findOneAndUpdate(
-            { page },
+            { pageKey: validation.sanitized.pageKey },
             update,
             {
                 new: true,
@@ -102,16 +176,34 @@ exports.upsertSeoByPage = async (req, res) => {
                 runValidators: true,
                 setDefaultsOnInsert: true,
             }
-        );
+        ).lean();
+
+        const { snapshotWriteResult, prerenderResult } = await writeSnapshotAndTriggerPrerender();
 
         return res.status(200).json({
             success: true,
-            data: seoData,
+            message: prerenderResult.ok
+                ? 'SEO metadata saved and prerender refreshed.'
+                : 'SEO metadata saved, but prerender refresh reported warnings.',
+            data: toDto(seoData),
+            operations: {
+                snapshotWrittenAt: snapshotWriteResult.snapshot.updatedAt,
+                snapshotPaths: snapshotWriteResult.paths,
+                prerender: {
+                    ok: prerenderResult.ok,
+                    code: prerenderResult.code,
+                    stderr: prerenderResult.stderr,
+                },
+            },
         });
     } catch (_error) {
         return res.status(500).json({
             success: false,
-            message: 'Failed to save SEO data',
+            message: 'Failed to save SEO metadata',
+            errors: ['Unexpected server error while saving SEO metadata.'],
         });
     }
 };
+
+// Backward compatible aliases for older clients.
+exports.upsertSeoByPage = exports.saveSeoByPage;
