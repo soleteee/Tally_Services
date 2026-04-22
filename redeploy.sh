@@ -19,9 +19,13 @@ if [ -d "$PROJECT_DIR" ]; then
 else
     echo "Directory missing. Cloning fresh repository..."
     mkdir -p /var/www
-    git clone "$REPO_URL" "$PROJECT_DIR"
+    git clone "$REPO_URL" PROJECT_DIR
     cd "$PROJECT_DIR"
 fi
+
+# Set permissions for the web server
+chown -R root:root "$PROJECT_DIR"
+chmod -R 755 "$PROJECT_DIR"
 
 # --- 2. BACKEND SETUP ---
 echo "Configuring Backend..."
@@ -73,15 +77,15 @@ printf 'server {
 
     location / {
         # Support for unique SEO source code per page
-        try_files $uri $uri/index.html $uri/ /index.html;
+        try_files \$uri \$uri/index.html \$uri/ /index.html;
     }
 
     location /api/ {
         proxy_pass http://localhost:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
     }
 }
 ' > /etc/nginx/sites-available/mittalonlineservices.com.conf
@@ -95,16 +99,16 @@ printf 'server {
     index index.html;
 
     location / {
-        try_files $uri $uri/index.html $uri/ /index.html;
+        try_files \$uri \$uri/index.html \$uri/ /index.html;
     }
 
     # Proxy API calls from Admin to the Backend
     location /api/ {
         proxy_pass http://localhost:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
     }
 }
 ' > /etc/nginx/sites-available/admin.mittalonlineservices.com.conf
