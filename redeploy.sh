@@ -45,9 +45,9 @@ printf 'VITE_API_URL=https://mittalonlineservices.com
 VITE_GTM_ID=GTM-PL9D2XGL
 ' > "$FRONTEND_DIR/.env"
 
-echo "Building Frontend..."
+echo "Building Frontend (including dev dependencies for tsc)..."
 cd "$FRONTEND_DIR"
-npm install
+npm install --include=dev
 npm run build
 
 # --- 4. ADMIN SETUP ---
@@ -55,9 +55,9 @@ echo "Configuring Admin..."
 printf 'VITE_API_URL=https://mittalonlineservices.com
 ' > "$ADMIN_DIR/.env"
 
-echo "Building Admin..."
+echo "Building Admin (including dev dependencies for tsc)..."
 cd "$ADMIN_DIR"
-npm install
+npm install --include=dev
 npm run build
 
 # --- 5. NGINX CONFIGURATION ---
