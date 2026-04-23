@@ -16,7 +16,9 @@ const normalizeRoutePath = (routePath) => {
 };
 
 const splitHeadTagEntries = (headTagsInput) => {
-    const input = String(headTagsInput || '').trim();
+    const input = String(headTagsInput || '')
+        .replace(/>\s*,+\s*</g, '>\n<')
+        .trim();
     if (!input) {
         return [];
     }
@@ -196,10 +198,22 @@ const validateHeadTags = (headTagsInput) => {
     return {
         isValid: errors.length === 0,
         errors,
-        normalizedTags: entries
-            .slice(0, MAX_HEAD_TAGS)
-            .map((entry) => normalizeHeadTagText(entry.text))
-            .filter(Boolean),
+        normalizedTags: (() => {
+            const seen = new Set();
+            const normalized = [];
+
+            for (const entry of entries.slice(0, MAX_HEAD_TAGS)) {
+                const tag = normalizeHeadTagText(entry.text);
+                if (!tag || seen.has(tag)) {
+                    continue;
+                }
+
+                seen.add(tag);
+                normalized.push(tag);
+            }
+
+            return normalized;
+        })(),
     };
 };
 

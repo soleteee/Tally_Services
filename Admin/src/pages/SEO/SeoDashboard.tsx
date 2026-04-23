@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import SeoForm, { type SeoFormValues } from './SeoForm';
 import SeoPreview from './SeoPreview';
@@ -25,6 +25,7 @@ const normalizeHeadTagsInput = (input: string | string[] | undefined): string =>
     }
 
     return String(input || '')
+        .replace(/>\s*,+\s*</g, '>\n<')
         .split(/\r?\n/)
         .map((line) => {
             const trimmed = line.trim();
@@ -88,15 +89,15 @@ const SeoDashboard = () => {
         [selectedPage]
     );
 
-    const getHeaders = () => {
+    const getHeaders = useCallback(() => {
         const token = getToken();
         return {
             'Content-Type': 'application/json',
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
         };
-    };
+    }, []);
 
-    const fetchSeoData = async () => {
+    const fetchSeoData = useCallback(async () => {
         setIsLoading(true);
         setApiErrors([]);
         try {
@@ -135,11 +136,11 @@ const SeoDashboard = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [endpoint, getHeaders, selectedPage]);
 
     useEffect(() => {
         fetchSeoData();
-    }, [endpoint]);
+    }, [fetchSeoData]);
 
     const headTagsValidation = useMemo(() => validateHeadTags(values.headTags), [values.headTags]);
     const schemaJsonValidation = useMemo(() => validateSchemaJson(values.schemaJson), [values.schemaJson]);

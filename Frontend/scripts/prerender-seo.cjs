@@ -8,6 +8,8 @@ const distTemplatePath = path.join(distDir, 'index.html');
 const publicSnapshotPath = path.join(projectRoot, 'public', 'seo', 'metadata.snapshot.json');
 const distSnapshotPath = path.join(distDir, 'seo', 'metadata.snapshot.json');
 const siteBaseUrl = 'https://mittalonlineservices.com';
+const SEO_BLOCK_START = '<!-- SEO_PRERENDER_START -->';
+const SEO_BLOCK_END = '<!-- SEO_PRERENDER_END -->';
 
 const readJsonFile = async (filePath) => {
     const raw = await fs.readFile(filePath, 'utf8');
@@ -43,12 +45,19 @@ const routeToOutputPath = (routePath) => {
 const removeExistingSeoTags = (html) => {
     let next = html;
 
+    // Remove previously injected SEO prerender block wholesale to avoid cumulative duplicates.
+    next = next.replace(
+        /<!-- SEO_PRERENDER_START -->[\s\S]*?<!-- SEO_PRERENDER_END -->\s*/gi,
+        ''
+    );
+
     next = next.replace(/<title>[\s\S]*?<\/title>/gi, '');
     next = next.replace(/<meta\s+name=(?:"|')description(?:"|')[^>]*>/gi, '');
     next = next.replace(/<meta\s+name=(?:"|')keywords(?:"|')[^>]*>/gi, '');
     next = next.replace(/<meta\s+name=(?:"|')robots(?:"|')[^>]*>/gi, '');
     next = next.replace(/<meta\s+property=(?:"|')og:[^"']+(?:"|')[^>]*>/gi, '');
     next = next.replace(/<meta\s+name=(?:"|')twitter:[^"']+(?:"|')[^>]*>/gi, '');
+    next = next.replace(/<meta\s+name=(?:"|')google-site-verification(?:"|')[^>]*>/gi, '');
     next = next.replace(/<link\s+rel=(?:"|')canonical(?:"|')[^>]*>/gi, '');
     next = next.replace(/<script[^>]*type=(?:"|')application\/ld\+json(?:"|')[^>]*>[\s\S]*?<\/script>/gi, '');
 
@@ -133,7 +142,8 @@ const injectSeoHeadMarkup = (html, seoHeadMarkup) => {
         throw new Error('Cannot inject SEO tags: missing <head> element in template');
     }
 
-    return withHeadClean.replace(/(<head[^>]*>)/i, `$1\n  ${seoHeadMarkup}`);
+    const wrappedMarkup = `${SEO_BLOCK_START}\n  ${seoHeadMarkup}\n  ${SEO_BLOCK_END}`;
+    return withHeadClean.replace(/(<head[^>]*>)/i, `$1\n  ${wrappedMarkup}`);
 };
 
 const loadSnapshot = async () => {
