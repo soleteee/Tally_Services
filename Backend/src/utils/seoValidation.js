@@ -60,6 +60,24 @@ const splitHeadTagEntries = (headTagsInput) => {
 const quoteUnquotedAttributes = (tagText) =>
     tagText.replace(/\s([a-zA-Z_:][-a-zA-Z0-9_:.]*)=([^\s"'>`]+)(?=\s|>|\/>)/g, ' $1="$2"');
 
+const normalizeHeadTagText = (tagText) => {
+    const repaired = quoteUnquotedAttributes(String(tagText || ''));
+    const trimmed = repaired.trim();
+    if (!trimmed) {
+        return '';
+    }
+
+    const firstTagIndex = trimmed.indexOf('<');
+    if (firstTagIndex === -1) {
+        return '';
+    }
+
+    return trimmed
+        .slice(firstTagIndex)
+        .replace(/[,;]+$/, '')
+        .trim();
+};
+
 const getTagName = (tagText) => {
     const match = tagText.match(/^<\s*([a-zA-Z0-9:-]+)/);
     return match ? match[1].toLowerCase() : '';
@@ -115,7 +133,7 @@ const validateHeadTags = (headTagsInput) => {
 
     for (const entry of entries) {
         const original = entry.text;
-        const repaired = quoteUnquotedAttributes(original);
+        const repaired = normalizeHeadTagText(original);
         const line = entry.line;
 
         if (entry.unterminatedScript) {
@@ -178,12 +196,10 @@ const validateHeadTags = (headTagsInput) => {
     return {
         isValid: errors.length === 0,
         errors,
-        normalizedTags: entries.slice(0, MAX_HEAD_TAGS).map((entry) => {
-            let text = quoteUnquotedAttributes(entry.text).trim();
-            // Remove trailing commas, semicolons, and extra punctuation that breaks SEO rendering
-            text = text.replace(/[,;]+$/, '').trim();
-            return text;
-        }),
+        normalizedTags: entries
+            .slice(0, MAX_HEAD_TAGS)
+            .map((entry) => normalizeHeadTagText(entry.text))
+            .filter(Boolean),
     };
 };
 

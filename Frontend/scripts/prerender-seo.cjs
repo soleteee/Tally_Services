@@ -62,6 +62,28 @@ const canonicalUrlForPath = (routePath) => {
     return `${siteBaseUrl}${routePath}`;
 };
 
+const normalizeHeadTag = (tag) => {
+    // Some sources may accidentally prefix tags with punctuation (e.g. ",,,,,<meta ...>").
+    const trimmed = String(tag || '').trim();
+    if (!trimmed) {
+        return '';
+    }
+
+    const firstTagIndex = trimmed.indexOf('<');
+    if (firstTagIndex === -1) {
+        return '';
+    }
+
+    const withoutPrefixNoise = trimmed.slice(firstTagIndex).trim();
+    const withoutTrailingPunctuation = withoutPrefixNoise.replace(/[,;]+$/, '').trim();
+
+    if (!withoutTrailingPunctuation.startsWith('<')) {
+        return '';
+    }
+
+    return withoutTrailingPunctuation;
+};
+
 const buildSeoHeadMarkup = (metadata) => {
     const title = escapeHtml(metadata.title || 'Mittal Online Services');
     const description = escapeHtml(metadata.description || '');
@@ -84,14 +106,14 @@ const buildSeoHeadMarkup = (metadata) => {
     tags.push(`<link rel="canonical" href="${canonical}" />`);
 
     if (Array.isArray(metadata.headTags)) {
+        const seenHeadTags = new Set();
         for (const tag of metadata.headTags) {
-            const normalized = String(tag || '')
-                .trim()
-                .replace(/[,;]+$/, '')
-                .trim();
-            if (!normalized) {
+            const normalized = normalizeHeadTag(tag);
+            if (!normalized || seenHeadTags.has(normalized)) {
                 continue;
             }
+
+            seenHeadTags.add(normalized);
             tags.push(normalized);
         }
     }
