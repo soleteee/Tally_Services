@@ -33,6 +33,33 @@ const escapeHtml = (value) =>
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 
+const removeLegacyCommaArtifacts = (html) => {
+    let next = html;
+    next = next.replace(/^[ \t]*,+[ \t]*$/gm, '');
+    next = next.replace(/[\s,]*<meta\s+name=(?:"|')google-site-verification(?:"|')[^>]*>/gi, (match) =>
+        match.replace(/^[\s,]+/, '')
+    );
+    next = next.replace(/,[\s\r\n]*(?=<(?:meta|link|script|title)\b)/gi, '');
+    return next;
+};
+
+const dedupeGoogleVerificationTags = (html) => {
+    const seen = new Set();
+
+    return html.replace(/<meta\s+name=(?:"|')google-site-verification(?:"|')[^>]*>/gi, (tag) => {
+        const contentMatch = tag.match(/content\s*=\s*(?:"([^"]*)"|'([^']*)')/i);
+        const contentValue = (contentMatch?.[1] || contentMatch?.[2] || '').trim();
+        const dedupeKey = contentValue || tag;
+
+        if (seen.has(dedupeKey)) {
+            return '';
+        }
+
+        seen.add(dedupeKey);
+        return tag;
+    });
+};
+
 const routeToOutputPath = (routePath) => {
     if (!routePath || routePath === '/') {
         return path.join(distDir, 'index.html');
@@ -43,7 +70,7 @@ const routeToOutputPath = (routePath) => {
 };
 
 const removeExistingSeoTags = (html) => {
-    let next = html;
+    let next = removeLegacyCommaArtifacts(html);
 
     // Remove previously injected SEO prerender block wholesale to avoid cumulative duplicates.
     next = next.replace(
@@ -57,7 +84,7 @@ const removeExistingSeoTags = (html) => {
     next = next.replace(/<meta\s+name=(?:"|')robots(?:"|')[^>]*>/gi, '');
     next = next.replace(/<meta\s+property=(?:"|')og:[^"']+(?:"|')[^>]*>/gi, '');
     next = next.replace(/<meta\s+name=(?:"|')twitter:[^"']+(?:"|')[^>]*>/gi, '');
-    next = next.replace(/<meta\s+name=(?:"|')google-site-verification(?:"|')[^>]*>/gi, '');
+    next = next.replace(/[\s,]*<meta\s+name=(?:"|')google-site-verification(?:"|')[^>]*>/gi, '');
     next = next.replace(/<link\s+rel=(?:"|')canonical(?:"|')[^>]*>/gi, '');
     next = next.replace(/<script[^>]*type=(?:"|')application\/ld\+json(?:"|')[^>]*>[\s\S]*?<\/script>/gi, '');
 
@@ -93,6 +120,23 @@ const normalizeHeadTag = (tag) => {
     return withoutTrailingPunctuation;
 };
 
+const splitHeadTagCandidates = (tag) => {
+    const source = String(tag || '')
+        .replace(/>\s*,+\s*</g, '>\n<')
+        .trim();
+
+    if (!source) {
+        return [];
+    }
+
+    const matchedTags = source.match(/<script[\s\S]*?<\/script>|<meta[^>]*>|<link[^>]*>/gi);
+    if (Array.isArray(matchedTags) && matchedTags.length > 0) {
+        return matchedTags;
+    }
+
+    return source.split(/\r?\n/).filter(Boolean);
+};
+
 const buildSeoHeadMarkup = (metadata) => {
     const title = escapeHtml(metadata.title || 'Mittal Online Services');
     const description = escapeHtml(metadata.description || '');
@@ -117,13 +161,15 @@ const buildSeoHeadMarkup = (metadata) => {
     if (Array.isArray(metadata.headTags)) {
         const seenHeadTags = new Set();
         for (const tag of metadata.headTags) {
-            const normalized = normalizeHeadTag(tag);
-            if (!normalized || seenHeadTags.has(normalized)) {
-                continue;
-            }
+            for (const candidate of splitHeadTagCandidates(tag)) {
+                const normalized = normalizeHeadTag(candidate);
+                if (!normalized || seenHeadTags.has(normalized)) {
+                    continue;
+                }
 
-            seenHeadTags.add(normalized);
-            tags.push(normalized);
+                seenHeadTags.add(normalized);
+                tags.push(normalized);
+            }
         }
     }
 
@@ -156,6 +202,51 @@ const loadSnapshot = async () => {
     }
 
     throw new Error('SEO snapshot file not found in dist/seo or public/seo');
+};
+
+const listHtmlFiles = async (dirPath) => {
+    const files = [];
+    const entries = await fs.readdir(dirPath, { withFileTypes: true });
+
+    for (const entry of entries) {
+        const fullPath = path.join(dirPath, entry.name);
+        if (entry.isDirectory()) {
+            const nested = await listHtmlFiles(fullPath);
+            files.push(...nested);
+            continue;
+        }
+
+        if (entry.isFile() && entry.name.toLowerCase().endsWith('.html')) {
+            files.push(fullPath);
+        }
+    }
+
+    return files;
+};
+
+const cleanupExistingDistHtml = async () => {
+    if (!(await fileExists(distDir))) {
+        console.warn('[SEO prerender] dist directory not found. Skipping fallback cleanup.');
+        return;
+    }
+
+    const htmlFiles = await listHtmlFiles(distDir);
+    if (htmlFiles.length === 0) {
+        console.warn('[SEO prerender] no HTML files found in dist. Skipping fallback cleanup.');
+        return;
+    }
+
+    await Promise.all(
+        htmlFiles.map(async (htmlPath) => {
+            const current = await fs.readFile(htmlPath, 'utf8');
+            const cleaned = dedupeGoogleVerificationTags(removeLegacyCommaArtifacts(current));
+            if (cleaned !== current) {
+                await fs.writeFile(htmlPath, cleaned, 'utf8');
+            }
+        })
+    );
+
+    console.log(`[SEO prerender] fallback cleanup applied to ${htmlFiles.length} HTML files.`);
 };
 
 const getKnownRoutesFromSnapshot = (snapshot) => {
@@ -205,6 +296,16 @@ const renderAllRouteFiles = async () => {
 };
 
 renderAllRouteFiles().catch((error) => {
+    if (error.message && error.message.includes('SEO snapshot file not found')) {
+        cleanupExistingDistHtml()
+            .then(() => process.exit(0))
+            .catch((fallbackError) => {
+                console.error('[SEO prerender] fallback cleanup failed:', fallbackError.message);
+                process.exit(1);
+            });
+        return;
+    }
+
     console.error('[SEO prerender] failed:', error.message);
     process.exit(1);
 });
