@@ -14,7 +14,7 @@ const toDto = (doc) => ({
     title: doc.title,
     description: doc.description,
     keywords: doc.keywords,
-    headTags: doc.headTags,
+    headTags: Array.isArray(doc.headTags) ? doc.headTags.join('\n') : String(doc.headTags || ''),
     schemaJson: doc.schemaJson,
     updatedBy: doc.updatedBy,
     createdAt: doc.createdAt,
@@ -38,7 +38,7 @@ const buildSuggestedMetadata = (catalogPage) => ({
         `<meta name="twitter:title" content="${catalogPage.pageName} | Tally Services" />`,
         `<meta name="twitter:description" content="Learn more about ${catalogPage.pageName} at Tally Services." />`,
         '<meta name="twitter:card" content="summary_large_image" />',
-    ],
+    ].join('\n'),
     schemaJson: '',
 });
 

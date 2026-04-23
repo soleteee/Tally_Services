@@ -10,10 +10,32 @@ type SeoApiPayload = {
     title: string;
     description: string;
     keywords?: string;
-    headTags?: string;
+    headTags?: string | string[];
     schemaJson?: string;
     updatedAt?: string;
     updatedBy?: string;
+};
+
+const normalizeHeadTagsInput = (input: string | string[] | undefined): string => {
+    if (Array.isArray(input)) {
+        return input
+            .map((tag) => String(tag || '').trim())
+            .filter(Boolean)
+            .join('\n');
+    }
+
+    return String(input || '')
+        .split(/\r?\n/)
+        .map((line) => {
+            const trimmed = line.trim();
+            const firstTagIndex = trimmed.indexOf('<');
+            if (firstTagIndex === -1) {
+                return trimmed;
+            }
+            return trimmed.slice(firstTagIndex).trim();
+        })
+        .filter(Boolean)
+        .join('\n');
 };
 
 const emptyForm: SeoFormValues = {
@@ -100,7 +122,7 @@ const SeoDashboard = () => {
                 title: data.title || '',
                 description: data.description || '',
                 keywords: data.keywords || '',
-                headTags: data.headTags || '',
+                headTags: normalizeHeadTagsInput(data.headTags),
                 schemaJson: data.schemaJson || '',
             });
             setMetadataInfo({
@@ -169,7 +191,10 @@ const SeoDashboard = () => {
             const response = await fetch(`${endpoint}/save`, {
                 method: 'POST',
                 headers: getHeaders(),
-                body: JSON.stringify(values),
+                body: JSON.stringify({
+                    ...values,
+                    headTags: normalizeHeadTagsInput(values.headTags),
+                }),
             });
 
             const result = await response.json();
