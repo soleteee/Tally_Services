@@ -20,46 +20,16 @@ const findMatchingKeywords = (text: string): string[] => {
     return REVIEW_KEYWORDS.filter((keyword) => normalizedText.includes(keyword.toLowerCase()));
 };
 
-const STYLE_HINTS = [
-    'warm and thankful tone',
-    'crisp and professional tone',
-    'friendly and practical tone',
-    'results-focused customer tone',
-    'natural small-business owner tone'
-];
-
-const GEMINI_MODELS = (import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.5-flash')
-    .split(',')
-    .map((model: string) => model.trim())
-    .filter(Boolean);
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const GOOGLE_REVIEW_URL =
     import.meta.env.VITE_GOOGLE_REVIEW_URL ||
     'https://g.page/r/CY3k8K3vWNaHEAI/review';
-
-const REVIEW_STYLE_GUIDE = [
-    'Write like a real customer in India leaving a Google review.',
-    'Keep the review natural, believable, and not overly promotional.',
-    'Use only one or two SEO-rich phrases, never force all keywords.',
-    'Keep the wording fresh on every generation and avoid repeating sentence structure.',
-    'Stay within 20 to 30 words total.'
-].join('\n');
-
-const FEW_SHOT_EXAMPLES = [
-    'Example 1: Quick support and smooth Tally setup made our work easier. The team explained everything clearly and responded on time, which really helped our business.',
-    'Example 2: Very professional Tally service in Meerut. Their guidance was practical, fast, and reliable, and the overall experience felt genuinely helpful for our accounting needs.'
-].join('\n');
 
 const getWordCount = (text: string): number =>
     text
         .trim()
         .split(/\s+/)
         .filter(Boolean).length;
-
-const isValidReviewLength = (text: string): boolean => {
-    const wc = getWordCount(text);
-    return wc >= 20 && wc <= 30;
-};
 
 const cleanReviewText = (text: string): string => {
     const withoutQuotes = text.replace(/["“”]/g, '').replace(/\s+/g, ' ').trim();
@@ -124,77 +94,21 @@ const ReviewGenerator: React.FC = () => {
         setSelectedKeywords((prev) => [...prev, keyword]);
     };
 
-    const callGemini = async (instruction: string): Promise<string> => {
-        if (!GEMINI_API_KEY) {
-            throw new Error('Gemini API key is missing. Set VITE_GEMINI_API_KEY in your Frontend environment file.');
+    const callReviewApi = async (payload: { mode: 'prompt' | 'keywords'; promptInput?: string; selectedKeywords?: string[] }): Promise<string> => {
+        const response = await fetch(`${API_BASE_URL}/api/review-generator`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
         }
 
-        const randomStyle = STYLE_HINTS[Math.floor(Math.random() * STYLE_HINTS.length)];
-        const randomSeed = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-
-        const finalPrompt = [
-            REVIEW_STYLE_GUIDE,
-            FEW_SHOT_EXAMPLES,
-            instruction,
-            `Use ${randomStyle}.`,
-            'Write in natural Indian English.',
-            'Include SEO-friendly, trending business words where relevant, but keep it believable and human.',
-            'Use only the selected keywords exactly as written, never rewrite or paraphrase them.',
-            'Return exactly one review, exactly 24 words, plain text only.',
-            'Do not use numbering, bullets, emojis, hashtags, or quotation marks.',
-            `Uniqueness seed: ${randomSeed}`
-        ].join('\n');
-
-        let lastErrorMessage = '';
-
-        for (const model of GEMINI_MODELS) {
-            for (const variant of [
-                finalPrompt,
-                `${finalPrompt}\nRewrite the review to be between 20 and 30 words only. Keep it natural and different from the previous version.`,
-                `${finalPrompt}\nRewrite again. Make it exactly 22 to 26 words, conversational, believable, and concise.`
-            ]) {
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            contents: [
-                                {
-                                    role: 'user',
-                                    parts: [{ text: variant }]
-                                }
-                            ],
-                            generationConfig: {
-                                temperature: 1.1,
-                                topP: 0.95,
-                                topK: 40,
-                                maxOutputTokens: 90
-                            }
-                        })
-                    }
-                );
-
-                if (!response.ok) {
-                    lastErrorMessage = await response.text();
-                    continue;
-                }
-
-                const data = await response.json();
-                const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                const review = cleanReviewText(rawText);
-
-                if (isValidReviewLength(review)) {
-                    return review;
-                }
-
-                lastErrorMessage = `Generated review had ${getWordCount(review)} words, expected 20-30.`;
-            }
-        }
-
-        throw new Error(`Gemini request failed: ${lastErrorMessage || 'No supported model responded successfully.'}`);
+        const data = await response.json();
+        return cleanReviewText(data?.review || '');
     };
 
     const generateFromPrompt = async () => {
@@ -209,9 +123,10 @@ const ReviewGenerator: React.FC = () => {
 
         setIsGeneratingPrompt(true);
         try {
-            const review = await callGemini(
-                `Create a Google review for Mittal Online Services based on this user input: ${promptInput.trim()}. If the prompt contains any of these exact keywords, keep them in the review exactly as written: ${matchedKeywords.join(', ') || 'none'}. If the user prompt is short, expand it naturally without sounding repetitive.`
-            );
+            const review = await callReviewApi({
+                mode: 'prompt',
+                promptInput: promptInput.trim()
+            });
             const hasMatchedKeywords = matchedKeywords.every((keyword) =>
                 review.toLowerCase().includes(keyword.toLowerCase())
             );
@@ -234,9 +149,10 @@ const ReviewGenerator: React.FC = () => {
 
         setIsGeneratingKeywords(true);
         try {
-            const review = await callGemini(
-                `Create a Google review for Mittal Online Services using these keywords exactly as written: ${selectedKeywords.join(', ')}. Keep the keywords unchanged, especially with "in meerut" phrasing, and make the result sound original.`
-            );
+            const review = await callReviewApi({
+                mode: 'keywords',
+                selectedKeywords
+            });
             const hasExactKeywords = selectedKeywords.every((keyword) =>
                 review.toLowerCase().includes(keyword.toLowerCase())
             );
