@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 
 // Lazy loading all pages
@@ -10,7 +10,7 @@ const Journey = lazy(() => import('./pages/about/Journey'));
 const WhyUs = lazy(() => import('./pages/about/WhyUs'));
 const Products = lazy(() => import('./pages/Products'));
 const Services = lazy(() => import('./pages/Services'));
-const Resources = lazy(() => import('./pages/Resources'));
+const Blogs = lazy(() => import('./pages/Resources'));
 const Testimonials = lazy(() => import('./pages/Testimonials'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Inquiry = lazy(() => import('./pages/Inquiry'));
@@ -85,7 +85,8 @@ function App() {
               <Route path="/about/why-us" element={<WhyUs />} />
               <Route path="/products" element={<Products />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/resources" element={<Resources />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/resources" element={<Navigate to="/blogs" replace />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/inquiry" element={<Inquiry />} />

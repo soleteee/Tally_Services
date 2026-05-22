@@ -18,6 +18,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const blogRoutes = require('./routes/blogRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const faqRoutes = require('./routes/faqRoutes');
+const { ensureDefaultFaqs } = require('./utils/faqSeed');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -69,6 +71,7 @@ app.get('/api/health', (_req, res) => {
 // Routes
 app.use('/api/blogs', blogRoutes);
 app.use('/api', reviewRoutes);
+app.use('/api/faqs', faqRoutes);
 app.use('/api/poster', require('./routes/posterRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/jobs', require('./routes/jobRoutes'));
@@ -82,6 +85,12 @@ mongoose.connect(MONGODB_URI)
     .then(async () => {
         console.log('Connected to MongoDB');
         console.log('Database name:', mongoose.connection.name);
+
+        try {
+            await ensureDefaultFaqs();
+        } catch (seedError) {
+            console.warn('[FAQ] Failed to ensure default FAQ seeds:', seedError.message);
+        }
         
         // Drop stale index if it exists
         try {

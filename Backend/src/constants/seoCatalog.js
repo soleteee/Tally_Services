@@ -8,7 +8,7 @@ const SEO_PAGE_CATALOG = [
     { pageKey: 'about-why-us', pageName: 'Why Choose Us', routePath: '/about/why-us' },
     { pageKey: 'products', pageName: 'Products', routePath: '/products' },
     { pageKey: 'services', pageName: 'Services', routePath: '/services' },
-    { pageKey: 'resources', pageName: 'Resources (Blogs)', routePath: '/resources' },
+    { pageKey: 'blogs', pageName: 'Blogs', routePath: '/blogs' },
     { pageKey: 'testimonials', pageName: 'Testimonials', routePath: '/testimonials' },
     { pageKey: 'contact', pageName: 'Contact Us', routePath: '/contact' },
     { pageKey: 'inquiry', pageName: 'Inquiry', routePath: '/inquiry' },

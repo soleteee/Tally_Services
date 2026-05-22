@@ -2,6 +2,7 @@ import React from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import { Link } from 'react-router-dom';
 import { assets } from '../assets/assets';
+import FaqSection from '../components/FaqSection';
 
 const productsList = [
     { name: 'TallyPrime Silver', desc: 'Single user edition for standalone PCs.', link: '/products/prime-silver', image: assets.tallyPrimeSilverLogo },
@@ -51,6 +52,12 @@ const Products: React.FC = () => {
                         </div>
                     ))}
                 </div>
+
+                <FaqSection
+                    pageKey="products"
+                    title="Frequently Asked Questions About Our Products"
+                    subtitle="Quick answers to help you compare products, understand deployment options, and choose the right Tally solution."
+                />
             </ScrollReveal>
         </div>
     );

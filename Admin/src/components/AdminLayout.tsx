@@ -1,6 +1,6 @@
 
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, LogOut, Briefcase, Search } from 'lucide-react';
+import { LayoutDashboard, FilePlus, LogOut, Briefcase, Search, HelpCircle } from 'lucide-react';
 import { clearAuthSession, getCurrentRole } from '../utils/auth';
 
 const AdminLayout = () => {
@@ -42,6 +42,10 @@ const AdminLayout = () => {
                             <Link to="/poster-settings" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/poster-settings') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                                 <FilePlus size={20} />
                                 <span className="font-medium">Poster Popup</span>
+                            </Link>
+                            <Link to="/faq-management" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/faq-management') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+                                <HelpCircle size={20} />
+                                <span className="font-medium">FAQ Management</span>
                             </Link>
                         </>
                     )}

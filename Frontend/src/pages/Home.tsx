@@ -80,12 +80,12 @@ const Home: React.FC = () => {
         fetchLatestBlogs();
     }, []);
 
-    const openBlogInResources = (blogId: string) => {
-        navigate(`/resources?blog=${blogId}`);
+    const openBlogInBlogs = (blogId: string) => {
+        navigate(`/blogs?blog=${blogId}`);
     };
 
     const copyBlogLink = (blogId: string) => {
-        const blogUrl = `${window.location.origin}/resources?blog=${blogId}`;
+        const blogUrl = `${window.location.origin}/blogs?blog=${blogId}`;
         navigator.clipboard.writeText(blogUrl);
         alert('Blog link copied to clipboard!');
     };
@@ -109,7 +109,7 @@ const Home: React.FC = () => {
                         <h2 className="text-3xl md:text-4xl font-bold text-primary">Latest Blogs</h2>
                         <button
                             type="button"
-                            onClick={() => navigate('/resources')}
+                            onClick={() => navigate('/blogs')}
                             className="text-secondary font-semibold hover:text-primary transition-colors"
                         >
                             View All
@@ -142,7 +142,7 @@ const Home: React.FC = () => {
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-auto">
                                                 <button
                                                     type="button"
-                                                    onClick={() => openBlogInResources(blog._id)}
+                                                    onClick={() => openBlogInBlogs(blog._id)}
                                                     className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-white font-medium hover:bg-primary/90 transition-colors"
                                                 >
                                                     Read More

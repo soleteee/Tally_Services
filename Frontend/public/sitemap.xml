@@ -218,9 +218,9 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Resources & Blog -->
+  <!-- Blogs -->
   <url>
-    <loc>https://mittalonlineservices.com/resources</loc>
+    <loc>https://mittalonlineservices.com/blogs</loc>
     <lastmod>2026-04-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

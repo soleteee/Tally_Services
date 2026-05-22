@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import ScrollReveal from '../components/ScrollReveal';
 import BlogModal from '../components/BlogModal';
 
@@ -16,7 +17,7 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
     if (!isOpen || !blog) return null;
 
     const displayImage = getDisplayImage(blog);
-    const blogLink = `${window.location.origin}/resources?blog=${blog._id}`;
+    const blogLink = `${window.location.origin}/blogs?blog=${blog._id}`;
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -280,11 +281,45 @@ const Resources: React.FC = () => {
         return pattern[index % pattern.length];
     };
 
+    const selectedBlogSchema = selectedBlog ? {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: selectedBlog.title,
+        description: selectedBlog.content.slice(0, 160),
+        image: getDisplayImage(selectedBlog) || undefined,
+        author: {
+            '@type': 'Person',
+            name: selectedBlog.author,
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'Mittal Online Services',
+        },
+        datePublished: new Date(selectedBlog.createdAt).toISOString(),
+        dateModified: new Date(selectedBlog.createdAt).toISOString(),
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': `${window.location.origin}/blogs?blog=${selectedBlog._id}`,
+        },
+    } : {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Blogs',
+        description: 'Stay updated with the latest in GST, Tally tips, and business guides.',
+        url: `${window.location.origin}/blogs`,
+    };
+
     return (
         <div className="pt-32 pb-20 px-5 max-w-[1200px] mx-auto min-h-screen relative">
+            <Helmet>
+                <script type="application/ld+json">
+                    {JSON.stringify(selectedBlogSchema)}
+                </script>
+            </Helmet>
+
             <ScrollReveal animation="fade-up">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-4xl font-bold text-primary text-center flex-grow">Resources <span className="font-secondary">&</span> Blog</h1>
+                    <h1 className="text-4xl font-bold text-primary text-center flex-grow">Blogs</h1>
                 </div>
 
                 <p className="text-lg text-center text-text/80 max-w-3xl mx-auto mb-8">
@@ -403,7 +438,7 @@ const Resources: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => {
-                                                        const blogUrl = `${window.location.origin}/resources?blog=${blog._id}`;
+                                                        const blogUrl = `${window.location.origin}/blogs?blog=${blog._id}`;
                                                         navigator.clipboard.writeText(blogUrl);
                                                         alert('Blog link copied to clipboard!');
                                                     }}

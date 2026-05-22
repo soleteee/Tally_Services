@@ -8,6 +8,7 @@ import AddBlog from './pages/AddBlog';
 import JobManagement from './pages/JobManagement';
 import PosterManagement from './pages/PosterManagement';
 import SeoDashboard from './pages/SEO/SeoDashboard';
+import FAQManagement from './pages/FAQManagement';
 import Login from './pages/Login';
 import { getCurrentRole, isAuthenticated } from './utils/auth';
 import './App.css';
@@ -51,6 +52,7 @@ function App() {
           <Route path="add-blog" element={<RoleRoute allowedRole="admin"><AddBlog /></RoleRoute>} />
           <Route path="jobs" element={<RoleRoute allowedRole="admin"><JobManagement /></RoleRoute>} />
           <Route path="poster-settings" element={<RoleRoute allowedRole="admin"><PosterManagement /></RoleRoute>} />
+          <Route path="faq-management" element={<RoleRoute allowedRole="admin"><FAQManagement /></RoleRoute>} />
           <Route path="seo/dashboard" element={<RoleRoute allowedRole="seo"><SeoDashboard /></RoleRoute>} />
         </Route>
         <Route path="*" element={<Navigate to={isAuthenticated() ? (getCurrentRole() === 'seo' ? '/seo/dashboard' : '/') : '/login'} replace />} />

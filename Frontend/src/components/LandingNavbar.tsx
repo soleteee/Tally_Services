@@ -89,7 +89,7 @@ const LandingNavbar: React.FC = () => {
                         )}
                     </li>
                     <li>
-                        <Link to="/resources" className={`transition-colors duration-300 ${hoverColorClass}`}>Resources</Link>
+                        <Link to="/blogs" className={`transition-colors duration-300 ${hoverColorClass}`}>Blogs</Link>
                     </li>
                     <li>
                         <Link to="/testimonials" className={`transition-colors duration-300 ${hoverColorClass}`}>Testimonials</Link>

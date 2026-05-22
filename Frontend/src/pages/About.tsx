@@ -1,6 +1,7 @@
 import ScrollReveal from '../components/ScrollReveal';
 import PhotoGallery from '../components/PhotoGallery';
 import { assets } from '../assets/assets';
+import FaqSection from '../components/FaqSection';
 
 const About = () => {
     return (
@@ -105,6 +106,11 @@ const About = () => {
                 <div className="mb-20">
                     <PhotoGallery />
                 </div>
+                <FaqSection
+                    pageKey="about"
+                    title="Frequently Asked Questions About Our Services"
+                    subtitle="Answers to the most common questions about our team, support, certifications, and service offerings."
+                />
                 {/* Google Map Section */}
                 <div className="mt-20 w-full h-[400px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
                     <iframe

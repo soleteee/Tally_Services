@@ -153,7 +153,7 @@ const Navbar: React.FC = () => {
                                 )}
                             </li>
 
-                            <li><Link to="/resources" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/resources' ? 'text-accent' : ''}`}>Blogs</Link></li>
+                            <li><Link to="/blogs" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/blogs' ? 'text-accent' : ''}`}>Blogs</Link></li>
                             <li><Link to="/testimonials" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/testimonials' ? 'text-accent' : ''}`}>Testimonials</Link></li>
                             <li><Link to="/clients" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/clients' ? 'text-accent' : ''}`}>Clients</Link></li>
                             <li><Link to="/careers" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/careers' ? 'text-accent' : ''}`}>Careers</Link></li>
@@ -213,7 +213,7 @@ const Navbar: React.FC = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><Link to="/resources" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Resources</Link></li>
+                        <li><Link to="/blogs" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Blogs</Link></li>
                         <li><Link to="/testimonials" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Testimonials</Link></li>
                         <li><Link to="/clients" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Clients</Link></li>
                         <li><Link to="/careers" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Careers</Link></li>
