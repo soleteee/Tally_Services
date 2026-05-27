@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaPhoneAlt, FaEnvelope, FaClock, FaMapMarkerAlt, FaBars, FaTimes, FaChevronDown, FaWhatsapp, FaYoutube } from 'react-icons/fa';
+import { FaPhoneAlt, FaEnvelope, FaClock, FaMapMarkerAlt, FaBars, FaTimes, FaChevronDown, FaWhatsapp, FaYoutube, FaInstagram, FaFacebookF } from 'react-icons/fa';
 import { assets } from '../assets/assets';
 
 const Navbar: React.FC = () => {
@@ -188,6 +188,26 @@ const Navbar: React.FC = () => {
                         >
                             <FaYoutube size={18} />
                             <span>YouTube</span>
+                        </a>
+                        <a
+                            href="https://www.instagram.com/mittalonlineservices?igsh=eXltYXJpbWwwbWd4"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            title="Instagram"
+                            className="hidden lg:flex items-center justify-center w-10 xl:w-11 2xl:w-12 h-10 xl:h-11 2xl:h-12 ml-1 xl:ml-2 rounded-full bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
+                        >
+                            <FaInstagram size={18} />
+                        </a>
+                        <a
+                            href="https://www.facebook.com/share/17u7msqbMH/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook"
+                            title="Facebook"
+                            className="hidden lg:flex items-center justify-center w-10 xl:w-11 2xl:w-12 h-10 xl:h-11 2xl:h-12 ml-1 xl:ml-2 rounded-full bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
+                        >
+                            <FaFacebookF size={16} />
                         </a>
                     </div>
                 </div>
