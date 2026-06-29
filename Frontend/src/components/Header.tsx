@@ -28,7 +28,7 @@ const Header: React.FC = () => {
             id: 1,
             image: assets.hero1,
             title: "Experience the Power",
-            highlight: "TallyPrime 7.0",
+            highlight: "TallyPrime 7.1",
             subtitle: "",
             features: [
                 "TallyDrive for Secure Cloud Backup",

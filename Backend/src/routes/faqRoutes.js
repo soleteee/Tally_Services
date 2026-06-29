@@ -11,11 +11,11 @@ const {
 
 const router = express.Router();
 
-router.get('/:pageKey', getPublicFaqs);
-
 router.get('/admin/:pageKey', verifyToken, authorizeAdmin, getAdminFaqs);
 router.post('/admin', verifyToken, authorizeAdmin, createFaq);
 router.put('/admin/:id', verifyToken, authorizeAdmin, updateFaq);
 router.delete('/admin/:id', verifyToken, authorizeAdmin, deleteFaq);
+
+router.get('/:pageKey', getPublicFaqs);
 
 module.exports = router;
