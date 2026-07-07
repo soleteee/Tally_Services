@@ -31,10 +31,10 @@ const Header: React.FC = () => {
             highlight: "TallyPrime 7.1",
             subtitle: "",
             features: [
-                "TallyDrive for Secure Cloud Backup",
-                "Connected Payments with PrimeBanking",
-                "Instant Discovery with SmartFind",
-                "Automate Invoice-to-Payment with Bharat Connect for Business"
+                "- Invoices That Reflect The Professional You",
+                "- AI Powered Document Processing With TallyIra",
+                "- Connected Payments With ICICI Bank",
+                "- Smart Schedule III Support"
             ],
             primaryBtn: "Upgrade Now",
             primaryLink: "/upgrade",
@@ -67,6 +67,19 @@ const Header: React.FC = () => {
                 "Scale users and storage as your business grows",
                 "Run TallyPrime on any device with ease",
                 "Automatic backup and high uptime reliability"
+            ],
+            primaryBtn: "Start Free Trial",
+            primaryLink: "/services/cloud",
+            secondaryBtn: "View Features",
+            secondaryLink: "/services/cloud"
+        },
+        {
+            id: 4,
+            image: assets.hero4,
+            title: "A New IRA Of",
+            highlight: "Thoughtful Intelligence",
+            features: [
+                "Save up to 80% of the time spent on manual data entry with TallyIra and modernise your business."
             ],
             primaryBtn: "Start Free Trial",
             primaryLink: "/services/cloud",

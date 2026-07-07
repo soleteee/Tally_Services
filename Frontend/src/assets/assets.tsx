@@ -6,6 +6,7 @@ import certificateFull from './Certificate/3Starpartnercertificate.jpg';
 import hero1 from './hero1.png';
 import hero2 from './hero2.png';
 import hero3 from './hero3.png';
+import hero4 from './hero4.png';
 import qrCode from './QR.jpeg';
 import logo1 from './Client Logo/Alexander Athletic Club.jpg'
 import logo2 from './Client Logo/Omega.jpg'
@@ -87,6 +88,7 @@ export const assets = {
     hero1,
     hero2,
     hero3,
+    hero4,
     qrCode,
     logo1,
     logo2,

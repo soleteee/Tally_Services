@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
             {/* Bottom Bar (Main Navigation) */}
             <div className="bg-primary text-white w-full">
                 <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
-                    <div className="flex justify-between lg:justify-center items-center h-14 lg:h-12 relative flex-nowrap">
+                    <div className="flex justify-between lg:justify-between items-center h-14 lg:h-12 relative flex-nowrap w-full">
 
                         {/* Mobile Logo (Visible only on mobile) */}
                         <div className="lg:hidden flex items-center gap-2">
@@ -161,54 +161,57 @@ const Navbar: React.FC = () => {
                             <li><Link to="/contact" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/contact' ? 'text-accent' : ''}`}>Contact Us</Link></li>
                         </ul>
 
-                        {/* WhatsApp Button */}
-                        <a
-                            href="https://wa.me/919997952180"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-auto hover:bg-green-600 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
-                        >
-                            <FaWhatsapp size={18} />
-                            <span>WhatsApp</span>
-                        </a>
-                        <a
-                            href="https://whatsapp.com/channel/0029Va6UVWjGehEHQhXVrI2P"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hidden lg:flex items-center gap-2 bg-[#25D366] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-1 xl:ml-2 hover:bg-green-600 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
-                        >
-                            <FaWhatsapp size={18} />
-                            <span>Join Channel</span>
-                        </a>
-                        <a
-                            href="https://www.youtube.com/@mittalonlineservice"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hidden lg:flex items-center gap-2 bg-[#FF0000] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold ml-1 xl:ml-2 hover:bg-red-700 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap"
-                        >
-                            <FaYoutube size={18} />
-                            <span>YouTube</span>
-                        </a>
-                        <a
-                            href="https://www.instagram.com/mittalonlineservices?igsh=eXltYXJpbWwwbWd4"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                            title="Instagram"
-                            className="hidden lg:flex items-center justify-center w-10 xl:w-11 2xl:w-12 h-10 xl:h-11 2xl:h-12 ml-1 xl:ml-2 rounded-full bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
-                        >
-                            <FaInstagram size={18} />
-                        </a>
-                        <a
-                            href="https://www.facebook.com/share/17u7msqbMH/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Facebook"
-                            title="Facebook"
-                            className="hidden lg:flex items-center justify-center w-10 xl:w-11 2xl:w-12 h-10 xl:h-11 2xl:h-12 ml-1 xl:ml-2 rounded-full bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
-                        >
-                            <FaFacebookF size={16} />
-                        </a>
+                        {/* Desktop Social / Contact Section */}
+                        <div className="hidden lg:flex items-center gap-1 xl:gap-2 ml-auto flex-shrink-0 pl-4">
+                            {/* WhatsApp Button */}
+                            <a
+                                href="https://wa.me/919997952180"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 bg-[#25D366] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold hover:bg-green-600 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap flex-shrink-0"
+                            >
+                                <FaWhatsapp size={18} />
+                                <span>WhatsApp</span>
+                            </a>
+                            <a
+                                href="https://whatsapp.com/channel/0029Va6UVWjGehEHQhXVrI2P"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 bg-[#25D366] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold hover:bg-green-600 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap flex-shrink-0"
+                            >
+                                <FaWhatsapp size={18} />
+                                <span>Join Channel</span>
+                            </a>
+                            <a
+                                href="https://www.youtube.com/@mittalonlineservice"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 bg-[#FF0000] text-white px-2 xl:px-3 2xl:px-4 py-1.5 rounded-full font-bold hover:bg-red-700 transition-all shadow-sm text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap flex-shrink-0"
+                            >
+                                <FaYoutube size={18} />
+                                <span>YouTube</span>
+                            </a>
+                            <a
+                                href="https://www.instagram.com/mittalonlineservices?igsh=eXltYXJpbWwwbWd4"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Instagram"
+                                title="Instagram"
+                                className="flex items-center justify-center w-10 h-10 flex-shrink-0 aspect-square rounded-full bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
+                            >
+                                <FaInstagram size={18} />
+                            </a>
+                            <a
+                                href="https://www.facebook.com/share/17u7msqbMH/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Facebook"
+                                title="Facebook"
+                                className="flex items-center justify-center w-10 h-10 flex-shrink-0 aspect-square rounded-full bg-white text-gray-700 border border-gray-200 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
+                            >
+                                <FaFacebookF size={16} />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
