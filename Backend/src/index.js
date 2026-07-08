@@ -13,6 +13,14 @@ if (fs.existsSync(envFilePath)) {
     Object.assign(process.env, parsedEnv);
 }
 
+// Prevent process exits on database connectivity failures
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('[Safety] Unhandled Rejection at:', promise, 'reason:', reason);
+});
+process.on('uncaughtException', (error) => {
+    console.error('[Safety] Uncaught Exception:', error);
+});
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');

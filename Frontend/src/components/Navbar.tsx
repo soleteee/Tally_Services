@@ -135,6 +135,7 @@ const Navbar: React.FC = () => {
                                                     <li><Link to="/products/prime-gold" className="hover:text-primary transition-colors block py-1">TallyPrime Gold</Link></li>
                                                     <li><Link to="/products/server" className="hover:text-primary transition-colors block py-1">TallyPrime Server</Link></li>
                                                     <li><Link to="/products/shoper-gold" className="hover:text-primary transition-colors block py-1">Shoper 9</Link></li>
+                                                    <li><Link to="/tally-ira" className="hover:text-primary transition-colors block py-1">TallyIra</Link></li>
                                                 </ul>
                                                 <Link to="/products/more" className="text-sm font-semibold text-accent hover:underline">More Products &rarr;</Link>
                                             </div>

@@ -161,23 +161,60 @@ exports.updateBlog = async (req, res) => {
     }
 };
 
+const defaultBlogs = [
+    {
+        _id: "default-1",
+        title: "Modernizing Accounting Workflows with TallyIra",
+        author: "Mittal Online Services",
+        content: "Discover how TallyIra leverages AI to read business documents, automate invoice data extraction, and minimize manual errors in TallyPrime.",
+        status: "approved",
+        createdAt: new Date().toISOString()
+    },
+    {
+        _id: "default-2",
+        title: "TallyPrime 7.1 Release: What's New?",
+        author: "Tally Solutions",
+        content: "Explore the latest features of TallyPrime 7.1, including automated Schedule III compliance and integrated payment services.",
+        status: "approved",
+        createdAt: new Date().toISOString()
+    },
+    {
+        _id: "default-3",
+        title: "Why Data Privacy Matters in AI Accounting",
+        author: "Security Desk",
+        content: "How TallyIra protects sensitive business records with zero-sharing policies, keeping your financial information private.",
+        status: "approved",
+        createdAt: new Date().toISOString()
+    }
+];
+
 // Get all approved blogs (Public)
 exports.getPublicBlogs = async (req, res) => {
     try {
+        const mongoose = require('mongoose');
+        if (mongoose.connection.readyState !== 1) {
+            return res.json(defaultBlogs);
+        }
         const blogs = await Blog.find({ status: 'approved' }).sort({ createdAt: -1 });
-        res.json(blogs);
+        res.json(blogs.length > 0 ? blogs : defaultBlogs);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.warn('[API] MongoDB query failed. Serving default blogs fallback:', error.message);
+        res.json(defaultBlogs);
     }
 };
 
 // Get all blogs (Admin)
 exports.getAllBlogs = async (req, res) => {
     try {
+        const mongoose = require('mongoose');
+        if (mongoose.connection.readyState !== 1) {
+            return res.json(defaultBlogs);
+        }
         const blogs = await Blog.find().sort({ createdAt: -1 });
-        res.json(blogs);
+        res.json(blogs.length > 0 ? blogs : defaultBlogs);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.warn('[API] MongoDB admin query failed. Serving default blogs fallback:', error.message);
+        res.json(defaultBlogs);
     }
 };
 

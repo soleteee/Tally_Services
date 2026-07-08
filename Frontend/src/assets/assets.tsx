@@ -71,7 +71,10 @@ import tallyPrimeServerLogo from './Products logo/TallyPrime-Server_A-1.jpg';
 import tallyTSSLogo from './Products logo/Tally Software Services (TSS) - Silver..jpg.jpeg';
 import virtualuser from './Products logo/Tally virtual user.jpg';
 
-
+// TallyIra Assets
+import iraImage from './Ira.png';
+import iraDownload from './IRA DOWNLOAD.png';
+import tallyIraScreenPhone from './tally-ira-screen-phone.mp4';
 
 export const galleryImages = [
     gal5, gal7, gal8, gal9, gal10, gal11, gal12, gal13, gal14, gal15,
@@ -114,8 +117,11 @@ export const assets = {
     tallyPrimeGoldLogo,
     tallyPrimeServerLogo,
     tallyTSSLogo,
-    virtualuser
-    
+    virtualuser,
+    iraImage,
+    iraDownload,
+    tallyIraScreenPhone
 };
 
 export default assets;
+

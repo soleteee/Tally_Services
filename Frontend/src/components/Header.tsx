@@ -81,10 +81,10 @@ const Header: React.FC = () => {
             features: [
                 "Save up to 80% of the time spent on manual data entry with TallyIra and modernise your business."
             ],
-            primaryBtn: "Start Free Trial",
-            primaryLink: "/services/cloud",
-            secondaryBtn: "View Features",
-            secondaryLink: "/services/cloud"
+            primaryBtn: "Know About IRA",
+            primaryLink: "/tally-ira",
+            secondaryBtn: "Contact Us",
+            secondaryLink: "/contact"
         }
     ];
 
