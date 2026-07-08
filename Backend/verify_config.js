@@ -1,4 +1,27 @@
-require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
+const dotenv = require('dotenv');
+const dns = require('dns');
+
+// Load UTF-16LE or UTF-8 .env file
+const envFilePath = path.join(__dirname, '.env');
+if (fs.existsSync(envFilePath)) {
+    const rawEnvBuffer = fs.readFileSync(envFilePath);
+    const isUtf16Le = rawEnvBuffer.length >= 2 && rawEnvBuffer[0] === 0xff && rawEnvBuffer[1] === 0xfe;
+    const rawEnvText = isUtf16Le
+        ? rawEnvBuffer.toString('utf16le')
+        : rawEnvBuffer.toString('utf8');
+    const parsedEnv = dotenv.parse(rawEnvText);
+    Object.assign(process.env, parsedEnv);
+}
+
+// Set DNS servers to Google and Cloudflare DNS to avoid SRV resolution issues (e.g. querySrv ECONNREFUSED)
+try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (dnsErr) {
+    console.warn('[DNS] Failed to set custom DNS servers:', dnsErr.message);
+}
+
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 

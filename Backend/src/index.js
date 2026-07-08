@@ -1,6 +1,14 @@
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
+const dns = require('dns');
+
+// Set DNS servers to Google and Cloudflare DNS to avoid SRV resolution issues (e.g. querySrv ECONNREFUSED)
+try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (dnsErr) {
+    console.warn('[DNS] Failed to set custom DNS servers:', dnsErr.message);
+}
 
 const envFilePath = path.join(__dirname, '../.env');
 if (fs.existsSync(envFilePath)) {

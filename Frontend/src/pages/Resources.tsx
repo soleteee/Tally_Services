@@ -268,17 +268,17 @@ const Resources: React.FC = () => {
         }
     };
 
-    const getBentoClassName = (index: number) => {
-        const pattern = [
-            'md:col-span-2 md:row-span-2',
-            'md:col-span-1 md:row-span-1',
-            'md:col-span-1 md:row-span-1',
-            'md:col-span-1 md:row-span-1',
-            'md:col-span-2 md:row-span-1',
-            'md:col-span-1 md:row-span-1',
-        ];
+    const layouts = [
+        { type: 'large', gridClass: 'md:col-span-2 md:row-span-2', imageClass: 'h-56 md:h-[220px] w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between', descClass: 'line-clamp-4 md:line-clamp-3' },
+        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
+        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
+        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
+        { type: 'wide',  gridClass: 'md:col-span-2 md:row-span-1', imageClass: 'h-56 md:h-full md:w-[35%] flex-shrink-0', contentClass: 'p-6 flex flex-col flex-grow justify-between', descClass: 'line-clamp-4 md:line-clamp-2' },
+        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
+    ];
 
-        return pattern[index % pattern.length];
+    const getBlogLayout = (index: number) => {
+        return layouts[index % layouts.length];
     };
 
     const selectedBlogSchema = selectedBlog ? {
@@ -377,7 +377,7 @@ const Resources: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 md:auto-rows-[220px] gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 md:auto-rows-[250px] gap-6">
                     {filteredBlogs.length === 0 ? (
                         <div className="col-span-full text-center text-gray-500 py-10">
                             {blogs.length === 0 ? 'No blogs available yet. Be the first to write one!' : 'No blogs match your search.'}
@@ -385,12 +385,13 @@ const Resources: React.FC = () => {
                     ) : (
                         filteredBlogs.map((blog, index) => {
                             const displayImage = getDisplayImage(blog);
+                            const layout = getBlogLayout(index);
 
                             return (
-                                <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow flex flex-col h-full ${getBentoClassName(index)}`}>
+                                <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex ${layout.type === 'wide' ? 'flex-col md:flex-row' : 'flex-col'} h-full ${layout.gridClass}`}>
                                     <button
                                         type="button"
-                                        className={`w-full bg-gray-200 relative text-left h-56 md:h-52 ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
+                                        className={`bg-gray-200 relative text-left ${layout.imageClass} ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
                                         onClick={() => {
                                             if (blog.youtubeUrl) {
                                                 window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer');
@@ -409,10 +410,12 @@ const Resources: React.FC = () => {
                                             </div>
                                         )}
                                     </button>
-                                    <div className="p-6 flex flex-col flex-grow">
-                                        <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
-                                        <h3 className="text-xl font-bold text-primary mb-3 line-clamp-2">{blog.title}</h3>
-                                        <p className="text-text/70 mb-4 flex-grow line-clamp-4 md:line-clamp-5">{blog.content}</p>
+                                    <div className={layout.contentClass}>
+                                        <div>
+                                            <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
+                                            <h3 className="text-xl font-bold text-primary mb-2 line-clamp-2">{blog.title}</h3>
+                                            <p className={`text-text/70 mb-4 ${layout.descClass}`}>{blog.content}</p>
+                                        </div>
                                         
                                         {/* Action Buttons */}
                                         <div className="flex flex-col gap-2 mt-auto">

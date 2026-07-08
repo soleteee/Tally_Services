@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
 import { assets } from '../assets/assets';
 import {
     FaChevronDown,
     FaChevronUp,
-    FaCheck,
     FaApple,
     FaGooglePlay,
     FaLock,
