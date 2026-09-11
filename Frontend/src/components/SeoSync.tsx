@@ -64,12 +64,12 @@ const SeoSync = () => {
             updateMetaTag('name', 'keywords', keywordsStr);
 
             // 4. Update Canonical Link
-            updateLinkTag('canonical', `https://mittalonlineservices.com${path}`);
+            updateLinkTag('canonical', `https://www.mittalonlineservices.com${path}`);
 
             // 5. Update Common OG Tags (derived from title/description)
             updateMetaTag('property', 'og:title', metadata.title);
             updateMetaTag('property', 'og:description', metadata.description);
-            updateMetaTag('property', 'og:url', `https://mittalonlineservices.com${path}`);
+            updateMetaTag('property', 'og:url', `https://www.mittalonlineservices.com${path}`);
 
             // 6. Handle custom headTags from the snapshot
             // We intentionally avoid complex HTML injection here to prevent double-injection

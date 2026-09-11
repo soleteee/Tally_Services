@@ -28,4 +28,4 @@ Crawl-delay: 1
 Request-rate: 10/1s
 
 # Sitemap location
-Sitemap: https://mittalonlineservices.com/sitemap.xml
+Sitemap: https://www.mittalonlineservices.com/sitemap.xml

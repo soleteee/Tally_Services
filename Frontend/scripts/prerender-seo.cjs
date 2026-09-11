@@ -7,7 +7,7 @@ const distDir = path.join(projectRoot, 'dist');
 const distTemplatePath = path.join(distDir, 'index.html');
 const publicSnapshotPath = path.join(projectRoot, 'public', 'seo', 'metadata.snapshot.json');
 const distSnapshotPath = path.join(distDir, 'seo', 'metadata.snapshot.json');
-const siteBaseUrl = 'https://mittalonlineservices.com';
+const siteBaseUrl = 'https://www.mittalonlineservices.com';
 const SEO_BLOCK_START = '<!-- SEO_PRERENDER_START -->';
 const SEO_BLOCK_END = '<!-- SEO_PRERENDER_END -->';
 
