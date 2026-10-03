@@ -390,6 +390,7 @@ const TallyIra: React.FC = () => {
                             <img
                                 src={assets.iraDownload}
                                 alt="TallyIra App Mockup"
+                                loading="lazy"
                                 className="w-full max-w-[340px] md:max-w-[380px] h-auto object-contain drop-shadow-2xl hover:scale-[1.02] transition-transform duration-500"
                             />
                         </ScrollReveal>

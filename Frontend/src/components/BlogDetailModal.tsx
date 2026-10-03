@@ -61,7 +61,7 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ blog, onClose }) => {
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-zoom-in" onClick={(e) => e.stopPropagation()}>
                 <div className="relative h-64 w-full">
                     {displayImage ? (
-                        <img src={displayImage} alt={blog.title} className="w-full h-full object-cover" />
+                        <img src={displayImage} alt={blog.title} loading="lazy" className="w-full h-full object-cover" />
                     ) : (
                         <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
                             No Image Available

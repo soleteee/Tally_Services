@@ -400,7 +400,7 @@ const Resources: React.FC = () => {
                                         title={blog.youtubeUrl ? `Open video for ${blog.title}` : undefined}
                                     >
                                         {displayImage ? (
-                                            <img src={displayImage} alt={blog.title} className="w-full h-full object-cover" />
+                                            <img src={displayImage} alt={blog.title} loading="lazy" className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
                                         )}

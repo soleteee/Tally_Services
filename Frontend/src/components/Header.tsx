@@ -100,10 +100,10 @@ const Header: React.FC = () => {
 
                                 {/* Left Content (Text) */}
                                 <div className={`flex-1 max-w-[650px] text-gray-900 transition-all duration-700 transform ${selectedIndex === index ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
-                                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-gray-900">
+                                    <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-gray-900">
                                         {slide.title} <br />
                                         <span className="text-primary">{slide.highlight}</span>
-                                    </h1>
+                                    </h2>
 
                                     <ul className="text-sm md:text-base lg:text-lg text-gray-700 mb-6 md:mb-8 max-w-[600px] space-y-1.5 md:space-y-2 list-none min-h-[112px] md:min-h-[140px]">
                                         {slide.features.map((feature, i) => (
@@ -147,6 +147,8 @@ const Header: React.FC = () => {
                                     <img
                                         src={slide.image}
                                         alt={slide.title}
+                                        loading={index === 0 ? 'eager' : 'lazy'}
+                                        fetchPriority={index === 0 ? 'high' : 'auto'}
                                         className="h-[330px] md:h-[480px] lg:h-[420px] w-full max-w-[780px] md:max-w-[870px] lg:max-w-[640px] object-contain drop-shadow-2xl transition-transform duration-500"
                                     />
                                 </div>

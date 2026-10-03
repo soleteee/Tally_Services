@@ -54,6 +54,7 @@ const AboutUs: React.FC = () => {
                             <img
                                 src={assets.certificateFull}
                                 alt="About Us"
+                                loading="lazy"
                                 className="w-full h-full object-cover z-10"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent"></div>

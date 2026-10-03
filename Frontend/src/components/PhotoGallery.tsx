@@ -74,6 +74,7 @@ const ImageTile: React.FC<ImageTileProps> = ({ images, interval = 3000 }) => {
             <img
                 src={currentImage}
                 alt="Gallery"
+                loading="lazy"
                 className={`absolute w-full h-full object-contain z-10 
                     ${isResetting ? 'transition-none' : 'transition-opacity duration-1000'}
                     ${isTransitioning ? 'opacity-0' : 'opacity-100'}
@@ -84,6 +85,7 @@ const ImageTile: React.FC<ImageTileProps> = ({ images, interval = 3000 }) => {
             <img
                 src={nextImage}
                 alt="Gallery Next"
+                loading="lazy"
                 className={`absolute w-full h-full object-contain z-0`}
             />
 
@@ -151,7 +153,7 @@ const PhotoGallery: React.FC = () => {
 
     return (
         <section className="w-full bg-white flex flex-col items-center px-4 sm:px-5 lg:px-8 py-8 md:py-16 font-['M_PLUS_2',sans-serif]">
-            <h1 className="text-4xl md:text-5xl text-primary mb-8 font-bold relative inline-block after:content-[''] after:block after:w-20 after:h-1 after:bg-accent after:mt-2 after:mx-auto tracking-tight">Gallery</h1>
+            <h2 className="text-4xl md:text-5xl text-primary mb-8 font-bold relative inline-block after:content-[''] after:block after:w-20 after:h-1 after:bg-accent after:mt-2 after:mx-auto tracking-tight">Gallery</h2>
 
             <div className="w-full max-w-[1400px]">
                 {/* Mobile/Tablet: Bento auto-rows | Desktop: 4x4 style grid */}

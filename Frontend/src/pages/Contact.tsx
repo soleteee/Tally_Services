@@ -46,7 +46,7 @@ const Contact: React.FC = () => {
         <div className="py-16 bg-bg min-h-[60vh]">
             <div className="max-w-[1200px] mx-auto px-5">
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold mb-4 text-primary">Contact Us</h2>
+                    <h1 className="text-3xl font-bold mb-4 text-primary">Contact Us</h1>
                     <p className="text-gray-500">Get in touch with our support team.</p>
                 </div>
 

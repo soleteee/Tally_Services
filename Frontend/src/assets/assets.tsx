@@ -1,12 +1,12 @@
 import newLogo from './newlogo.png';
-import aboutus from './Aboutus.png';
-import logoMOS from './LogoMOS.png';
-import certification from './3star_logo.png';
-import certificateFull from './Certificate/3Starpartnercertificate.jpg';
+import aboutus from './Aboutus.webp';
+import logoMOS from './LogoMOS.webp';
+import certification from './3star_logo.webp';
+import certificateFull from './Certificate/3Starpartnercertificate.webp';
 import hero1 from './hero1.png';
-import hero2 from './hero2.png';
-import hero3 from './hero3.png';
-import hero4 from './hero4.png';
+import hero2 from './hero2.webp';
+import hero3 from './hero3.webp';
+import hero4 from './hero4.webp';
 import qrCode from './QR.jpeg';
 import logo1 from './Client Logo/Alexander Athletic Club.jpg'
 import logo2 from './Client Logo/Omega.jpg'
@@ -72,7 +72,7 @@ import tallyTSSLogo from './Products logo/Tally Software Services (TSS) - Silver
 import virtualuser from './Products logo/Tally virtual user.jpg';
 
 // TallyIra Assets
-import iraImage from './Ira.png';
+import iraImage from './Ira.webp';
 import iraDownload from './IRA DOWNLOAD.png';
 import tallyIraScreenPhone from './tally-ira-screen-phone.mp4';
 

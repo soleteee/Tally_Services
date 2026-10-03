@@ -70,10 +70,17 @@ const SeoSync = () => {
             updateMetaTag('property', 'og:title', metadata.title);
             updateMetaTag('property', 'og:description', metadata.description);
             updateMetaTag('property', 'og:url', `https://www.mittalonlineservices.com${path}`);
+            updateMetaTag('property', 'og:type', 'website');
+            updateMetaTag('property', 'og:site_name', 'Mittal Online Services');
 
-            // 6. Handle custom headTags from the snapshot
-            // We intentionally avoid complex HTML injection here to prevent double-injection
-            // with the prerendered HTML, focus on the primary meta tags for SPA navigation.
+            // 6. Update Twitter Card Tags
+            updateMetaTag('name', 'twitter:card', 'summary_large_image');
+            updateMetaTag('name', 'twitter:title', metadata.title);
+            updateMetaTag('name', 'twitter:description', metadata.description);
+
+            // 7. Inject BreadcrumbList structured data
+            injectBreadcrumbSchema(path, metadata.title);
+            injectOrganizationSchema();
         }
     }, [location, snapshot]);
 
@@ -110,4 +117,78 @@ function updateLinkTag(rel: string, href: string) {
     element.setAttribute('href', href);
 }
 
+/**
+ * Injects BreadcrumbList JSON-LD structured data based on the current path.
+ */
+function injectBreadcrumbSchema(path: string, title: string) {
+    const SCHEMA_ID = 'seo-sync-breadcrumb';
+    
+    // Remove existing breadcrumb schema
+    const existing = document.getElementById(SCHEMA_ID);
+    if (existing) existing.remove();
+
+    // Build breadcrumb items from path segments
+    const segments = path.split('/').filter(Boolean);
+    const breadcrumbItems = [
+        {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': 'https://www.mittalonlineservices.com/'
+        }
+    ];
+
+    let cumulativePath = '';
+    segments.forEach((segment, index) => {
+        cumulativePath += `/${segment}`;
+        const name = index === segments.length - 1
+            ? title
+            : segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+        breadcrumbItems.push({
+            '@type': 'ListItem',
+            'position': index + 2,
+            'name': name,
+            'item': `https://www.mittalonlineservices.com${cumulativePath}`
+        });
+    });
+
+    // Only inject if we have more than just "Home"
+    if (breadcrumbItems.length > 1) {
+        const script = document.createElement('script');
+        script.id = SCHEMA_ID;
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': breadcrumbItems
+        });
+        document.head.appendChild(script);
+    }
+}
+
+function injectOrganizationSchema() {
+    const SCHEMA_ID = 'seo-sync-organization';
+    if (document.getElementById(SCHEMA_ID)) return;
+
+    const script = document.createElement('script');
+    script.id = SCHEMA_ID;
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Mittal Online Services',
+        url: 'https://www.mittalonlineservices.com/',
+        description: 'Authorized 3-Star Tally Partner providing TallyPrime, TSS, cloud, customization, training, and consultancy services in Meerut.',
+        contactPoint: {
+            '@type': 'ContactPoint',
+            telephone: '+91-99979-52180',
+            contactType: 'customer service',
+            areaServed: 'IN',
+            availableLanguage: ['en', 'hi']
+        }
+    });
+    document.head.appendChild(script);
+}
+
 export default SeoSync;
+

@@ -34,6 +34,7 @@ const About = () => {
                         <img 
                             src={assets.certificateFull} 
                             alt="3-Star Partner Certificate" 
+                            loading="lazy"
                             className="w-full h-auto rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
                         />
                     </div>

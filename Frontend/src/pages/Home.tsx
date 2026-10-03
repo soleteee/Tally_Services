@@ -92,6 +92,7 @@ const Home: React.FC = () => {
 
     return (
         <div className="w-full">
+            <h1 className="sr-only">Mittal Online Services – Authorized Tally Solutions Partner in Meerut</h1>
             <Header />
             <ScrollReveal animation="fade-up">
                 <AboutUs />
@@ -129,7 +130,7 @@ const Home: React.FC = () => {
                                     <article key={blog._id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col">
                                         <div className="h-48 bg-gray-200">
                                             {displayImage ? (
-                                                <img src={displayImage} alt={blog.title} className="w-full h-full object-cover" />
+                                                <img src={displayImage} alt={blog.title} loading="lazy" className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
                                             )}

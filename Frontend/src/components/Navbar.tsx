@@ -104,6 +104,8 @@ const Navbar: React.FC = () => {
 
                         {/* Mobile Menu Button */}
                         <button
+                            type="button"
+                            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                             className="lg:hidden text-white focus:outline-none p-2"
                             onClick={toggleMobileMenu}
                         >

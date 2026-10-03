@@ -36,6 +36,7 @@ const Products: React.FC = () => {
                                     <img 
                                         src={product.image} 
                                         alt={product.name} 
+                                        loading="lazy"
                                         className="max-h-full max-w-full object-contain"
                                     />
                                 </div>
