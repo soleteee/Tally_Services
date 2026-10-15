@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { assets } from '../assets/assets';
+import HeroSlideTally from './HeroSlideTally';
+import HeroSlidePricing from './HeroSlidePricing';
+import HeroSlideIra from './HeroSlideIra';
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
@@ -26,52 +29,36 @@ const Header: React.FC = () => {
     const slides = [
         {
             id: 1,
-            image: assets.hero1,
-            title: "Experience the Power",
-            highlight: "TallyPrime 7.1",
-            subtitle: "",
-            features: [
-                "- Invoices That Reflect The Professional You",
-                "- AI Powered Document Processing With TallyIra",
-                "- Connected Payments With ICICI Bank",
-                "- Smart Schedule III Support"
-            ],
+            isCustom: true,
+            title: "",
+            highlight: "",
+            features: [] as string[],
             primaryBtn: "Upgrade Now",
             primaryLink: "/upgrade",
-            secondaryBtn: "Learn More",
-            secondaryLink: "/products/prime-gold"
+            secondaryBtn: "Renew TSS",
+            secondaryLink: "/renew-tss"
         },
         {
             id: 2,
-            image: assets.hero2,
-            title: "Uninterrupted Growth with",
-            highlight: "Tally Software Services (TSS)",
-            features: [
-                "Renew before expiry and get 1 month free",
-                "Always stay updated with latest releases",
-                "Priority support from certified experts",
-                "Access connected business features anytime"
-            ],
-            primaryBtn: "Renew TSS",
-            primaryLink: "/renew-tss",
+            isCustomPricing: true,
+            title: "",
+            highlight: "",
+            features: [] as string[],
+            primaryBtn: "Buy Now",
+            primaryLink: "/products/prime-silver",
             secondaryBtn: "Contact Us",
             secondaryLink: "/contact"
         },
         {
             id: 3,
-            image: assets.hero3,
-            title: "Access Tally Anywhere with",
-            highlight: "Tally on Cloud",
-            features: [
-                "Access data securely from anywhere, anytime",
-                "Scale users and storage as your business grows",
-                "Run TallyPrime on any device with ease",
-                "Automatic backup and high uptime reliability"
-            ],
-            primaryBtn: "Start Free Trial",
-            primaryLink: "/services/cloud",
-            secondaryBtn: "View Features",
-            secondaryLink: "/services/cloud"
+            isCustomIra: true,
+            title: "",
+            highlight: "",
+            features: [] as string[],
+            primaryBtn: "Get Early Access",
+            primaryLink: "/tally-ira",
+            secondaryBtn: "Contact Us",
+            secondaryLink: "/contact"
         },
         {
             id: 4,
@@ -89,17 +76,34 @@ const Header: React.FC = () => {
     ];
 
     return (
-        <header className="relative w-full min-h-[calc(80vh+40px)] md:h-[calc(125vh-180px)] lg:h-[calc(115vh-180px)] overflow-hidden bg-blue-50">
+        <header className="relative w-full min-h-[535px] md:h-[555px] lg:h-[585px] overflow-hidden bg-blue-50">
             {/* Carousel viewport */}
             <div className="overflow-hidden h-full" ref={emblaRef}>
                 <div className="flex h-full">
                     {slides.map((slide, index) => (
                         <div key={slide.id} className="relative flex-[0_0_100%] h-full">
-                            {/* Slide Container (Split Layout) */}
-                            <div className="w-full h-full flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-10 lg:px-16 pt-5 md:pt-0 pb-3 md:pb-0 bg-gradient-to-r from-blue-50 to-blue-200">
+                            {slide.isCustom ? (
+                                <HeroSlideTally
+                                    isActive={selectedIndex === index}
+                                    upgradeHref={slide.primaryLink}
+                                    renewTssHref={slide.secondaryLink}
+                                />
+                            ) : slide.isCustomPricing ? (
+                                <HeroSlidePricing
+                                    isActive={selectedIndex === index}
+                                    buyNowHref={slide.primaryLink}
+                                />
+                            ) : slide.isCustomIra ? (
+                                <HeroSlideIra
+                                    isActive={selectedIndex === index}
+                                    getAccessHref={slide.primaryLink}
+                                />
+                            ) : (
+                                /* Slide Container (Split Layout) */
+                                <div className="w-full h-full flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-10 lg:px-16 pt-5 md:pt-0 pb-3 md:pb-0 bg-gradient-to-r from-blue-50 to-blue-200">
 
-                                {/* Left Content (Text) */}
-                                <div className={`flex-1 max-w-[650px] text-gray-900 transition-all duration-700 transform ${selectedIndex === index ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+                                    {/* Left Content (Text) */}
+                                    <div className={`flex-1 max-w-[650px] text-gray-900 transition-all duration-700 transform ${selectedIndex === index ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
                                     <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-gray-900">
                                         {slide.title} <br />
                                         <span className="text-primary">{slide.highlight}</span>
@@ -149,17 +153,18 @@ const Header: React.FC = () => {
                                         alt={slide.title}
                                         loading={index === 0 ? 'eager' : 'lazy'}
                                         fetchPriority={index === 0 ? 'high' : 'auto'}
-                                        className="h-[330px] md:h-[480px] lg:h-[420px] w-full max-w-[780px] md:max-w-[870px] lg:max-w-[640px] object-contain drop-shadow-2xl transition-transform duration-500"
+                                        className="h-[280px] md:h-[380px] lg:h-[390px] w-full max-w-[780px] md:max-w-[870px] lg:max-w-[640px] object-contain drop-shadow-2xl transition-transform duration-500"
                                     />
                                 </div>
                             </div>
+                            )}
                         </div>
                     ))}
                 </div>
             </div>
 
             {/* Navigation Dots */}
-            <div className="hidden md:flex absolute bottom-10 left-1/2 transform -translate-x-1/2 gap-[14px] z-20">
+            <div className="hidden md:flex absolute bottom-5 left-1/2 transform -translate-x-1/2 gap-[14px] z-20">
                 {slides.map((_, index) => (
                     <button
                         key={index}
