@@ -1,4 +1,3 @@
-import ScrollReveal from '../components/ScrollReveal';
 import PhotoGallery from '../components/PhotoGallery';
 import { assets } from '../assets/assets';
 import FaqSection from '../components/FaqSection';
@@ -6,8 +5,7 @@ import FaqSection from '../components/FaqSection';
 const About = () => {
     return (
         <div className="pt-32 pb-20 px-5 max-w-[1200px] mx-auto">
-            <ScrollReveal animation="fade-up">
-                <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 text-center">About Mittal Online Services</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 text-center">About Mittal Online Services</h1>
 
                 <div className="prose max-w-none text-lg text-text/80 mb-20">
                     <p className="mb-6 text-center max-w-4xl mx-auto">
@@ -126,7 +124,6 @@ const About = () => {
                         className="w-full h-full"
                     ></iframe>
                 </div>
-            </ScrollReveal>
         </div>
     );
 };
