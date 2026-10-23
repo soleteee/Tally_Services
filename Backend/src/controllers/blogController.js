@@ -65,20 +65,22 @@ const getYouTubeThumbnail = (youtubeUrl) => {
 // Create a new blog (User or Admin)
 exports.createBlog = async (req, res) => {
     try {
-        const { title, author, content, image, youtubeUrl, status } = req.body;
+        const { title, author, content, image, socialUrl, youtubeUrl, status } = req.body;
         // Users default to pending. Admin can pass 'approved' if we add that logic later, 
         // but for now, if 'status' is passed in body, accept it (secure via Admin panel logic) 
         // or force 'pending' for public API. 
         // Let's allow status to be set if passed, but typically frontend sends it.
 
         const normalizedImage = typeof image === 'string' ? image.trim() : '';
-        const normalizedYouTubeUrl = typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '';
+        const normalizedSocialUrl = typeof socialUrl === 'string'
+            ? socialUrl.trim()
+            : (typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '');
 
         let finalImage = getUploadedImageUrl(req);
 
         // If no photo is uploaded, prefer the YouTube thumbnail when a valid URL is present.
-        if (!finalImage && normalizedYouTubeUrl) {
-            finalImage = getYouTubeThumbnail(normalizedYouTubeUrl);
+        if (!finalImage && normalizedSocialUrl) {
+            finalImage = getYouTubeThumbnail(normalizedSocialUrl);
         }
 
         // Fall back to a manual image URL only when no upload or YouTube thumbnail is available.
@@ -91,7 +93,7 @@ exports.createBlog = async (req, res) => {
             author,
             content,
             image: finalImage,
-            youtubeUrl: normalizedYouTubeUrl,
+            socialUrl: normalizedSocialUrl,
             status: status || 'pending'
         });
 
@@ -114,6 +116,7 @@ exports.updateBlog = async (req, res) => {
             title,
             content,
             image,
+            socialUrl,
             youtubeUrl,
             author,
             status,
@@ -136,17 +139,20 @@ exports.updateBlog = async (req, res) => {
         }
 
         const normalizedImage = typeof image === 'string' ? image.trim() : '';
-        const normalizedYouTubeUrl = typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '';
+        const normalizedSocialUrl = typeof socialUrl === 'string'
+            ? socialUrl.trim()
+            : (typeof youtubeUrl === 'string' ? youtubeUrl.trim() : '');
 
-        if (typeof youtubeUrl === 'string') {
-            blog.youtubeUrl = normalizedYouTubeUrl;
+        if (typeof socialUrl === 'string' || typeof youtubeUrl === 'string') {
+            blog.socialUrl = normalizedSocialUrl;
+            blog.youtubeUrl = undefined;
         }
 
         const uploadedImageUrl = getUploadedImageUrl(req);
         if (uploadedImageUrl) {
             blog.image = uploadedImageUrl;
-        } else if (normalizedYouTubeUrl) {
-            const thumbnail = getYouTubeThumbnail(normalizedYouTubeUrl);
+        } else if (normalizedSocialUrl) {
+            const thumbnail = getYouTubeThumbnail(normalizedSocialUrl);
             if (thumbnail) {
                 blog.image = thumbnail;
             }

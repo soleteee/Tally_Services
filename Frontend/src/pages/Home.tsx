@@ -13,6 +13,7 @@ type Blog = {
     author: string;
     content: string;
     image?: string;
+    socialUrl?: string;
     youtubeUrl?: string;
     createdAt: string;
 };
@@ -49,7 +50,7 @@ const getDisplayImage = (blog: Blog): string | null => {
         return blog.image;
     }
 
-    const videoId = getYouTubeVideoId(blog.youtubeUrl);
+    const videoId = getYouTubeVideoId(blog.socialUrl || blog.youtubeUrl);
     if (!videoId) {
         return null;
     }

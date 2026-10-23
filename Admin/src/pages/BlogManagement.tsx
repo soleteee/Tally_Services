@@ -6,6 +6,7 @@ type Blog = {
     author: string;
     content: string;
     image?: string;
+    socialUrl?: string;
     youtubeUrl?: string;
     status: 'pending' | 'approved';
     createdAt: string;
@@ -18,7 +19,7 @@ const BlogManagement = () => {
         title: '',
         content: '',
         image: '',
-        youtubeUrl: '',
+        socialUrl: '',
     });
     const [editImageFile, setEditImageFile] = useState<File | null>(null);
 
@@ -61,7 +62,7 @@ const BlogManagement = () => {
             title: blog.title || '',
             content: blog.content || '',
             image: blog.image || '',
-            youtubeUrl: blog.youtubeUrl || '',
+            socialUrl: blog.socialUrl || blog.youtubeUrl || '',
         });
         setEditImageFile(null);
     };
@@ -83,7 +84,7 @@ const BlogManagement = () => {
             payload.append('title', editForm.title);
             payload.append('content', editForm.content);
             payload.append('image', editForm.image);
-            payload.append('youtubeUrl', editForm.youtubeUrl);
+            payload.append('socialUrl', editForm.socialUrl);
 
             if (editImageFile) {
                 payload.append('imageFile', editImageFile);
@@ -212,13 +213,13 @@ const BlogManagement = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">YouTube URL (Optional)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Social Media Link (Optional)</label>
                                 <input
                                     type="url"
-                                    value={editForm.youtubeUrl}
-                                    onChange={(e) => setEditForm((prev) => ({ ...prev, youtubeUrl: e.target.value }))}
+                                    value={editForm.socialUrl}
+                                    onChange={(e) => setEditForm((prev) => ({ ...prev, socialUrl: e.target.value }))}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                                    placeholder="https://www.youtube.com/watch?v=..."
+                                    placeholder="https://www.youtube.com, facebook.com, instagram.com, etc."
                                 />
                             </div>
 

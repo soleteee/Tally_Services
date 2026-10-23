@@ -6,6 +6,7 @@ interface Blog {
     author: string;
     content: string;
     image?: string;
+    socialUrl?: string;
     youtubeUrl?: string;
     createdAt: string;
 }
@@ -53,7 +54,8 @@ const getYouTubeVideoId = (urlValue?: string): string | null => {
 const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ blog, onClose }) => {
     if (!blog) return null;
 
-    const videoId = getYouTubeVideoId(blog.youtubeUrl);
+    const socialUrl = blog.socialUrl || blog.youtubeUrl;
+    const videoId = getYouTubeVideoId(socialUrl);
     const displayImage = blog.image || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '');
 
     return (
@@ -80,14 +82,14 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ blog, onClose }) => {
                         <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
                     </div>
                     <h2 className="text-3xl font-bold text-primary mb-6">{blog.title}</h2>
-                    {blog.youtubeUrl && (
+                    {socialUrl && (
                         <a
-                            href={blog.youtubeUrl}
+                            href={socialUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-block mb-6 rounded-lg bg-red-600 px-4 py-2 text-white font-medium hover:bg-red-700 transition-colors"
                         >
-                            Watch on YouTube
+                            Open Social Media Link
                         </a>
                     )}
                     <div className="prose max-w-none text-text/80 whitespace-pre-wrap leading-relaxed">

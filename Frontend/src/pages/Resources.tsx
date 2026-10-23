@@ -9,6 +9,7 @@ type Blog = {
     author: string;
     content: string;
     image?: string;
+    socialUrl?: string;
     youtubeUrl?: string;
     createdAt: string;
 };
@@ -66,19 +67,19 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
 
                     <div className="mt-8 pt-8 border-t border-gray-200">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            {blog.youtubeUrl && (
+                            {(blog.socialUrl || blog.youtubeUrl) && (
                                 <button
                                     type="button"
-                                    onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
+                                    onClick={() => window.open(blog.socialUrl || blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
                                     className="inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-3 text-white font-semibold hover:bg-red-700 transition-colors"
                                 >
-                                    Watch Full Video on YouTube
+                                    Open Social Media Link
                                 </button>
                             )}
                             <button
                                 type="button"
                                 onClick={() => copyToClipboard(blogLink)}
-                                className={`inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-white font-semibold hover:bg-secondary/90 transition-colors ${!blog.youtubeUrl ? 'sm:col-span-2' : ''}`}
+                                className={`inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-white font-semibold hover:bg-secondary/90 transition-colors ${!(blog.socialUrl || blog.youtubeUrl) ? 'sm:col-span-2' : ''}`}
                             >
                                 Copy Blog Link
                             </button>
@@ -150,7 +151,7 @@ const getDisplayImage = (blog: Blog): string | null => {
         return blog.image;
     }
 
-    const videoId = getYouTubeVideoId(blog.youtubeUrl);
+    const videoId = getYouTubeVideoId(blog.socialUrl || blog.youtubeUrl);
     if (!videoId) {
         return null;
     }
@@ -248,7 +249,7 @@ const Resources: React.FC = () => {
         window.history.pushState({}, '', `${url.pathname}${nextSearch ? `?${nextSearch}` : ''}`);
     };
 
-    const handleCreateBlog = async (blogData: { title: string; author: string; content: string; image: string; youtubeUrl: string }) => {
+    const handleCreateBlog = async (blogData: { title: string; author: string; content: string; image: string; socialUrl: string }) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs`, {
                 method: 'POST',
@@ -391,22 +392,22 @@ const Resources: React.FC = () => {
                                 <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex ${layout.type === 'wide' ? 'flex-col md:flex-row' : 'flex-col'} h-full ${layout.gridClass}`}>
                                     <button
                                         type="button"
-                                        className={`bg-gray-200 relative text-left ${layout.imageClass} ${blog.youtubeUrl ? 'cursor-pointer' : ''}`}
+                                        className={`bg-gray-200 relative text-left ${layout.imageClass} ${(blog.socialUrl || blog.youtubeUrl) ? 'cursor-pointer' : ''}`}
                                         onClick={() => {
-                                            if (blog.youtubeUrl) {
-                                                window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer');
+                                            if (blog.socialUrl || blog.youtubeUrl) {
+                                                window.open(blog.socialUrl || blog.youtubeUrl, '_blank', 'noopener,noreferrer');
                                             }
                                         }}
-                                        title={blog.youtubeUrl ? `Open video for ${blog.title}` : undefined}
+                                        title={(blog.socialUrl || blog.youtubeUrl) ? `Open social media link for ${blog.title}` : undefined}
                                     >
                                         {displayImage ? (
                                             <img src={displayImage} alt={blog.title} loading="lazy" className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
                                         )}
-                                        {blog.youtubeUrl && (
+                                        {(blog.socialUrl || blog.youtubeUrl) && (
                                             <div className="absolute top-3 right-3 rounded-full bg-black/70 text-white text-xs px-3 py-1">
-                                                Watch on YouTube
+                                                Open Social Media Link
                                             </div>
                                         )}
                                     </button>
@@ -428,13 +429,13 @@ const Resources: React.FC = () => {
                                             </button>
 
                                             <div className="flex gap-2">
-                                                {blog.youtubeUrl && (
+                                                {(blog.socialUrl || blog.youtubeUrl) && (
                                                     <button
                                                         type="button"
-                                                        onClick={() => window.open(blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
+                                                        onClick={() => window.open(blog.socialUrl || blog.youtubeUrl, '_blank', 'noopener,noreferrer')}
                                                         className="flex-1 inline-flex items-center justify-center rounded-lg bg-red-600 px-3 py-2 text-white font-medium hover:bg-red-700 transition-colors text-sm"
                                                     >
-                                                        Watch Video
+                                                        Open Link
                                                     </button>
                                                 )}
 
@@ -445,7 +446,7 @@ const Resources: React.FC = () => {
                                                         navigator.clipboard.writeText(blogUrl);
                                                         alert('Blog link copied to clipboard!');
                                                     }}
-                                                    className={`${blog.youtubeUrl ? 'flex-1' : 'w-full'} inline-flex items-center justify-center rounded-lg bg-secondary px-3 py-2 text-white font-medium hover:bg-secondary/90 transition-colors text-sm`}
+                                                    className={`${(blog.socialUrl || blog.youtubeUrl) ? 'flex-1' : 'w-full'} inline-flex items-center justify-center rounded-lg bg-secondary px-3 py-2 text-white font-medium hover:bg-secondary/90 transition-colors text-sm`}
                                                     title="Copy link for backlinks and sharing"
                                                 >
                                                     Copy Link

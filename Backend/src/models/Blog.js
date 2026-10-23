@@ -17,6 +17,12 @@ const blogSchema = new mongoose.Schema({
         type: String, // URL to image
         required: false,
     },
+    socialUrl: {
+        type: String,
+        required: false,
+        trim: true,
+    },
+    // Kept for compatibility with blogs created before socialUrl was introduced.
     youtubeUrl: {
         type: String,
         required: false,

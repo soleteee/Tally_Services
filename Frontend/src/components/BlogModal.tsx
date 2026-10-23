@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface BlogModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (blog: { title: string; author: string; content: string; image: string; youtubeUrl: string }) => void;
+    onSubmit: (blog: { title: string; author: string; content: string; image: string; socialUrl: string }) => void;
 }
 
 const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, onSubmit }) => {
@@ -11,19 +11,19 @@ const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, onSubmit }) => {
     const [author, setAuthor] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
-    const [youtubeUrl, setYoutubeUrl] = useState('');
+    const [socialUrl, setSocialUrl] = useState('');
 
     if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({ title, author, content, image, youtubeUrl });
+        onSubmit({ title, author, content, image, socialUrl });
         // Reset form
         setTitle('');
         setAuthor('');
         setContent('');
         setImage('');
-        setYoutubeUrl('');
+        setSocialUrl('');
         onClose();
     };
 
@@ -78,13 +78,13 @@ const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, onSubmit }) => {
                         ></textarea>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-text mb-1">YouTube URL (Optional)</label>
+                        <label className="block text-sm font-medium text-text mb-1">Social Media Link (Optional)</label>
                         <input
                             type="url"
-                            value={youtubeUrl}
-                            onChange={(e) => setYoutubeUrl(e.target.value)}
+                            value={socialUrl}
+                            onChange={(e) => setSocialUrl(e.target.value)}
                             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                            placeholder="https://www.youtube.com/watch?v=..."
+                            placeholder="https://www.youtube.com, facebook.com, instagram.com, etc."
                         />
                     </div>
                     <div className="flex justify-end gap-3 pt-2">

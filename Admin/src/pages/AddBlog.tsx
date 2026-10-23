@@ -8,7 +8,7 @@ const AddBlog = () => {
         author: 'Admin', // Default to Admin
         content: '',
         image: '',
-        youtubeUrl: '',
+        socialUrl: '',
         status: 'approved' // Admins post approved blogs directly
     });
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -31,7 +31,7 @@ const AddBlog = () => {
             payload.append('content', formData.content);
             payload.append('status', formData.status);
             payload.append('image', formData.image);
-            payload.append('youtubeUrl', formData.youtubeUrl);
+            payload.append('socialUrl', formData.socialUrl);
             if (imageFile) {
                 payload.append('imageFile', imageFile);
             }
@@ -110,14 +110,14 @@ const AddBlog = () => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">YouTube URL (Optional)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Social Media Link (Optional)</label>
                     <input
                         type="url"
-                        name="youtubeUrl"
-                        value={formData.youtubeUrl}
+                        name="socialUrl"
+                        value={formData.socialUrl}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                        placeholder="https://www.youtube.com/watch?v=..."
+                        placeholder="https://www.youtube.com, facebook.com, instagram.com, etc."
                     />
                 </div>
 

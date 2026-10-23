@@ -21,6 +21,7 @@ type Blog = {
     author: string;
     content: string;
     image?: string;
+    socialUrl?: string;
     youtubeUrl?: string;
     createdAt: string;
 };
@@ -80,7 +81,7 @@ const TallyIra: React.FC = () => {
 
     const getDisplayImage = (blog: Blog): string | null => {
         if (blog.image) return blog.image;
-        const videoId = getYouTubeVideoId(blog.youtubeUrl);
+        const videoId = getYouTubeVideoId(blog.socialUrl || blog.youtubeUrl);
         if (!videoId) return null;
         return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     };
