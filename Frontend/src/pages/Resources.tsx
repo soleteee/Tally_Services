@@ -49,20 +49,18 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
                 </div>
 
                 <div className="p-6 md:p-10">
-                    <div className={`grid grid-cols-1 ${displayImage ? 'lg:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.2fr)]' : ''} gap-8`}>
+                    <div className="max-w-4xl mx-auto">
                         {displayImage && (
-                            <div className="lg:col-span-1">
+                            <div className="aspect-video w-full overflow-hidden rounded-lg bg-gray-200">
                                 <img
                                     src={displayImage}
                                     alt={blog.title}
-                                    className="w-full h-64 lg:h-96 object-cover rounded-lg"
+                                    className="h-full w-full object-cover"
                                 />
                             </div>
                         )}
-                        <div className="min-w-0">
-                            <div className="prose prose-lg max-w-none">
-                                <p className="text-gray-700 leading-8 whitespace-pre-wrap break-words">{blog.content}</p>
-                            </div>
+                        <div className="mx-auto mt-8 max-w-3xl text-center">
+                            <p className="text-lg leading-8 text-gray-700 whitespace-pre-wrap break-words">{blog.content}</p>
                         </div>
                     </div>
 
@@ -299,7 +297,7 @@ const Resources: React.FC = () => {
     };
 
     return (
-        <div className="pt-32 pb-20 px-5 max-w-[1200px] mx-auto min-h-screen relative">
+        <div className="mt-6 pt-32 pb-20 px-5 max-w-[1200px] mx-auto min-h-screen relative">
             <Helmet>
                 <script type="application/ld+json">
                     {JSON.stringify(selectedBlogSchema)}
@@ -378,7 +376,7 @@ const Resources: React.FC = () => {
                                 <div key={blog._id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col h-full">
                                     <button
                                         type="button"
-                                        className={`bg-gray-200 relative text-left h-56 w-full ${(blog.socialUrl || blog.youtubeUrl) ? 'cursor-pointer' : ''}`}
+                                        className={`aspect-video bg-gray-200 relative text-left w-full ${(blog.socialUrl || blog.youtubeUrl) ? 'cursor-pointer' : ''}`}
                                         onClick={() => {
                                             if (blog.socialUrl || blog.youtubeUrl) {
                                                 window.open(blog.socialUrl || blog.youtubeUrl, '_blank', 'noopener,noreferrer');

@@ -132,7 +132,7 @@ const Home: React.FC = () => {
 
                                 return (
                                     <article key={blog._id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col">
-                                        <div className="h-48 bg-gray-200">
+                                        <div className="aspect-video bg-gray-200">
                                             {displayImage ? (
                                                 <img src={displayImage} alt={blog.title} loading="lazy" className="w-full h-full object-cover" />
                                             ) : (

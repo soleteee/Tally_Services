@@ -61,7 +61,7 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ blog, onClose }) => {
     return (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-zoom-in" onClick={(e) => e.stopPropagation()}>
-                <div className="relative h-64 w-full">
+                <div className="relative aspect-video w-full overflow-hidden">
                     {displayImage ? (
                         <img src={displayImage} alt={blog.title} loading="lazy" className="w-full h-full object-cover" />
                     ) : (

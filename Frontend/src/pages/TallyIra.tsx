@@ -477,7 +477,7 @@ const TallyIra: React.FC = () => {
                         return (
                             <ScrollReveal key={blog._id} animation="fade-up" delay={idx * 100}>
                                 <article className="bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
-                                    <div className="h-48 bg-gray-200 overflow-hidden relative">
+                                    <div className="aspect-video bg-gray-200 overflow-hidden relative">
                                         {displayImage ? (
                                             <img
                                                 src={displayImage}
