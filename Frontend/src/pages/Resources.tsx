@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import ScrollReveal from '../components/ScrollReveal';
 import BlogModal from '../components/BlogModal';
+import { getBlogSlug } from '../utils/blogSlug';
 
 type Blog = {
     _id: string;
@@ -18,7 +19,7 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
     if (!isOpen || !blog) return null;
 
     const displayImage = getDisplayImage(blog);
-    const blogLink = `${window.location.origin}/blogs?blog=${blog._id}`;
+    const blogLink = `${window.location.origin}/blogs/${getBlogSlug(blog.title)}`;
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -28,7 +29,7 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto" onClick={onClose}>
             <div
-                className="bg-white rounded-xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl my-auto"
+                className="bg-white rounded-xl w-full max-w-5xl max-h-[calc(100vh-2rem)] overflow-y-auto shadow-2xl my-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-10">
@@ -47,8 +48,8 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
                     </button>
                 </div>
 
-                <div className="p-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="p-6 md:p-10">
+                    <div className={`grid grid-cols-1 ${displayImage ? 'lg:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.2fr)]' : ''} gap-8`}>
                         {displayImage && (
                             <div className="lg:col-span-1">
                                 <img
@@ -58,9 +59,9 @@ const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ isOpen, blog, onClose
                                 />
                             </div>
                         )}
-                        <div className={displayImage ? 'lg:col-span-2' : 'lg:col-span-3'}>
+                        <div className="min-w-0">
                             <div className="prose prose-lg max-w-none">
-                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap text-justify">{blog.content}</p>
+                                <p className="text-gray-700 leading-8 whitespace-pre-wrap break-words">{blog.content}</p>
                             </div>
                         </div>
                     </div>
@@ -218,12 +219,17 @@ const Resources: React.FC = () => {
         }
 
         const params = new URLSearchParams(window.location.search);
-        const blogId = params.get('blog');
-        if (!blogId) {
+        const blogIdentifier = params.get('blog');
+        const blogSlug = window.location.pathname.startsWith('/blogs/')
+            ? window.location.pathname.slice('/blogs/'.length)
+            : '';
+        if (!blogIdentifier && !blogSlug) {
             return;
         }
 
-        const matchedBlog = blogs.find((blog) => blog._id === blogId);
+        const matchedBlog = blogs.find((blog) =>
+            blog._id === blogIdentifier || getBlogSlug(blog.title) === blogSlug
+        );
         if (matchedBlog) {
             setSelectedBlog(matchedBlog);
             setIsDetailModalOpen(true);
@@ -234,19 +240,14 @@ const Resources: React.FC = () => {
         setSelectedBlog(blog);
         setIsDetailModalOpen(true);
 
-        const url = new URL(window.location.href);
-        url.searchParams.set('blog', blog._id);
-        window.history.pushState({}, '', `${url.pathname}${url.search}`);
+        window.history.pushState({}, '', `/blogs/${getBlogSlug(blog.title)}`);
     };
 
     const closeBlogDetails = () => {
         setIsDetailModalOpen(false);
         setSelectedBlog(null);
 
-        const url = new URL(window.location.href);
-        url.searchParams.delete('blog');
-        const nextSearch = url.searchParams.toString();
-        window.history.pushState({}, '', `${url.pathname}${nextSearch ? `?${nextSearch}` : ''}`);
+        window.history.pushState({}, '', '/blogs');
     };
 
     const handleCreateBlog = async (blogData: { title: string; author: string; content: string; image: string; socialUrl: string }) => {
@@ -269,19 +270,6 @@ const Resources: React.FC = () => {
         }
     };
 
-    const layouts = [
-        { type: 'large', gridClass: 'md:col-span-2 md:row-span-2', imageClass: 'h-56 md:h-[220px] w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between', descClass: 'line-clamp-4 md:line-clamp-3' },
-        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
-        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
-        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
-        { type: 'wide',  gridClass: 'md:col-span-2 md:row-span-1', imageClass: 'h-56 md:h-full md:w-[35%] flex-shrink-0', contentClass: 'p-6 flex flex-col flex-grow justify-between', descClass: 'line-clamp-4 md:line-clamp-2' },
-        { type: 'small', gridClass: 'md:col-span-1 md:row-span-1', imageClass: 'h-56 md:hidden w-full', contentClass: 'p-6 flex flex-col flex-grow justify-between h-full', descClass: 'line-clamp-4 md:line-clamp-2' },
-    ];
-
-    const getBlogLayout = (index: number) => {
-        return layouts[index % layouts.length];
-    };
-
     const selectedBlogSchema = selectedBlog ? {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
@@ -300,7 +288,7 @@ const Resources: React.FC = () => {
         dateModified: new Date(selectedBlog.createdAt).toISOString(),
         mainEntityOfPage: {
             '@type': 'WebPage',
-            '@id': `${window.location.origin}/blogs?blog=${selectedBlog._id}`,
+            '@id': `${window.location.origin}/blogs/${getBlogSlug(selectedBlog.title)}`,
         },
     } : {
         '@context': 'https://schema.org',
@@ -378,21 +366,19 @@ const Resources: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 md:auto-rows-[250px] gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {filteredBlogs.length === 0 ? (
                         <div className="col-span-full text-center text-gray-500 py-10">
                             {blogs.length === 0 ? 'No blogs available yet. Be the first to write one!' : 'No blogs match your search.'}
                         </div>
                     ) : (
-                        filteredBlogs.map((blog, index) => {
+                        filteredBlogs.map((blog) => {
                             const displayImage = getDisplayImage(blog);
-                            const layout = getBlogLayout(index);
-
                             return (
-                                <div key={blog._id} className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex ${layout.type === 'wide' ? 'flex-col md:flex-row' : 'flex-col'} h-full ${layout.gridClass}`}>
+                                <div key={blog._id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col h-full">
                                     <button
                                         type="button"
-                                        className={`bg-gray-200 relative text-left ${layout.imageClass} ${(blog.socialUrl || blog.youtubeUrl) ? 'cursor-pointer' : ''}`}
+                                        className={`bg-gray-200 relative text-left h-56 w-full ${(blog.socialUrl || blog.youtubeUrl) ? 'cursor-pointer' : ''}`}
                                         onClick={() => {
                                             if (blog.socialUrl || blog.youtubeUrl) {
                                                 window.open(blog.socialUrl || blog.youtubeUrl, '_blank', 'noopener,noreferrer');
@@ -411,11 +397,11 @@ const Resources: React.FC = () => {
                                             </div>
                                         )}
                                     </button>
-                                    <div className={layout.contentClass}>
+                                    <div className="p-6 flex flex-col flex-grow justify-between">
                                         <div>
                                             <span className="text-xs font-bold text-accent uppercase tracking-wider mb-2 block">{blog.author}</span>
                                             <h3 className="text-xl font-bold text-primary mb-2 line-clamp-2">{blog.title}</h3>
-                                            <p className={`text-text/70 mb-4 ${layout.descClass}`}>{blog.content}</p>
+                                            <p className="text-text/70 mb-4 line-clamp-4">{blog.content}</p>
                                         </div>
                                         
                                         {/* Action Buttons */}
@@ -442,7 +428,7 @@ const Resources: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => {
-                                                        const blogUrl = `${window.location.origin}/blogs?blog=${blog._id}`;
+                                                        const blogUrl = `${window.location.origin}/blogs/${getBlogSlug(blog.title)}`;
                                                         navigator.clipboard.writeText(blogUrl);
                                                         alert('Blog link copied to clipboard!');
                                                     }}

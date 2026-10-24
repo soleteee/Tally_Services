@@ -6,6 +6,7 @@ import OurServices from '../components/OurServices';
 import ScrollReveal from '../components/ScrollReveal';
 import BusinessGrowth from '../components/BusinessGrowth';
 import PhotoGallery from '../components/PhotoGallery';
+import { getBlogSlug } from '../utils/blogSlug';
 
 type Blog = {
     _id: string;
@@ -82,11 +83,13 @@ const Home: React.FC = () => {
     }, []);
 
     const openBlogInBlogs = (blogId: string) => {
-        navigate(`/blogs?blog=${blogId}`);
+        const blog = blogs.find((item) => item._id === blogId);
+        navigate(blog ? `/blogs/${getBlogSlug(blog.title)}` : '/blogs');
     };
 
     const copyBlogLink = (blogId: string) => {
-        const blogUrl = `${window.location.origin}/blogs?blog=${blogId}`;
+        const blog = blogs.find((item) => item._id === blogId);
+        const blogUrl = `${window.location.origin}/blogs/${blog ? getBlogSlug(blog.title) : blogId}`;
         navigator.clipboard.writeText(blogUrl);
         alert('Blog link copied to clipboard!');
     };

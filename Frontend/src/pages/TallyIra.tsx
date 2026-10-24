@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
 import { assets } from '../assets/assets';
+import { getBlogSlug } from '../utils/blogSlug';
 import {
     FaChevronDown,
     FaChevronUp,
@@ -493,7 +494,7 @@ const TallyIra: React.FC = () => {
                                         <p className="text-xs font-bold text-accent uppercase mb-2">
                                             {blog.author}
                                         </p>
-                                        <h3 className="text-lg font-bold text-primary mb-3 line-clamp-2 hover:text-accent transition-colors cursor-pointer" onClick={() => navigate(`/blogs?blog=${blog._id}`)}>
+                                        <h3 className="text-lg font-bold text-primary mb-3 line-clamp-2 hover:text-accent transition-colors cursor-pointer" onClick={() => navigate(`/blogs/${getBlogSlug(blog.title)}`)}>
                                             {blog.title}
                                         </h3>
                                         <p className="text-sm text-gray-600 line-clamp-3 mb-6 flex-grow leading-relaxed">
@@ -503,7 +504,7 @@ const TallyIra: React.FC = () => {
                                         <div className="grid grid-cols-2 gap-3 mt-auto">
                                             <button
                                                 type="button"
-                                                onClick={() => navigate(`/blogs?blog=${blog._id}`)}
+                                                onClick={() => navigate(`/blogs/${getBlogSlug(blog.title)}`)}
                                                 className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-white font-bold hover:bg-blue-700 transition-all text-xs"
                                             >
                                                 Read More
@@ -511,7 +512,7 @@ const TallyIra: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    navigator.clipboard.writeText(`${window.location.origin}/blogs?blog=${blog._id}`);
+                                                    navigator.clipboard.writeText(`${window.location.origin}/blogs/${getBlogSlug(blog.title)}`);
                                                     alert('Link copied to clipboard!');
                                                 }}
                                                 className="inline-flex items-center justify-center rounded-xl bg-blue-50 border border-blue-100 px-4 py-2.5 text-primary font-bold hover:bg-blue-100 transition-all text-xs"
