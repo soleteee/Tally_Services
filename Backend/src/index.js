@@ -68,7 +68,7 @@ app.use((req, res, next) => {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.get('/', (_req, res) => {
     res.status(200).json({
