@@ -99,12 +99,8 @@ printf 'server {
         proxy_set_header X-Forwarded-Proto \$scheme;
     }
 
-    location /uploads/ {
-        proxy_pass http://localhost:5000;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+    location ^~ /uploads/ {
+        alias /var/www/Tally_Services/Backend/uploads/;
     }
 }
 ' > /etc/nginx/sites-available/mittalonlineservices.com.conf
