@@ -75,6 +75,7 @@ const ImageTile: React.FC<ImageTileProps> = ({ images, interval = 3000 }) => {
                 src={currentImage}
                 alt="Gallery"
                 loading="lazy"
+                decoding="async"
                 className={`absolute w-full h-full object-contain z-10 
                     ${isResetting ? 'transition-none' : 'transition-opacity duration-1000'}
                     ${isTransitioning ? 'opacity-0' : 'opacity-100'}
@@ -86,6 +87,7 @@ const ImageTile: React.FC<ImageTileProps> = ({ images, interval = 3000 }) => {
                 src={nextImage}
                 alt="Gallery Next"
                 loading="lazy"
+                decoding="async"
                 className={`absolute w-full h-full object-contain z-0`}
             />
 
@@ -117,6 +119,7 @@ const VideoTile: React.FC = () => {
                 loop
                 muted
                 playsInline
+                preload="metadata"
                 className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
             >
                 <source src={assets.galleryVideo} type="video/mp4" />

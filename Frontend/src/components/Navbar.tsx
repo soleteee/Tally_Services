@@ -37,8 +37,8 @@ const Navbar: React.FC = () => {
                     {/* Left: Logo */}
                     <div className="flex items-center gap-3 md:gap-4 w-full lg:w-auto justify-between lg:justify-start">
                         <Link to="/" className="flex items-center gap-3">
-                            <img src={assets.logoMOS} alt="Mittal Online Services" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
-                            <img src={assets.certification} alt="Certification" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
+                            <img src={assets.logoMOS} alt="Mittal Online Services" loading="eager" decoding="async" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
+                            <img src={assets.certification} alt="Certification" loading="eager" decoding="async" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
                         </Link>
                     </div>
 
@@ -161,6 +161,7 @@ const Navbar: React.FC = () => {
                             <li><Link to="/clients" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/clients' ? 'text-accent' : ''}`}>Clients</Link></li>
                             <li><Link to="/careers" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/careers' ? 'text-accent' : ''}`}>Careers</Link></li>
                             <li><Link to="/online-payment" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/online-payment' ? 'text-accent' : ''}`}>Pay Online</Link></li>
+                            <li><Link to="/crochet" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/crochet' ? 'text-accent' : ''}`}>Crochet Corner</Link></li>
                             <li><Link to="/contact" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/contact' ? 'text-accent' : ''}`}>Contact Us</Link></li>
                         </ul>
 
@@ -244,6 +245,12 @@ const Navbar: React.FC = () => {
                         <li><Link to="/clients" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Clients</Link></li>
                         <li><Link to="/careers" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Careers</Link></li>
                         <li><Link to="/online-payment" onClick={toggleMobileMenu} className="block py-3 border-b border-gray-100 hover:text-primary">Pay Online</Link></li>
+                        <li>
+                            <Link to="/crochet" onClick={toggleMobileMenu} className="py-3 border-b border-gray-100 hover:text-primary flex items-center justify-between">
+                                <span>Crochet Corner</span>
+                                <span className="text-[11px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold">Handmade</span>
+                            </Link>
+                        </li>
                         <li><Link to="/contact" onClick={toggleMobileMenu} className="block py-3 hover:text-primary">Contact Us</Link></li>
                     </ul>
                     {/* Mobile Contact Info Block */}

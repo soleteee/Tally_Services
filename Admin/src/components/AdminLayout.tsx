@@ -1,6 +1,6 @@
 
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FilePlus, LogOut, Briefcase, Search, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, FilePlus, LogOut, Briefcase, Search, HelpCircle, Sparkles } from 'lucide-react';
 import { clearAuthSession, getCurrentRole } from '../utils/auth';
 
 const AdminLayout = () => {
@@ -46,6 +46,10 @@ const AdminLayout = () => {
                             <Link to="/faq-management" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/faq-management') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}>
                                 <HelpCircle size={20} />
                                 <span className="font-medium">FAQ Management</span>
+                            </Link>
+                            <Link to="/crochet" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/crochet') ? 'bg-rose-50 text-rose-600 font-semibold' : 'text-gray-600 hover:bg-gray-50'}`}>
+                                <Sparkles size={20} className={isActive('/crochet') ? 'text-rose-600' : 'text-rose-500'} />
+                                <span className="font-medium">Crochet Products</span>
                             </Link>
                         </>
                     )}

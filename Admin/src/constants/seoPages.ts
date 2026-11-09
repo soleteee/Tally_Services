@@ -20,6 +20,7 @@ export const SEO_FALLBACK_PAGES: SeoPageConfig[] = [
     { pageKey: 'renew-tss', pageName: 'Renew TSS', routePath: '/renew-tss' },
     { pageKey: 'upgrade', pageName: 'Upgrade Tally', routePath: '/upgrade' },
     { pageKey: 'tally-ira', pageName: 'TallyIra', routePath: '/tally-ira' },
+    { pageKey: 'crochet', pageName: 'Crochet Creations & Products', routePath: '/crochet' },
 
     // Product Pages
     { pageKey: 'products', pageName: 'Products (All)', routePath: '/products' },

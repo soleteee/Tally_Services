@@ -52,6 +52,7 @@ const Upgrade = lazy(() => import('./pages/Upgrade'));
 const OnlinePayment = lazy(() => import('./pages/OnlinePayment'));
 const ReviewGenerator = lazy(() => import('./pages/ReviewGenerator'));
 const TallyIra = lazy(() => import('./pages/TallyIra'));
+const Crochet = lazy(() => import('./pages/Crochet'));
 
 import PosterPopup from './components/PosterPopup';
 
@@ -129,6 +130,8 @@ function App() {
               <Route path="/online-payment" element={<OnlinePayment />} />
               <Route path="/review-generator" element={<ReviewGenerator />} />
               <Route path="/tally-ira" element={<TallyIra />} />
+              <Route path="/crochet" element={<Crochet />} />
+              <Route path="/crochet-creations" element={<Crochet />} />
 
               <Route path="*" element={<div className="max-w-[1200px] mx-auto px-5 py-20 text-center"><h2>404 - Page Not Found</h2></div>} />
             </Routes>

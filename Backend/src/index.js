@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
 const dns = require('dns');
+const zlib = require('zlib');
 
 // Set DNS servers to Google and Cloudflare DNS to avoid SRV resolution issues (e.g. querySrv ECONNREFUSED)
 try {
@@ -68,7 +69,45 @@ app.use((req, res, next) => {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Built-in Gzip compression middleware for JSON responses over 1KB
+app.use((req, res, next) => {
+    const acceptEncoding = req.headers['accept-encoding'] || '';
+    if (!acceptEncoding.includes('gzip')) {
+        return next();
+    }
+
+    const originalJson = res.json.bind(res);
+    res.json = (body) => {
+        try {
+            const jsonString = JSON.stringify(body);
+            if (Buffer.byteLength(jsonString) < 1024) {
+                return originalJson(body);
+            }
+
+            zlib.gzip(jsonString, (err, compressed) => {
+                if (err) {
+                    return originalJson(body);
+                }
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Content-Encoding', 'gzip');
+                res.setHeader('Vary', 'Accept-Encoding');
+                res.send(compressed);
+            });
+        } catch (_e) {
+            originalJson(body);
+        }
+    };
+
+    next();
+});
+
+// Cache static uploads for 7 days
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
+    maxAge: '7d',
+    etag: true,
+    immutable: true,
+}));
 
 app.get('/', (_req, res) => {
     res.status(200).json({
@@ -86,6 +125,7 @@ app.get('/api/health', (_req, res) => {
 
 // Routes
 app.use('/api/blogs', blogRoutes);
+app.use('/api/crochet', require('./routes/crochetRoutes'));
 app.use('/api', reviewRoutes);
 app.use('/api/faqs', faqRoutes);
 app.use('/api/poster', require('./routes/posterRoutes'));
