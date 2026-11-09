@@ -1,8 +1,12 @@
+const mongoose = require('mongoose');
 const Poster = require('../models/Poster');
 
 // Get poster settings (create default if not exists)
 exports.getPoster = async (req, res) => {
     try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.json({ imageUrl: '', isVisible: false });
+        }
         let poster = await Poster.findOne();
         if (!poster) {
             poster = await Poster.create({ imageUrl: '', isVisible: false });
@@ -10,7 +14,7 @@ exports.getPoster = async (req, res) => {
         res.json(poster);
     } catch (error) {
         console.error("Error in getPoster:", error);
-        res.status(500).json({ message: error.message });
+        res.json({ imageUrl: '', isVisible: false });
     }
 };
 

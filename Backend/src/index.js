@@ -137,7 +137,10 @@ app.use('/api', require('./routes/authRoutes'));
 
 
 // Database Connection
-mongoose.connect(MONGODB_URI)
+mongoose.set('bufferCommands', false);
+mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+})
     .then(async () => {
         console.log('Connected to MongoDB');
         console.log('Database name:', mongoose.connection.name);
