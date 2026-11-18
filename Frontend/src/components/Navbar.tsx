@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <header className="w-full font-sans shadow-md z-[1000] sticky top-0 bg-white">
+        <header className="w-full font-sans shadow-md z-[1000] relative lg:sticky lg:top-0 bg-white">
 
             {/* Top Bar (Information Bar) - Visible on both Desktop and Mobile */}
             <div className="bg-white text-gray-700 py-2.5 md:py-3 border-b border-gray-100">
