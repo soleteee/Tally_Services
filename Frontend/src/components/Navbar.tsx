@@ -30,11 +30,11 @@ const Navbar: React.FC = () => {
     return (
         <header className="w-full font-sans shadow-md z-[1000] sticky top-0 bg-white">
 
-            {/* Top Bar (Information Bar) */}
-            <div className="hidden lg:block bg-white text-gray-700 py-2 md:py-3 border-b border-gray-100">
+            {/* Top Bar (Information Bar) - Visible on both Desktop and Mobile */}
+            <div className="bg-white text-gray-700 py-2.5 md:py-3 border-b border-gray-100">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 lg:gap-8 xl:gap-12">
 
-                    {/* Left: Logo */}
+                    {/* Left: Logo & Certification Images */}
                     <div className="flex items-center gap-3 md:gap-4 w-full lg:w-auto justify-between lg:justify-start">
                         <Link to="/" className="flex items-center gap-3">
                             <img src={assets.logoMOS} alt="Mittal Online Services" loading="eager" decoding="async" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
@@ -42,10 +42,10 @@ const Navbar: React.FC = () => {
                         </Link>
                     </div>
 
-                    {/* Right: Business Information Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-3 xl:gap-3 text-sm w-full lg:w-auto mt-2 lg:mt-2">
-                        {/* Working Hours */}
-                        <div className="flex items-start gap-2 min-w-0 ml-6">
+                    {/* Right / Under Images (Mobile): Business Information Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2.5 md:gap-3 xl:gap-3 text-xs sm:text-sm w-full lg:w-auto mt-1 lg:mt-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-gray-100">
+                        {/* Working Hours (hidden on extra small screens, visible on sm+) */}
+                        <div className="hidden sm:flex items-start gap-2 min-w-0 lg:ml-6">
                             <FaClock className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
                             <div className="flex flex-col leading-tight">
                                 <span className="font-bold text-gray-900">Mon – Sat</span>
@@ -54,11 +54,11 @@ const Navbar: React.FC = () => {
                         </div>
 
                         {/* Phone Numbers */}
-                        <div className="flex items-start gap-1 min-w-0">
-                            <FaPhoneAlt className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
+                        <div className="flex items-start gap-2 min-w-0">
+                            <FaPhoneAlt className="text-primary text-sm sm:text-base mt-0.5 flex-shrink-0" />
                             <div className="flex flex-col leading-tight min-w-0">
-                                <span className="font-bold text-gray-900">Call Us</span>
-                                <div className="flex flex-col gap-0.5">
+                                <span className="font-bold text-gray-900 text-xs sm:text-sm">Call Us</span>
+                                <div className="flex flex-wrap sm:flex-col gap-x-3 gap-y-0.5">
                                     <a href="tel:+919997952180" className="text-xs text-gray-600 font-medium hover:text-primary transition-colors">+91 99979 52180</a>
                                     <a href="tel:+919997952142" className="text-xs text-gray-600 font-medium hover:text-primary transition-colors">+91 99979 52142</a>
                                 </div>
@@ -67,9 +67,9 @@ const Navbar: React.FC = () => {
 
                         {/* Email */}
                         <div className="flex items-start gap-2 min-w-0">
-                            <FaEnvelope className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
+                            <FaEnvelope className="text-primary text-sm sm:text-base mt-0.5 flex-shrink-0" />
                             <div className="flex flex-col leading-tight min-w-0">
-                                <span className="font-bold text-gray-900">Email Us</span>
+                                <span className="font-bold text-gray-900 text-xs sm:text-sm">Email Us</span>
                                 <a href="mailto:mittalonlineservices@gmail.com" className="text-xs text-gray-600 hover:text-primary transition-colors font-medium break-all">mittalonlineservices@gmail.com</a>
                             </div>
                         </div>
@@ -81,9 +81,9 @@ const Navbar: React.FC = () => {
                             rel="noopener noreferrer"
                             className="flex items-start gap-2 min-w-0 max-w-full xl:max-w-[240px] cursor-pointer hover:text-primary transition-colors"
                         >
-                            <FaMapMarkerAlt className="text-primary text-base md:text-lg mt-0.5 flex-shrink-0" />
+                            <FaMapMarkerAlt className="text-primary text-sm sm:text-base mt-0.5 flex-shrink-0" />
                             <div className="flex flex-col leading-tight min-w-0">
-                                <span className="font-bold text-gray-900">Location</span>
+                                <span className="font-bold text-gray-900 text-xs sm:text-sm">Location</span>
                                 <span className="text-xs text-gray-600 leading-snug font-medium">B-4, Ground Floor, Meerut Mall, Delhi Road, Meerut</span>
                             </div>
                         </a>
@@ -96,10 +96,10 @@ const Navbar: React.FC = () => {
                 <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
                     <div className="flex justify-between lg:justify-between items-center h-14 lg:h-12 relative flex-nowrap w-full">
 
-                        {/* Mobile Logo & Certification (Visible only on mobile) */}
+                        {/* Mobile Brand (Visible only on mobile) */}
                         <div className="lg:hidden flex items-center gap-2">
                             <img src={assets.logoMOS} alt="MOS" className="h-9 w-auto bg-white rounded p-1" />
-                            <img src={assets.certification} alt="Certification" className="h-9 w-auto bg-white rounded p-0.5" />
+                            <span className="font-bold text-base sm:text-lg">Mittal Online Services</span>
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -217,24 +217,6 @@ const Navbar: React.FC = () => {
                             </a>
                         </div>
                     </div>
-                </div>
-
-                {/* Mobile contact strip — shown only on mobile, placed UNDER the images and burger button */}
-                <div className="lg:hidden border-t border-white/15 bg-primary/95 px-3 py-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-white/90">
-                    <a href="tel:+919997952180" className="flex items-center gap-1 hover:text-white transition-colors">
-                        <FaPhoneAlt size={10} /> +91 99979 52180
-                    </a>
-                    <a href="mailto:mittalonlineservices@gmail.com" className="flex items-center gap-1 hover:text-white transition-colors truncate">
-                        <FaEnvelope size={10} /> mittalonlineservices@gmail.com
-                    </a>
-                    <a
-                        href="https://www.google.com/maps/search/?api=1&query=B-4,+Ground+Floor,+Meerut+Mall,+Delhi+Road,+Meerut"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 hover:text-white transition-colors"
-                    >
-                        <FaMapMarkerAlt size={10} /> Meerut Mall
-                    </a>
                 </div>
             </div>
 
