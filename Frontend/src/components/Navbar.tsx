@@ -253,10 +253,43 @@ const Navbar: React.FC = () => {
                         </li>
                         <li><Link to="/contact" onClick={toggleMobileMenu} className="block py-3 hover:text-primary">Contact Us</Link></li>
                     </ul>
+                    {/* Mobile Social Buttons */}
+                    <div className="p-4 border-t border-gray-100 flex flex-col gap-3">
+                        <a
+                            href="https://wa.me/919997952180"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={toggleMobileMenu}
+                            className="flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-3 rounded-xl font-bold hover:bg-green-600 transition-all shadow-sm text-sm"
+                        >
+                            <FaWhatsapp size={18} /> Chat on WhatsApp
+                        </a>
+                        <a
+                            href="https://whatsapp.com/channel/0029Va6UVWjGehEHQhXVrI2P"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={toggleMobileMenu}
+                            className="flex items-center justify-center gap-2 bg-[#25D366] text-white px-4 py-3 rounded-xl font-bold hover:bg-green-600 transition-all shadow-sm text-sm"
+                        >
+                            <FaWhatsapp size={18} /> Join WhatsApp Channel
+                        </a>
+                        <a
+                            href="https://www.youtube.com/@mittalonlineservice"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={toggleMobileMenu}
+                            className="flex items-center justify-center gap-2 bg-[#FF0000] text-white px-4 py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-sm text-sm"
+                        >
+                            <FaYoutube size={18} /> YouTube Channel
+                        </a>
+                    </div>
                     {/* Mobile Contact Info Block */}
                     <div className="bg-gray-100 p-4 text-sm text-gray-600 border-t">
                         <div className="flex items-center gap-2 mb-2">
                             <FaPhoneAlt size={12} /> +91-0121-4000575
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <FaEnvelope size={12} /> mittalonlineservices@gmail.com
                         </div>
                         <div className="flex items-center gap-2">
                             <FaEnvelope size={12} /> info@mittalonlineservices.com
