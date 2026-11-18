@@ -20,6 +20,7 @@ export type CrochetProduct = {
     description: string;
     category: string;
     image: string;
+    additionalImages?: string[];
     materials?: string;
     dimensions?: string;
     isAvailable: boolean;
@@ -64,8 +65,10 @@ const CrochetManagement: React.FC = () => {
         isCustomizable: true,
         featured: false,
     });
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string>('');
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
+    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const [existingAdditionalImages, setExistingAdditionalImages] = useState<string[]>([]);
+    const [additionalUrlsText, setAdditionalUrlsText] = useState<string>('');
 
     const fetchProducts = async () => {
         try {
@@ -102,8 +105,10 @@ const CrochetManagement: React.FC = () => {
             isCustomizable: true,
             featured: false,
         });
-        setImageFile(null);
-        setImagePreview('');
+        setImageFiles([]);
+        setImagePreviews([]);
+        setExistingAdditionalImages([]);
+        setAdditionalUrlsText('');
         setIsModalOpen(true);
     };
 
@@ -115,39 +120,50 @@ const CrochetManagement: React.FC = () => {
             category: isPreset ? product.category : 'Other',
             customCategory: isPreset ? '' : product.category,
             description: product.description,
-            imageUrl: product.image.startsWith('http') ? product.image : '',
+            imageUrl: product.image && product.image.startsWith('http') ? product.image : '',
             materials: product.materials || '',
             dimensions: product.dimensions || '',
             isAvailable: product.isAvailable,
             isCustomizable: product.isCustomizable ?? true,
             featured: product.featured ?? false,
         });
-        setImageFile(null);
-        setImagePreview(product.image);
+        setImageFiles([]);
+        setImagePreviews([]);
+        setExistingAdditionalImages(product.additionalImages || []);
+        setAdditionalUrlsText('');
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setEditingProduct(null);
-        setImageFile(null);
-        setImagePreview('');
+        setImageFiles([]);
+        setImagePreviews([]);
+        setExistingAdditionalImages([]);
+        setAdditionalUrlsText('');
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            setImagePreview(URL.createObjectURL(file));
+        const files = Array.from(e.target.files || []);
+        if (files.length > 0) {
+            setImageFiles((prev) => [...prev, ...files]);
+            const newPreviews = files.map((f) => URL.createObjectURL(f));
+            setImagePreviews((prev) => [...prev, ...newPreviews]);
         }
+    };
+
+    const handleRemoveNewFile = (index: number) => {
+        setImageFiles((prev) => prev.filter((_, i) => i !== index));
+        setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const handleRemoveExistingImage = (index: number) => {
+        setExistingAdditionalImages((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const url = e.target.value;
         setFormData((prev) => ({ ...prev, imageUrl: url }));
-        if (!imageFile && url.trim()) {
-            setImagePreview(url.trim());
-        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -163,8 +179,8 @@ const CrochetManagement: React.FC = () => {
             return;
         }
 
-        if (!editingProduct && !imageFile && !formData.imageUrl.trim()) {
-            toast.error('Please upload an image or provide an image URL');
+        if (!editingProduct && imageFiles.length === 0 && !formData.imageUrl.trim()) {
+            toast.error('Please upload at least one image or provide an image URL');
             return;
         }
 
@@ -189,8 +205,19 @@ const CrochetManagement: React.FC = () => {
                 payload.append('image', formData.imageUrl.trim());
             }
 
-            if (imageFile) {
-                payload.append('imageFile', imageFile);
+            // Append all uploaded image files
+            imageFiles.forEach((file) => {
+                payload.append('imageFile', file);
+            });
+
+            // Parse additional URLs if any
+            const extraUrls = additionalUrlsText
+                .split(/[\n,]/)
+                .map((u) => u.trim())
+                .filter(Boolean);
+            const allAdditional = [...existingAdditionalImages, ...extraUrls];
+            if (allAdditional.length > 0) {
+                payload.append('additionalImages', JSON.stringify(allAdditional));
             }
 
             const url = editingProduct
@@ -420,6 +447,11 @@ const CrochetManagement: React.FC = () => {
                                             <Sparkles size={11} /> Featured
                                         </span>
                                     )}
+                                    {product.additionalImages && product.additionalImages.length > 0 && (
+                                        <span className="px-2 py-1 rounded-full text-xs font-semibold bg-gray-900/80 text-white shadow-sm backdrop-blur-sm">
+                                            📷 {product.additionalImages.length + 1} photos
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="absolute top-3 right-3">
@@ -607,27 +639,35 @@ const CrochetManagement: React.FC = () => {
                                 )}
                             </div>
 
-                            {/* Photo Upload & Image URL */}
+                            {/* Photo Upload & Image URL (Multiple photos supported) */}
                             <div className="border border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-3">
-                                <label className="block text-sm font-semibold text-gray-800">
-                                    Product Photo <span className="text-red-500">*</span>
-                                </label>
+                                <div className="flex justify-between items-center">
+                                    <label className="block text-sm font-semibold text-gray-800">
+                                        Product Photos <span className="text-red-500">*</span>
+                                    </label>
+                                    <span className="text-xs bg-rose-50 text-rose-600 font-semibold px-2 py-0.5 rounded-full">
+                                        Multiple photos supported
+                                    </span>
+                                </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {/* Upload file */}
                                     <div>
                                         <span className="text-xs font-medium text-gray-600 block mb-1">
-                                            Upload from Computer
+                                            Upload from Computer (Choose multiple)
                                         </span>
                                         <label className="border-2 border-dashed border-gray-300 hover:border-rose-400 bg-white rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition text-center h-28">
                                             <UploadCloud size={24} className="text-rose-500 mb-1" />
                                             <span className="text-xs font-semibold text-gray-700">
-                                                {imageFile ? imageFile.name : 'Choose Image File'}
+                                                {imageFiles.length > 0
+                                                    ? `${imageFiles.length} photo(s) selected`
+                                                    : 'Choose Image File(s)'}
                                             </span>
-                                            <span className="text-[11px] text-gray-400">PNG, JPG, WEBP up to 10MB</span>
+                                            <span className="text-[11px] text-gray-400">PNG, JPG, WEBP (Select one or more)</span>
                                             <input
                                                 type="file"
                                                 accept="image/*"
+                                                multiple
                                                 onChange={handleFileChange}
                                                 className="hidden"
                                             />
@@ -635,37 +675,121 @@ const CrochetManagement: React.FC = () => {
                                     </div>
 
                                     {/* Direct URL */}
-                                    <div>
-                                        <span className="text-xs font-medium text-gray-600 block mb-1">
-                                            Or Paste Image URL
-                                        </span>
-                                        <input
-                                            type="url"
-                                            value={formData.imageUrl}
-                                            onChange={handleImageUrlChange}
-                                            placeholder="https://images.unsplash.com/..."
-                                            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-rose-500 outline-none mb-1"
-                                        />
-                                        <span className="text-[11px] text-gray-400 block">
-                                            Useful for hosted Unsplash or cloud images.
-                                        </span>
+                                    <div className="space-y-2">
+                                        <div>
+                                            <span className="text-xs font-medium text-gray-600 block mb-1">
+                                                Primary Image URL
+                                            </span>
+                                            <input
+                                                type="url"
+                                                value={formData.imageUrl}
+                                                onChange={handleImageUrlChange}
+                                                placeholder="https://images.unsplash.com/..."
+                                                className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-rose-500 outline-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <span className="text-xs font-medium text-gray-600 block mb-1">
+                                                Additional Image URLs (one per line or comma-separated)
+                                            </span>
+                                            <textarea
+                                                rows={2}
+                                                value={additionalUrlsText}
+                                                onChange={(e) => setAdditionalUrlsText(e.target.value)}
+                                                placeholder="https://...&#10;https://..."
+                                                className="w-full px-3.5 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-rose-500 outline-none"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Preview */}
-                                {imagePreview && (
-                                    <div className="pt-2 flex items-center gap-3">
-                                        <img
-                                            src={imagePreview}
-                                            alt="Preview"
-                                            className="w-20 h-20 object-cover rounded-lg border border-gray-200 shadow-sm"
-                                        />
-                                        <div className="text-xs text-gray-600">
-                                            <p className="font-semibold text-gray-800">Image Preview</p>
-                                            <p className="text-gray-500">
-                                                This photo will be displayed on the website and linked in WhatsApp
-                                                inquiries.
-                                            </p>
+                                {/* Previews Grid */}
+                                {(imagePreviews.length > 0 ||
+                                    existingAdditionalImages.length > 0 ||
+                                    formData.imageUrl ||
+                                    (editingProduct && editingProduct.image)) && (
+                                    <div className="pt-2 border-t border-gray-200">
+                                        <p className="text-xs font-semibold text-gray-700 mb-2">
+                                            Product Photos:
+                                        </p>
+                                        <div className="flex flex-wrap gap-3">
+                                            {/* Existing primary image in edit mode */}
+                                            {editingProduct && editingProduct.image && imagePreviews.length === 0 && !formData.imageUrl && (
+                                                <div className="relative group w-20 h-20 rounded-lg overflow-hidden border-2 border-rose-400 shadow-sm">
+                                                    <img
+                                                        src={editingProduct.image}
+                                                        alt="Current Primary"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <span className="absolute bottom-0 inset-x-0 bg-rose-600 text-white text-[9px] text-center font-bold py-0.5">
+                                                        Primary
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {/* Primary URL preview */}
+                                            {formData.imageUrl && (
+                                                <div className="relative group w-20 h-20 rounded-lg overflow-hidden border-2 border-rose-400 shadow-sm">
+                                                    <img
+                                                        src={formData.imageUrl}
+                                                        alt="URL Primary"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <span className="absolute bottom-0 inset-x-0 bg-rose-600 text-white text-[9px] text-center font-bold py-0.5">
+                                                        Primary URL
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {/* Newly uploaded previews */}
+                                            {imagePreviews.map((src, idx) => (
+                                                <div
+                                                    key={`new-${idx}`}
+                                                    className="relative group w-20 h-20 rounded-lg overflow-hidden border border-gray-300 shadow-sm"
+                                                >
+                                                    <img
+                                                        src={src}
+                                                        alt={`New upload ${idx + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <span className="absolute bottom-0 inset-x-0 bg-gray-900/80 text-white text-[9px] text-center font-bold py-0.5">
+                                                        {idx === 0 && !formData.imageUrl ? 'Main' : `Photo ${idx + 1}`}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveNewFile(idx)}
+                                                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-0.5 shadow hover:bg-red-700 transition"
+                                                        title="Remove photo"
+                                                    >
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            ))}
+
+                                            {/* Existing additional images in edit mode */}
+                                            {existingAdditionalImages.map((url, idx) => (
+                                                <div
+                                                    key={`exist-${idx}`}
+                                                    className="relative group w-20 h-20 rounded-lg overflow-hidden border border-gray-300 shadow-sm"
+                                                >
+                                                    <img
+                                                        src={url}
+                                                        alt={`Additional ${idx + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <span className="absolute bottom-0 inset-x-0 bg-blue-600 text-white text-[9px] text-center font-bold py-0.5">
+                                                        Extra
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveExistingImage(idx)}
+                                                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-0.5 shadow hover:bg-red-700 transition"
+                                                        title="Remove photo"
+                                                    >
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 )}

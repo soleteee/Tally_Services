@@ -93,13 +93,30 @@ const Navbar: React.FC = () => {
 
             {/* Bottom Bar (Main Navigation) */}
             <div className="bg-primary text-white w-full">
+                {/* Mobile contact strip — shown only on mobile, sits just above nav links row */}
+                <div className="lg:hidden border-b border-white/10 px-3 py-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-white/90">
+                    <a href="tel:+919997952180" className="flex items-center gap-1 hover:text-white transition-colors">
+                        <FaPhoneAlt size={10} /> +91 99979 52180
+                    </a>
+                    <a href="mailto:mittalonlineservices@gmail.com" className="flex items-center gap-1 hover:text-white transition-colors">
+                        <FaEnvelope size={10} /> mittalonlineservices@gmail.com
+                    </a>
+                    <a
+                        href="https://www.google.com/maps/search/?api=1&query=B-4,+Ground+Floor,+Meerut+Mall,+Delhi+Road,+Meerut"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 hover:text-white transition-colors"
+                    >
+                        <FaMapMarkerAlt size={10} /> Meerut Mall, Delhi Road
+                    </a>
+                </div>
                 <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
                     <div className="flex justify-between lg:justify-between items-center h-14 lg:h-12 relative flex-nowrap w-full">
 
                         {/* Mobile Logo (Visible only on mobile) */}
                         <div className="lg:hidden flex items-center gap-2">
-                            <img src={assets.logoMOS} alt="MOS" className="h-10 w-auto bg-white rounded p-1" />
-                            <span className="font-bold text-lg">Mittal Online Services</span>
+                            <img src={assets.logoMOS} alt="MOS" className="h-9 w-auto bg-white rounded p-1" />
+                            <img src={assets.certification} alt="Certification" className="h-9 w-auto bg-white rounded p-0.5" />
                         </div>
 
                         {/* Mobile Menu Button */}

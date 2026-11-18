@@ -28,8 +28,8 @@ router.get('/:id', crochetController.getCrochetProductById);
 
 // Admin routes
 router.get('/admin/all', crochetController.getAdminCrochetProducts);
-router.post('/', upload.single('imageFile'), crochetController.createCrochetProduct);
-router.put('/:id', upload.single('imageFile'), crochetController.updateCrochetProduct);
+router.post('/', upload.any(), crochetController.createCrochetProduct);
+router.put('/:id', upload.any(), crochetController.updateCrochetProduct);
 router.patch('/:id/toggle', crochetController.toggleAvailability);
 router.delete('/:id', crochetController.deleteCrochetProduct);
 

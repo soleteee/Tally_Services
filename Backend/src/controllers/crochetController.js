@@ -105,11 +105,35 @@ const isDbReady = () => mongoose.connection.readyState === 1;
 /** Build a simple unique ID for in-memory products */
 const makeId = () => `mem-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
-const getUploadedImageUrl = (req) => {
-    if (!req.file) return null;
+const getUploadedImages = (req) => {
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const host = req.get('host');
-    return `${protocol}://${host}/uploads/${req.file.filename}`;
+    const toUrl = (filename) => `${protocol}://${host}/uploads/${filename}`;
+
+    const files = req.files ? (Array.isArray(req.files) ? req.files : Object.values(req.files).flat()) : (req.file ? [req.file] : []);
+    const primaryFile = files.find((f) => f.fieldname === 'imageFile') || files[0];
+    const additionalFiles = files.filter((f) => f !== primaryFile);
+
+    return {
+        primaryUrl: primaryFile ? toUrl(primaryFile.filename) : null,
+        additionalUrls: additionalFiles.map((f) => toUrl(f.filename)),
+    };
+};
+
+const parseAdditionalImages = (raw) => {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw.filter((u) => typeof u === 'string' && u.trim());
+    if (typeof raw === 'string') {
+        const trimmed = raw.trim();
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(trimmed);
+                if (Array.isArray(parsed)) return parsed.filter((u) => typeof u === 'string' && u.trim());
+            } catch (_) {}
+        }
+        return trimmed.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    return [];
 };
 
 // ─── PUBLIC ────────────────────────────────────────────────────────────────────
@@ -176,20 +200,28 @@ exports.getCrochetProductById = async (req, res) => {
 
 exports.createCrochetProduct = async (req, res) => {
     try {
-        const { name, description, category, image, materials, dimensions, isAvailable, isCustomizable, featured, sortOrder } = req.body;
+        const { name, description, category, image, materials, dimensions, isAvailable, isCustomizable, featured, sortOrder, additionalImages } = req.body;
 
         if (!name || !name.trim()) return res.status(400).json({ message: 'Product name is required' });
         if (!description || !description.trim()) return res.status(400).json({ message: 'Product description is required' });
 
-        let finalImage = getUploadedImageUrl(req);
+        const { primaryUrl, additionalUrls } = getUploadedImages(req);
+        let finalImage = primaryUrl;
         if (!finalImage && typeof image === 'string' && image.trim()) finalImage = image.trim();
+        if (!finalImage && additionalUrls.length > 0) {
+            finalImage = additionalUrls.shift();
+        }
         if (!finalImage) return res.status(400).json({ message: 'Product photo is required (upload a photo or enter image URL)' });
+
+        const bodyAdditional = parseAdditionalImages(additionalImages);
+        const combinedAdditional = [...additionalUrls, ...bodyAdditional];
 
         const productData = {
             name: name.trim(),
             description: description.trim(),
             category: category ? category.trim() : 'General',
             image: finalImage,
+            additionalImages: combinedAdditional,
             materials: materials ? materials.trim() : 'Premium Soft Yarn',
             dimensions: dimensions ? dimensions.trim() : '',
             isAvailable: isAvailable === undefined ? true : String(isAvailable) === 'true',
@@ -221,7 +253,9 @@ exports.createCrochetProduct = async (req, res) => {
 exports.updateCrochetProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, category, image, materials, dimensions, isAvailable, isCustomizable, featured, sortOrder } = req.body;
+        const { name, description, category, image, materials, dimensions, isAvailable, isCustomizable, featured, sortOrder, additionalImages } = req.body;
+
+        const { primaryUrl, additionalUrls } = getUploadedImages(req);
 
         // ── Offline: update in-memory store ──
         if (!isDbReady()) {
@@ -239,9 +273,15 @@ exports.updateCrochetProduct = async (req, res) => {
             if (featured !== undefined) p.featured = String(featured) === 'true';
             if (sortOrder !== undefined) p.sortOrder = Number(sortOrder) || 0;
 
-            const uploadedImage = getUploadedImageUrl(req);
-            if (uploadedImage) p.image = uploadedImage;
+            if (primaryUrl) p.image = primaryUrl;
             else if (typeof image === 'string' && image.trim()) p.image = image.trim();
+
+            if (additionalImages !== undefined || additionalUrls.length > 0) {
+                const bodyAdditional = parseAdditionalImages(additionalImages);
+                p.additionalImages = [...(p.additionalImages || []), ...additionalUrls, ...bodyAdditional];
+                // Deduplicate
+                p.additionalImages = Array.from(new Set(p.additionalImages));
+            }
 
             inMemoryProducts[idx] = p;
             return res.json(p);
@@ -261,9 +301,13 @@ exports.updateCrochetProduct = async (req, res) => {
         if (featured !== undefined) product.featured = String(featured) === 'true';
         if (sortOrder !== undefined) product.sortOrder = Number(sortOrder) || 0;
 
-        const uploadedImage = getUploadedImageUrl(req);
-        if (uploadedImage) product.image = uploadedImage;
+        if (primaryUrl) product.image = primaryUrl;
         else if (typeof image === 'string' && image.trim()) product.image = image.trim();
+
+        if (additionalImages !== undefined || additionalUrls.length > 0) {
+            const bodyAdditional = parseAdditionalImages(additionalImages);
+            product.additionalImages = Array.from(new Set([...(product.additionalImages || []), ...additionalUrls, ...bodyAdditional]));
+        }
 
         const updated = await product.save();
         return res.json(updated);

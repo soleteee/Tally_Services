@@ -46,18 +46,18 @@ const AboutUs: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex-1 w-full flex justify-center">
-                        <div className="w-full h-[350px] bg-gradient-to-br from-[#e0e7ff] to-[#dbeafe] rounded-2xl flex items-center justify-center text-primary font-bold text-2xl shadow-2xl relative overflow-hidden border border-white/50"
+                        <div className="w-full max-w-[520px] md:max-w-none h-auto md:h-[380px] bg-gradient-to-br from-[#e0e7ff] to-[#dbeafe] rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden border border-white/50 p-2 sm:p-4"
                             style={{
                                 backgroundImage: 'linear-gradient(135deg, #e0e7ff 25%, #dbeafe 25%, #dbeafe 50%, #e0e7ff 50%, #e0e7ff 75%, #dbeafe 75%, #dbeafe 100%)',
                                 backgroundSize: '20px 20px'
                             }}>
                             <img
                                 src={assets.certificateFull}
-                                alt="About Us"
+                                alt="Mittal Online Services 3-Star Certified Partner Certificate"
                                 loading="lazy"
-                                className="w-full h-full object-cover z-10"
+                                className="w-full h-auto max-h-[360px] object-contain rounded-xl z-10 drop-shadow-sm"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent pointer-events-none"></div>
                         </div>
                     </div>
                 </div>

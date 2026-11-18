@@ -4,6 +4,9 @@ import { FaWhatsapp } from 'react-icons/fa';
 import ScrollReveal from './ScrollReveal';
 
 const Footer: React.FC = () => {
+    const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'mittalonlineservices@gmail.com';
+    const infoEmail = import.meta.env.VITE_INFO_EMAIL || 'info@mittalonlineservices.com';
+
     return (
         <footer className="bg-[#222] text-[#ccc] py-16">
             <div className="max-w-[1200px] mx-auto px-5 flex flex-wrap justify-between gap-8">
@@ -83,8 +86,9 @@ const Footer: React.FC = () => {
                         <p className="text-text/80 font-medium text-white font-bold">For Any Inquiry Call on 9997952180</p>
                         <p className="mb-2">Phone: +91-0121-4000575, 9997952142,2198,4601, <br />7482,7892</p>
                         <p className="mb-2">
-                            Email: <a href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL}`} className="hover:text-white transition-colors">{import.meta.env.VITE_CONTACT_EMAIL}</a><br />
-                            <a href={`mailto:${import.meta.env.VITE_INFO_EMAIL}`} className="hover:text-white transition-colors">{import.meta.env.VITE_INFO_EMAIL}</a>
+                            <span className="font-semibold text-white">Email: </span><br />
+                            <a href={`mailto:${contactEmail}`} className="text-gray-200 hover:text-white transition-colors underline break-all">{contactEmail}</a><br />
+                            <a href={`mailto:${infoEmail}`} className="text-gray-200 hover:text-white transition-colors underline break-all">{infoEmail}</a>
                         </p>
                         <p className="mb-2">Hours: 10:00 AM – 06:00 PM</p>
                     </div>

@@ -18,6 +18,7 @@ export type CrochetProduct = {
     description: string;
     category: string;
     image: string;
+    additionalImages?: string[];
     materials?: string;
     dimensions?: string;
     isAvailable: boolean;
@@ -116,6 +117,7 @@ const Crochet: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [activeModalProduct, setActiveModalProduct] = useState<CrochetProduct | null>(null);
+    const [selectedModalImage, setSelectedModalImage] = useState<string | null>(null);
 
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -371,7 +373,10 @@ const Crochet: React.FC = () => {
                                     className="h-full"
                                 >
                                     <div
-                                        onClick={() => setActiveModalProduct(product)}
+                                        onClick={() => {
+                                            setActiveModalProduct(product);
+                                            setSelectedModalImage(product.image);
+                                        }}
                                         className="bg-white rounded-2xl overflow-hidden border border-[#EFE5DC] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full cursor-pointer group"
                                     >
                                         {/* Image wrapper */}
@@ -395,6 +400,11 @@ const Crochet: React.FC = () => {
                                                 {product.featured && (
                                                     <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-amber-500 text-white shadow-sm flex items-center gap-1">
                                                         <FaMagic size={10} /> Popular
+                                                    </span>
+                                                )}
+                                                {product.additionalImages && product.additionalImages.length > 0 && (
+                                                    <span className="px-2 py-1 rounded-full text-[11px] font-extrabold bg-[#302117]/85 text-white shadow-sm backdrop-blur-sm">
+                                                        📷 {product.additionalImages.length + 1} photos
                                                     </span>
                                                 )}
                                             </div>
@@ -578,16 +588,42 @@ const Crochet: React.FC = () => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="grid grid-cols-1 md:grid-cols-2">
-                            {/* Product Photo */}
-                            <div className="relative aspect-square md:aspect-auto bg-[#F7EFE9] overflow-hidden">
-                                <img
-                                    src={getFullImageUrl(activeModalProduct.image)}
-                                    alt={activeModalProduct.name}
-                                    className="w-full h-full object-cover"
-                                />
-                                <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#302117] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                    {activeModalProduct.category}
-                                </span>
+                            {/* Product Photo & Thumbnails */}
+                            <div className="flex flex-col bg-[#F7EFE9]">
+                                <div className="relative aspect-square w-full bg-[#F7EFE9] overflow-hidden">
+                                    <img
+                                        src={getFullImageUrl(selectedModalImage || activeModalProduct.image)}
+                                        alt={activeModalProduct.name}
+                                        className="w-full h-full object-cover transition-all duration-300"
+                                    />
+                                    <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#302117] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                        {activeModalProduct.category}
+                                    </span>
+                                </div>
+
+                                {/* Thumbnails strip if multiple photos exist */}
+                                {activeModalProduct.additionalImages && activeModalProduct.additionalImages.length > 0 && (
+                                    <div className="p-3 bg-white/70 border-t border-gray-100 flex items-center gap-2 overflow-x-auto">
+                                        {[activeModalProduct.image, ...activeModalProduct.additionalImages].map((imgUrl, i) => (
+                                            <button
+                                                key={i}
+                                                type="button"
+                                                onClick={() => setSelectedModalImage(imgUrl)}
+                                                className={`w-14 h-14 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all ${
+                                                    (selectedModalImage || activeModalProduct.image) === imgUrl
+                                                        ? 'border-[#C85A32] scale-105 shadow-sm'
+                                                        : 'border-transparent opacity-70 hover:opacity-100'
+                                                }`}
+                                            >
+                                                <img
+                                                    src={getFullImageUrl(imgUrl)}
+                                                    alt={`Photo ${i + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Details Panel */}

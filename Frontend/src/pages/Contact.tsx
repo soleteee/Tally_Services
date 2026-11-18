@@ -78,18 +78,22 @@ const Contact: React.FC = () => {
 
                         <div className="mb-6">
                             <h4 className="font-bold text-lg text-secondary mb-2">Email</h4>
-                            <a
-                                href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL || 'mittalonlineservices@gmail.com'}`}
-                                className="block text-blue-600 font-medium hover:text-blue-800 transition-colors break-all"
-                            >
-                                {import.meta.env.VITE_CONTACT_EMAIL || 'mittalonlineservices@gmail.com'}
-                            </a>
-                            <a
-                                href={`mailto:${import.meta.env.VITE_INFO_EMAIL || 'info@mittalonlineservices.com'}`}
-                                className="block text-blue-600 font-medium hover:text-blue-800 transition-colors break-all mt-1"
-                            >
-                                {import.meta.env.VITE_INFO_EMAIL || 'info@mittalonlineservices.com'}
-                            </a>
+                            <div className="flex flex-col gap-2.5 bg-blue-50/70 p-3.5 rounded-lg border border-blue-100">
+                                <a
+                                    href="mailto:mittalonlineservices@gmail.com"
+                                    className="text-blue-700 font-semibold hover:underline transition-colors break-all text-sm sm:text-base flex items-center gap-2"
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-blue-600 flex-shrink-0"></span>
+                                    mittalonlineservices@gmail.com
+                                </a>
+                                <a
+                                    href="mailto:info@mittalonlineservices.com"
+                                    className="text-blue-700 font-semibold hover:underline transition-colors break-all text-sm sm:text-base flex items-center gap-2"
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-blue-600 flex-shrink-0"></span>
+                                    info@mittalonlineservices.com
+                                </a>
+                            </div>
                         </div>
 
                         {/* WhatsApp Quick Contact */}

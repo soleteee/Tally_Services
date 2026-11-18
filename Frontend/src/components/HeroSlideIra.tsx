@@ -5,11 +5,13 @@ import HeroBackdrop from './HeroBackdrop';
 interface HeroSlideIraProps {
   isActive: boolean;
   getAccessHref?: string;
+  buyNowHref?: string;
 }
 
 export const HeroSlideIra: React.FC<HeroSlideIraProps> = ({
   isActive,
   getAccessHref = '/tally-ira',
+  buyNowHref = '/products/prime-silver',
 }) => {
   return (
     <div className="relative w-full h-full min-h-[535px] md:min-h-full overflow-hidden bg-[#FFF9E3] select-none font-sans">
@@ -72,10 +74,10 @@ export const HeroSlideIra: React.FC<HeroSlideIraProps> = ({
             <span>of the time spent on manual data entry with TallyIra and modernise your business.</span>
           </p>
 
-          {/* Get Early Access Button */}
+          {/* Action Buttons */}
           <div
             style={{ transitionDelay: '360ms' }}
-            className={`mt-6 sm:mt-8 w-full sm:w-auto transition-all duration-600 ease-out ${
+            className={`mt-6 sm:mt-8 flex flex-wrap sm:flex-nowrap items-center gap-3 w-full sm:w-auto transition-all duration-600 ease-out ${
               isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
             }`}
           >
@@ -84,6 +86,25 @@ export const HeroSlideIra: React.FC<HeroSlideIraProps> = ({
               className="group inline-flex items-center justify-center gap-2 bg-[#F9A61A] text-[#111111] font-semibold text-[15px] sm:text-[16px] px-[22px] py-[13px] rounded-[4px] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 w-full sm:w-auto"
             >
               <span>Get Early Access</span>
+              <svg
+                className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </a>
+
+            <a
+              href={buyNowHref}
+              className="group inline-flex items-center justify-center gap-2 bg-[#0B6BA8] text-white font-semibold text-[15px] sm:text-[16px] px-[22px] py-[13px] rounded-[4px] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 w-full sm:w-auto"
+            >
+              <span>Buy Now</span>
               <svg
                 className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 viewBox="0 0 24 24"
