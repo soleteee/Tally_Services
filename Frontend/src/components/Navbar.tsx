@@ -34,12 +34,22 @@ const Navbar: React.FC = () => {
             <div className="bg-white text-gray-700 py-2.5 md:py-3 border-b border-gray-100">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 lg:gap-8 xl:gap-12">
 
-                    {/* Left: Logo & Certification Images */}
-                    <div className="flex items-center gap-3 md:gap-4 w-full lg:w-auto justify-between lg:justify-start">
-                        <Link to="/" className="flex items-center gap-3">
+                    {/* Left: Logo & Certification Images + Mobile Burger Menu Button */}
+                    <div className="flex items-center justify-between w-full lg:w-auto">
+                        <Link to="/" className="flex items-center gap-2 sm:gap-3">
                             <img src={assets.logoMOS} alt="Mittal Online Services" loading="eager" decoding="async" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
                             <img src={assets.certification} alt="Certification" loading="eager" decoding="async" className="h-10 md:h-12 lg:h-16 w-auto object-contain" />
                         </Link>
+
+                        {/* Mobile Menu Button - Placed on the new top nav bar */}
+                        <button
+                            type="button"
+                            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                            className="lg:hidden text-primary hover:text-blue-700 focus:outline-none p-2 rounded-lg border border-gray-200 shadow-sm bg-gray-50 hover:bg-gray-100 transition"
+                            onClick={toggleMobileMenu}
+                        >
+                            {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+                        </button>
                     </div>
 
                     {/* Right / Under Images (Mobile): Business Information Grid */}
@@ -91,29 +101,13 @@ const Navbar: React.FC = () => {
                 </div>
             </div>
 
-            {/* Bottom Bar (Main Navigation) */}
-            <div className="bg-primary text-white w-full">
+            {/* Bottom Bar (Main Navigation) - Desktop Only, Hidden on Mobile */}
+            <div className="hidden lg:block bg-primary text-white w-full">
                 <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
-                    <div className="flex justify-between lg:justify-between items-center h-14 lg:h-12 relative flex-nowrap w-full">
-
-                        {/* Mobile Brand (Visible only on mobile) */}
-                        <div className="lg:hidden flex items-center gap-2">
-                            <img src={assets.logoMOS} alt="MOS" className="h-9 w-auto bg-white rounded p-1" />
-                            <span className="font-bold text-base sm:text-lg">Mittal Online Services</span>
-                        </div>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            type="button"
-                            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                            className="lg:hidden text-white focus:outline-none p-2"
-                            onClick={toggleMobileMenu}
-                        >
-                            {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-                        </button>
+                    <div className="flex justify-between items-center h-12 relative flex-nowrap w-full">
 
                         {/* Navigation Links (Desktop) */}
-                        <ul className="hidden lg:flex items-center gap-3 xl:gap-5 2xl:gap-7 text-[12px] xl:text-[13px] 2xl:text-[15px] font-bold tracking-normal xl:tracking-wide h-full whitespace-nowrap">
+                        <ul className="flex items-center gap-3 xl:gap-5 2xl:gap-7 text-[12px] xl:text-[13px] 2xl:text-[15px] font-bold tracking-normal xl:tracking-wide h-full whitespace-nowrap">
                             <li><Link to="/" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/' ? 'text-accent' : ''}`}>Home</Link></li>
                             <li><Link to="/about" className={`h-full flex items-center whitespace-nowrap hover:text-accent transition-colors ${location.pathname === '/about' ? 'text-accent' : ''}`}>About Us</Link></li>
 
